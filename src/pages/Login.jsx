@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaExclamationCircle } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaExclamationCircle, FaGoogle } from 'react-icons/fa';
 import { Button } from '../components';
 import { toast } from 'react-toastify';
+import authService from '../services/authService';
 
 const Login = () => {
   // Scroll to top when component mounts
@@ -91,6 +92,10 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = '/api/auth/google';
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center py-20 px-4">
       <motion.div 
@@ -169,6 +174,21 @@ const Login = () => {
             {isSubmitting ? 'Accesso in corso...' : 'Accedi'}
           </Button>
         </form>
+        
+        <div className="mt-8">
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-secondary-700 absolute w-full"></div>
+            <span className="bg-secondary-900 px-4 relative z-10 text-secondary-400 text-sm">oppure</span>
+          </div>
+          
+          <button
+            onClick={handleGoogleLogin}
+            className="mt-6 w-full flex items-center justify-center bg-white text-secondary-900 p-4 hover:bg-gray-100 transition-all duration-300"
+          >
+            <FaGoogle className="mr-3 text-red-500" />
+            <span>Accedi con Google</span>
+          </button>
+        </div>
         
         {/* Link per registrazione */}
         <div className="mt-8 text-center">

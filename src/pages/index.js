@@ -18,6 +18,7 @@ import Jobs from "./Jobs";
 import FAQ from "./FAQ";
 import Login from "./Login";
 import Register from "./Register";
+import GoogleAuthCallback from './GoogleAuthCallback';
 
 export {
   Home,
@@ -40,4 +41,5 @@ export {
   FAQ,
   Login,
   Register,
+  GoogleAuthCallback,
 };
