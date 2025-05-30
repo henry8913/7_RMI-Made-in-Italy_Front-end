@@ -4,7 +4,7 @@ const restomodService = {
   // Ottieni tutti i modelli restomod
   getAll: async (filters = {}) => {
     try {
-      const response = await api.get('/api/restomods', { params: filters });
+      const response = await api.get('/restomods', { params: filters });
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ const restomodService = {
   // Ottieni i modelli in evidenza
   getFeatured: async () => {
     try {
-      const response = await api.get('/api/restomods', { params: { inEvidenza: true } });
+      const response = await api.get('/restomods', { params: { inEvidenza: true } });
       return response.data;
     } catch (error) {
       throw error;
@@ -24,7 +24,7 @@ const restomodService = {
   // Ottieni un singolo modello per ID
   getById: async (id) => {
     try {
-      const response = await api.get(`/api/restomods/${id}`);
+      const response = await api.get(`/restomods/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -34,7 +34,7 @@ const restomodService = {
   // Ottieni modelli per costruttore
   getByBrand: async (brandId) => {
     try {
-      const response = await api.get('/api/restomods', { params: { costruttore: brandId } });
+      const response = await api.get('/restomods', { params: { costruttore: brandId } });
       return response.data;
     } catch (error) {
       throw error;

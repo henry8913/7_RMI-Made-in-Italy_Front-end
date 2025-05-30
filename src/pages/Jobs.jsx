@@ -135,7 +135,7 @@ const Jobs = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-secondary-950 z-20"></div>
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('/images/jobs-hero.jpg')` }}
+          style={{ backgroundImage: `url('https://cdn.mos.cms.futurecdn.net/nZFBnnTXGWRPzTpHPJy78m-1920-80.jpg.webp')` }}
         ></div>
         <div className="container mx-auto px-4 relative z-30">
           <motion.div
@@ -191,7 +191,7 @@ const Jobs = () => {
               className="rounded-lg overflow-hidden shadow-xl"
             >
               <img
-                src="/images/team-workshop.jpg"
+                src="https://cdn.mos.cms.futurecdn.net/xwJvTXaNn3tH7bDdxn4e3V-1600-80.jpg.webp"
                 alt="Il nostro team al lavoro"
                 className="w-full h-auto"
               />

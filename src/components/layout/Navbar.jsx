@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt } from 'react-icons/fa';
@@ -10,6 +10,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
 
   // Chiudi il menu quando cambia la location
@@ -39,6 +40,8 @@ const Navbar = () => {
     try {
       await logout();
       setShowUserMenu(false);
+      // Reindirizza l'utente alla home page dopo il logout
+      navigate('/');
     } catch (error) {
       console.error('Errore durante il logout', error);
     }

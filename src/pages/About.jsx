@@ -77,9 +77,12 @@ const About = () => {
       <div className="relative h-[60vh] md:h-[70vh]">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-secondary-950/80 z-10" />
-          <img
-            src="https://cdn.mos.cms.futurecdn.net/QzjHm8CHjYiqJYVk49ZWWW-1920-80.jpg.webp"
-            alt="Classic Car Workshop"
+          <video
+            src="https://borromeodesilva.it/IMG/tutto-bene/tuttobene.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
             className="w-full h-full object-cover"
           />
         </div>

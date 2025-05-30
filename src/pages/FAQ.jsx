@@ -95,7 +95,7 @@ const FAQ = () => {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-secondary-950/80 z-10" />
           <img
-            src="https://images.unsplash.com/photo-1611566026373-c6c8da0ea861?q=80&w=2071&auto=format&fit=crop"
+            src="https://cdn.mos.cms.futurecdn.net/eHeR26bKLjkLFtPc8v7iA7-1600-80.jpg.webp"
             alt="Classic Car Workshop"
             className="w-full h-full object-cover"
           />

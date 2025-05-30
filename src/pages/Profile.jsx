@@ -1,16 +1,22 @@
-import { useState, useEffect, useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "../components";
 import { useAuth } from "../contexts/AuthContext";
 
 const Profile = () => {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: { pathname: "/profile" } }} />;
+  }
 
   // Redirect se l'utente non è autenticato
   if (!currentUser) {
@@ -115,7 +121,8 @@ const Profile = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      // Il redirect avverrà automaticamente grazie al controllo all'inizio del componente
+      // Reindirizza l'utente alla home page dopo il logout
+      navigate('/');
     } catch (err) {
       console.error("Errore durante il logout:", err);
       setError(

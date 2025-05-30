@@ -9,26 +9,45 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [authToken, setAuthTokenState] = useState(localStorage.getItem('token'));
 
-  // Verifica se l'utente è autenticato all'avvio dell'applicazione
+  // Funzione per impostare il token di autenticazione negli header delle richieste
+  const setAuthToken = (token) => {
+    if (token) {
+      localStorage.setItem('token', token);
+      // Imposta il token nell'header Authorization per tutte le richieste
+      authService.api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setAuthTokenState(token);
+    } else {
+      localStorage.removeItem('token');
+      delete authService.api.defaults.headers.common['Authorization'];
+      setAuthTokenState(null);
+    }
+  };
+
+  // Verifica se l'utente è autenticato all'avvio dell'applicazione e quando il token cambia
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
+        setLoading(true);
         // Verifica se esiste un token nel localStorage
         const token = localStorage.getItem('token');
         
         if (token) {
           // Imposta il token nell'header delle richieste API
-          setAuthToken(token);
+          authService.api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
           // Ottieni i dati dell'utente corrente
           const userData = await authService.getCurrentUser();
           setCurrentUser(userData);
+        } else {
+          setCurrentUser(null);
         }
       } catch (err) {
         console.error('Errore durante la verifica dello stato di autenticazione:', err);
         // In caso di errore, rimuovi il token e reimposta lo stato
         localStorage.removeItem('token');
+        delete authService.api.defaults.headers.common['Authorization'];
         setCurrentUser(null);
         setError('Sessione scaduta o non valida. Effettua nuovamente il login.');
       } finally {
@@ -37,19 +56,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuthStatus();
-  }, []);
-
-  // Funzione per impostare il token di autenticazione negli header delle richieste
-  const setAuthToken = (token) => {
-    if (token) {
-      localStorage.setItem('token', token);
-      // Imposta il token nell'header Authorization per tutte le richieste
-      authService.api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      localStorage.removeItem('token');
-      delete authService.api.defaults.headers.common['Authorization'];
-    }
-  };
+  }, [authToken]); // Aggiungiamo authToken come dipendenza per ricontrollare quando cambia
 
   // Funzione per il login
   const login = async (credentials) => {

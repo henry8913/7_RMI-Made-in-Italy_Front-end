@@ -4,7 +4,7 @@ const blogService = {
   // Ottieni tutti i post del blog
   getAll: async (filters = {}) => {
     try {
-      const response = await api.get('/api/blog', { params: filters });
+      const response = await api.get('/blog', { params: filters });
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ const blogService = {
   // Ottieni i post in evidenza
   getFeatured: async () => {
     try {
-      const response = await api.get('/api/blog', { params: { inEvidenza: true } });
+      const response = await api.get('/blog', { params: { inEvidenza: true } });
       return response.data;
     } catch (error) {
       throw error;
@@ -24,7 +24,7 @@ const blogService = {
   // Ottieni un singolo post per ID o slug
   getById: async (idOrSlug) => {
     try {
-      const response = await api.get(`/api/blog/${idOrSlug}`);
+      const response = await api.get(`/blog/${idOrSlug}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -34,7 +34,7 @@ const blogService = {
   // Ottieni post per categoria
   getByCategory: async (categoria) => {
     try {
-      const response = await api.get('/api/blog', { params: { categoria } });
+      const response = await api.get('/blog', { params: { categoria } });
       return response.data;
     } catch (error) {
       throw error;
@@ -44,7 +44,7 @@ const blogService = {
   // Ottieni post per tag
   getByTag: async (tag) => {
     try {
-      const response = await api.get('/api/blog', { params: { tag } });
+      const response = await api.get('/blog', { params: { tag } });
       return response.data;
     } catch (error) {
       throw error;
@@ -54,7 +54,7 @@ const blogService = {
   // Aggiungi un commento a un post
   addComment: async (postId, commentData) => {
     try {
-      const response = await api.post(`/api/blog/${postId}/commenti`, commentData);
+      const response = await api.post(`/blog/${postId}/commenti`, commentData);
       return response.data;
     } catch (error) {
       throw error;
@@ -64,7 +64,7 @@ const blogService = {
   // Metti mi piace a un post
   likePost: async (postId) => {
     try {
-      const response = await api.post(`/api/blog/${postId}/like`);
+      const response = await api.post(`/blog/${postId}/like`);
       return response.data;
     } catch (error) {
       throw error;
@@ -74,7 +74,7 @@ const blogService = {
   // Rimuovi mi piace da un post
   unlikePost: async (postId) => {
     try {
-      const response = await api.delete(`/api/blog/${postId}/like`);
+      const response = await api.delete(`/blog/${postId}/like`);
       return response.data;
     } catch (error) {
       throw error;

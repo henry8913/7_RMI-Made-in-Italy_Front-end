@@ -4,7 +4,7 @@ const packageService = {
   // Ottieni tutti i pacchetti disponibili
   getAll: async () => {
     try {
-      const response = await api.get('/api/packages');
+      const response = await api.get('/packages');
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ const packageService = {
   // Ottieni un singolo pacchetto per ID
   getById: async (id) => {
     try {
-      const response = await api.get(`/api/packages/${id}`);
+      const response = await api.get(`/packages/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -24,7 +24,7 @@ const packageService = {
   // Acquista un pacchetto
   purchase: async (packageId) => {
     try {
-      const response = await api.post(`/api/packages/${packageId}/acquista`);
+      const response = await api.post(`/packages/${packageId}/acquista`);
       return response.data;
     } catch (error) {
       throw error;
@@ -34,7 +34,7 @@ const packageService = {
   // Ottieni lo stato di una sessione di pagamento
   getCheckoutStatus: async (sessionId) => {
     try {
-      const response = await api.get(`/api/packages/checkout-status/${sessionId}`);
+      const response = await api.get(`/packages/checkout-status/${sessionId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -44,7 +44,7 @@ const packageService = {
   // Ottieni gli ordini dell'utente corrente
   getUserOrders: async () => {
     try {
-      const response = await api.get('/api/packages/ordini');
+      const response = await api.get('/packages/ordini');
       return response.data;
     } catch (error) {
       throw error;

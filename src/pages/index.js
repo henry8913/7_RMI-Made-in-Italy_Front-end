@@ -16,6 +16,8 @@ import Packages from "./Packages";
 import PackageDetail from "./PackageDetail";
 import Jobs from "./Jobs";
 import FAQ from "./FAQ";
+import Login from "./Login";
+import Register from "./Register";
 
 export {
   Home,
@@ -36,4 +38,6 @@ export {
   PackageDetail,
   Jobs,
   FAQ,
+  Login,
+  Register,
 };
