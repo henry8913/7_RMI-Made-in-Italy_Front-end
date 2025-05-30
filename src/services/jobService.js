@@ -1,0 +1,63 @@
+import api from './api';
+
+const jobService = {
+  // Ottieni tutte le offerte di lavoro disponibili
+  getAll: async () => {
+    try {
+      const response = await api.get('/api/jobs');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Ottieni un'offerta di lavoro specifica per ID
+  getById: async (id) => {
+    try {
+      const response = await api.get(`/api/jobs/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Candidati per un'offerta di lavoro
+  apply: async (jobId, applicationData) => {
+    try {
+      const formData = new FormData();
+      
+      // Aggiungi i dati del candidato
+      Object.keys(applicationData).forEach(key => {
+        if (key !== 'cv') {
+          formData.append(key, applicationData[key]);
+        }
+      });
+      
+      // Aggiungi il CV se presente
+      if (applicationData.cv) {
+        formData.append('cv', applicationData.cv);
+      }
+      
+      const response = await api.post(`/api/jobs/${jobId}/apply`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Ottieni le candidature dell'utente corrente
+  getUserApplications: async () => {
+    try {
+      const response = await api.get('/api/jobs/applications');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+};
+
+export default jobService;

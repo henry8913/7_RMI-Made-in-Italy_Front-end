@@ -1,68 +1,124 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700;800&family=Roboto+Mono&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer base {
+  html {
+    @apply scroll-smooth;
   }
-  a:hover {
-    color: #747bff;
+  
+  body {
+    @apply font-sans bg-secondary-950 text-white antialiased;
+    background-image: linear-gradient(to bottom, rgba(15, 15, 15, 0.99), rgba(15, 15, 15, 0.95)),
+      url('/src/assets/images/texture.png');
+    background-attachment: fixed;
   }
-  button {
-    background-color: #f9f9f9;
+
+  h1, h2, h3 {
+    @apply font-heading font-medium tracking-tight;
   }
+
+  h4, h5, h6 {
+    @apply font-display font-medium;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  .luxury-card {
+    @apply bg-secondary-900/80 backdrop-blur-sm border border-secondary-800 rounded-lg shadow-elegant transition-all duration-400;
+  }
+
+  .luxury-card:hover {
+    @apply shadow-luxury border-secondary-700 transform -translate-y-1;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600;
+  }
+
+  .btn-hover-effect {
+    @apply relative overflow-hidden transition-all duration-400;
+  }
+
+  .btn-hover-effect::after {
+    @apply content-[''] absolute top-0 h-full w-0 left-0 bg-white/10 transition-all duration-400;
+  }
+
+  .btn-hover-effect:hover::after {
+    @apply w-full;
+  }
+
+  /* Stile Bizzarrini */
+  .glass-effect {
+    @apply bg-secondary-950/90 backdrop-blur-md border-b border-secondary-900;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-heading font-medium mb-8;
+  }
+
+  .section-subtitle {
+    @apply text-xl md:text-2xl font-heading text-primary mb-12;
+  }
+
+  .bizzarrini-card {
+    @apply bg-secondary-900/50 backdrop-blur-sm border-t border-primary/20 p-8 transition-all duration-500;
+  }
+
+  .bizzarrini-card:hover {
+    @apply border-primary/50 bg-secondary-900/70;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B8941E;
+}
+
+/* Animations */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Luxury hover effects */
+.image-zoom-container {
+  @apply overflow-hidden;
+}
+
+.image-zoom {
+  @apply transition-transform duration-700 ease-in-out;
+}
+
+.image-zoom:hover {
+  @apply transform scale-105;
 }
