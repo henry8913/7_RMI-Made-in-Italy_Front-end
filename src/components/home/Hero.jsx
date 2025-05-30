@@ -47,12 +47,12 @@ const Hero = () => {
           </motion.h1>
           
           <motion.p 
-            className="text-base md:text-lg text-secondary-300 mb-12 max-w-2xl font-light leading-relaxed tracking-wide"
+            className="text-base md:text-lg text-secondary-300 mb-8 max-w-2xl font-light leading-relaxed tracking-wide" /* Ridotto da mb-12 a mb-8 */
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.5 }}
           >
-            Trasformiamo le auto classiche italiane in capolavori moderni, unendo l'artigianato tradizionale con tecnologie all'avanguardia per creare restomods unici e straordinari.
+            RMI Made in Italy trasforma auto d'epoca italiane in capolavori moderni, mantenendo l'anima classica ma aggiungendo tecnologia e prestazioni contemporanee.
           </motion.p>
           
           <motion.div 

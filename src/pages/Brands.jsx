@@ -75,10 +75,10 @@ const Brands = () => {
       </section>
 
       {/* Brands Grid */}
-      <section className="section-padding">
+      <section className="py-16 md:py-20"> {/* Modificato da section-padding a py-16 md:py-20 */}
         <div className="container-custom">
           {loading ? (
-            <div className="flex justify-center items-center py-20">
+            <div className="flex justify-center items-center py-16"> {/* Ridotto da py-20 a py-16 */}
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
             </div>
           ) : error ? (

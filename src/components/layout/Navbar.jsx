@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import Logo from '../../assets/images/logo.svg';
+import CartIcon from '../CartIcon';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,7 +80,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-10">
+          <div className="hidden lg:flex items-center space-x-8">  {/* Ridotto da space-x-10 a space-x-8 per ottimizzare lo spazio */}
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -94,8 +95,11 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* User Menu & Mobile Menu Button */}
+          {/* User Menu, Cart & Mobile Menu Button */}
           <div className="flex items-center space-x-6">
+            {/* Cart Icon */}
+            <CartIcon />
+            
             {/* User Menu */}
             {currentUser ? (
               <div className="relative">
@@ -180,6 +184,12 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
+              <Link
+                to="/cart"
+                className={`block px-4 py-2 text-xs uppercase tracking-[0.3em] font-extralight transition-all duration-300 ${isActive('/cart') ? 'text-primary' : 'text-white hover:text-primary'}`}
+              >
+                Carrello
+              </Link>
               {!currentUser && (
                 <Link
                   to="/login"

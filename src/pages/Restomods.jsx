@@ -152,13 +152,13 @@ const Restomods = () => {
       <section className="relative h-[40vh] overflow-hidden bg-gradient-to-b from-primary-950 to-secondary-950">
         <div className="absolute inset-0 bg-pattern opacity-10"></div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="container-custom text-center">
+          <div className="container-custom text-center pt-5">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold mb-4">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold mb-4 pt-5">
                 <span className="text-gradient">Restomods</span> Collection
               </h1>
               <p className="text-xl text-secondary-300 max-w-3xl mx-auto mb-8">

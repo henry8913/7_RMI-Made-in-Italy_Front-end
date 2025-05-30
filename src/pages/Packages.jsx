@@ -45,11 +45,15 @@ const Packages = () => {
 
     try {
       setPurchasing(packageId);
-      const response = await packageService.purchasePackage(packageId);
-
-      // Redirect to Stripe checkout
-      if (response.checkoutUrl) {
-        window.location.href = response.checkoutUrl;
+      
+      // Trova il pacchetto selezionato
+      const selectedPackage = packages.find(pkg => pkg._id === packageId);
+      
+      if (selectedPackage) {
+        // Naviga alla pagina di dettaglio del pacchetto
+        navigate(`/packages/${packageId}`);
+      } else {
+        throw new Error("Pacchetto non trovato");
       }
     } catch (err) {
       console.error("Errore nell'acquisto del pacchetto:", err);
@@ -187,7 +191,7 @@ const Packages = () => {
                           Elaborazione...
                         </div>
                       ) : (
-                        "Acquista ora"
+                        "Scopri di più"
                       )}
                     </button>
                   </div>

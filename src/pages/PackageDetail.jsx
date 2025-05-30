@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import { packageService } from "../services";
 import { Button } from "../components/ui";
 import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
+import { toast } from "react-toastify";
 
 const PackageDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { addToCart } = useCart();
 
   const [packageData, setPackageData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +39,7 @@ const PackageDetail = () => {
     }
   }, [id]);
 
-  const handlePurchase = async () => {
+  const handlePurchase = () => {
     if (!isAuthenticated) {
       navigate("/auth", { state: { from: `/packages/${id}` } });
       return;
@@ -44,16 +47,30 @@ const PackageDetail = () => {
 
     try {
       setPurchasing(true);
-      const response = await packageService.purchasePackage(id);
-
-      // Redirect to Stripe checkout
-      if (response.checkoutUrl) {
-        window.location.href = response.checkoutUrl;
-      }
+      
+      // Aggiungi il pacchetto al carrello
+      const cartItem = {
+        id: packageData._id,
+        type: 'Package',
+        name: packageData.nome,
+        price: packageData.prezzo,
+        image: packageData.immagine,
+        duration: packageData.durata,
+        features: packageData.caratteristiche ? packageData.caratteristiche.slice(0, 3) : []
+      };
+      
+      addToCart(cartItem);
+      toast.success("Pacchetto aggiunto al carrello!");
+      
+      // Redirect al carrello
+      setTimeout(() => {
+        setPurchasing(false);
+        navigate("/cart");
+      }, 500);
     } catch (err) {
-      console.error("Errore nell'acquisto del pacchetto:", err);
-      alert(
-        "Si è verificato un errore nell'acquisto del pacchetto. Riprova più tardi."
+      console.error("Errore nell'aggiunta del pacchetto al carrello:", err);
+      toast.error(
+        "Si è verificato un errore nell'aggiunta del pacchetto al carrello. Riprova più tardi."
       );
       setPurchasing(false);
     }
@@ -82,9 +99,9 @@ const PackageDetail = () => {
   return (
     <div className="min-h-screen bg-secondary-900 text-white">
       {/* Hero Section */}
-      <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
+      <section className="relative py-20 md:py-24 overflow-hidden"> 
         <div className="absolute inset-0 bg-black/60 z-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900 z-20"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-secondary-950 z-20"></div>
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: packageData.immagine ? `url('${packageData.immagine}')` : `url('/images/package-detail-hero.jpg')` }}
@@ -312,12 +329,17 @@ const PackageDetail = () => {
                       Elaborazione...
                     </div>
                   ) : (
-                    "Acquista ora"
+                    <div className="flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                      </svg>
+                      Aggiungi al carrello
+                    </div>
                   )}
                 </button>
 
                 <div className="text-center text-sm text-secondary-400">
-                  <p>Pagamento sicuro tramite Stripe</p>
+                  <p>Pagamento sicuro</p>
                   <p className="mt-2">Garanzia di rimborso di 14 giorni</p>
                 </div>
               </motion.div>
