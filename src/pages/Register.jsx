@@ -105,7 +105,7 @@ const Register = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = authService.getGoogleAuthUrl();
+    window.location.href = '/api/auth/google';
   };
 
   return (

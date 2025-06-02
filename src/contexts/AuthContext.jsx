@@ -131,6 +131,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    setAuthToken,
   };
 
   return (

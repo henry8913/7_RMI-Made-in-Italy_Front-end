@@ -21,6 +21,7 @@ import {
   FAQ,
   Login,
   Register,
+  GoogleAuthCallback,
 } from "./pages";
 
 import {
@@ -34,6 +35,9 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Rotta per il callback di autenticazione Google */}
+        <Route path="/auth/google/success" element={<GoogleAuthCallback />} />
+        
         {/* Rotte con layout comune (navbar e footer) */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
