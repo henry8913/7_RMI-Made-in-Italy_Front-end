@@ -1,49 +1,65 @@
 import api from './api';
 
-const authService = {
+// Servizio per la gestione dell'autenticazione
+export const authService = {
+  api,
+
   // Registrazione utente
-  register: async (userData) => {
+  async register(userData) {
     try {
-      const response = await api.post('/api/auth/register', userData);
+      const response = await api.post('/auth/register', userData);
       return response.data;
     } catch (error) {
+      console.error('Errore durante la registrazione:', error);
       throw error;
     }
   },
 
   // Login utente
-  login: async (credentials) => {
+  async login(credentials) {
     try {
-      const response = await api.post('/api/auth/login', credentials);
+      const response = await api.post('/auth/login', credentials);
       return response.data;
     } catch (error) {
+      console.error('Errore durante il login:', error);
       throw error;
     }
   },
 
   // Logout utente
-  logout: async () => {
+  async logout() {
     try {
-      const response = await api.post('/api/auth/logout');
-      return response.data;
+      // Rimuovi il token dal localStorage
+      localStorage.removeItem('token');
+      // Rimuovi l'header di autorizzazione
+      delete api.defaults.headers.common['Authorization'];
+      return { success: true };
     } catch (error) {
+      console.error('Errore durante il logout:', error);
       throw error;
     }
   },
 
-  // Ottieni utente corrente
-  getCurrentUser: async () => {
+  // Ottieni l'utente corrente
+  async getCurrentUser() {
     try {
-      const response = await api.get('/api/auth/me');
+      const response = await api.get('/auth/profile');
       return response.data;
     } catch (error) {
+      console.error('Errore durante il recupero dell\'utente corrente:', error);
       throw error;
     }
   },
 
-  // URL per login con Google
-  getGoogleAuthUrl: () => {
-    return `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`;
+  // Ottieni l'URL per l'autenticazione Google
+  async getGoogleAuthUrl() {
+    try {
+      const response = await api.get('/auth/google');
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante il recupero dell\'URL di autenticazione Google:', error);
+      throw error;
+    }
   },
 };
 

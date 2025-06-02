@@ -19,6 +19,8 @@ import {
   PackageDetail,
   Jobs,
   FAQ,
+  Login,
+  Register,
 } from "./pages";
 
 import {
@@ -51,6 +53,8 @@ function App() {
           <Route path="packages/:id" element={<PackageDetail />} />
           <Route path="jobs" element={<Jobs />} />
           <Route path="faq" element={<FAQ />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
           
           {/* Rotte per i servizi */}
           <Route path="services/restoration" element={<Restoration />} />

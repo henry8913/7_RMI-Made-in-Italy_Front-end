@@ -4,7 +4,7 @@ const jobService = {
   // Ottieni tutte le offerte di lavoro disponibili
   getAll: async () => {
     try {
-      const response = await api.get('/api/jobs');
+      const response = await api.get('/jobs');
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ const jobService = {
   // Ottieni un'offerta di lavoro specifica per ID
   getById: async (id) => {
     try {
-      const response = await api.get(`/api/jobs/${id}`);
+      const response = await api.get(`/jobs/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -38,7 +38,7 @@ const jobService = {
         formData.append('cv', applicationData.cv);
       }
       
-      const response = await api.post(`/api/jobs/${jobId}/apply`, formData, {
+      const response = await api.post(`/jobs/${jobId}/apply`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -52,7 +52,7 @@ const jobService = {
   // Ottieni le candidature dell'utente corrente
   getUserApplications: async () => {
     try {
-      const response = await api.get('/api/jobs/applications');
+      const response = await api.get('/jobs/applications');
       return response.data;
     } catch (error) {
       throw error;
