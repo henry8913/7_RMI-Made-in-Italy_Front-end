@@ -24,9 +24,13 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor per gestire gli errori
+// Interceptor per gestire le risposte e gli errori
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Log per debug delle risposte
+    console.log(`API Response [${response.config.method.toUpperCase()}] ${response.config.url}:`, response.data);
+    return response;
+  },
   (error) => {
     // Gestisci errori di autenticazione (401)
     if (error.response && error.response.status === 401) {

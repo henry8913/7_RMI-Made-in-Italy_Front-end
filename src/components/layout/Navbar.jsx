@@ -131,6 +131,15 @@ const Navbar = () => {
                         >
                           Profilo
                         </Link>
+                        {currentUser && currentUser.ruolo === 'admin' && (
+                          <Link
+                            to="/admin"
+                            className="flex items-center px-4 py-3 text-xs text-white hover:text-primary transition-all duration-300 font-extralight tracking-[0.15em]"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            Amministrazione
+                          </Link>
+                        )}
                         <button
                           onClick={handleLogout}
                           className="flex items-center w-full px-4 py-3 text-xs text-white hover:text-primary transition-all duration-300 font-extralight tracking-[0.15em]"
@@ -190,6 +199,14 @@ const Navbar = () => {
               >
                 Carrello
               </Link>
+              {currentUser && currentUser.ruolo === 'admin' && (
+                <Link
+                  to="/admin"
+                  className={`block px-4 py-2 text-xs uppercase tracking-[0.3em] font-extralight transition-all duration-300 ${isActive('/admin') ? 'text-primary' : 'text-white hover:text-primary'}`}
+                >
+                  Amministrazione
+                </Link>
+              )}
               {!currentUser && (
                 <Link
                   to="/login"

@@ -24,6 +24,7 @@ import {
   GoogleAuthCallback,
   Cart,
   CheckoutSuccess,
+  Admin,
 } from "./pages";
 
 import {
@@ -69,6 +70,7 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout-success" element={<CheckoutSuccess />} />
+            <Route path="admin" element={<Admin />} />
             
             {/* Rotte per i servizi */}
             <Route path="services/restoration" element={<Restoration />} />

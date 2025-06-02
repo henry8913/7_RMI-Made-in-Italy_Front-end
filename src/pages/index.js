@@ -21,6 +21,7 @@ import Register from "./Register";
 import GoogleAuthCallback from './GoogleAuthCallback';
 import Cart from './Cart';
 import CheckoutSuccess from './CheckoutSuccess';
+import Admin from './Admin';
 
 export {
   Home,
@@ -46,4 +47,5 @@ export {
   GoogleAuthCallback,
   Cart,
   CheckoutSuccess,
+  Admin,
 };
