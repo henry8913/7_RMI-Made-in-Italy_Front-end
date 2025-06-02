@@ -17,7 +17,8 @@ const Admin = () => {
     blogs: 0,
     packages: 0,
     messages: 0,
-    jobs: 0
+    jobs: 0,
+    customRequests: 0
   });
 
   // Scroll to top when component mounts
@@ -65,32 +66,52 @@ const Admin = () => {
     { id: 'blogs', name: 'Blog', icon: <FaBlog /> },
     { id: 'packages', name: 'Pacchetti', icon: <FaBox /> },
     { id: 'jobs', name: 'Lavori', icon: <FaBriefcase /> },
+    { id: 'customRequests', name: 'Richieste Personalizzate', icon: <FaEnvelope /> },
   ];
 
   // Componente per la dashboard
-  const Dashboard = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {Object.entries(stats).map(([key, value]) => (
-        <div key={key} className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-secondary-400 text-sm capitalize">{key}</p>
-              <h3 className="text-white text-2xl font-medium mt-1">{value}</h3>
-            </div>
-            <div className="text-primary text-2xl">
-              {key === 'users' && <FaUsers />}
-              {key === 'restomods' && <FaCar />}
-              {key === 'brands' && <FaBuilding />}
-              {key === 'blogs' && <FaBlog />}
-              {key === 'packages' && <FaBox />}
-              {key === 'messages' && <FaEnvelope />}
-              {key === 'jobs' && <FaBriefcase />}
+  const Dashboard = () => {
+    // Funzione per ottenere il nome visualizzato per ogni statistica
+    const getDisplayName = (key) => {
+      const displayNames = {
+        users: 'Utenti',
+        restomods: 'Restomods',
+        brands: 'Marchi',
+        blogs: 'Articoli Blog',
+        packages: 'Pacchetti',
+        messages: 'Messaggi',
+        jobs: 'Lavori',
+        customRequests: 'Richieste Personalizzate'
+      };
+      return displayNames[key] || key;
+    };
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {Object.entries(stats).map(([key, value]) => (
+          <div key={key} className="bg-secondary-900 p-6 rounded-sm border border-secondary-800 hover:border-primary transition-colors duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-secondary-400 text-sm">{getDisplayName(key)}</p>
+                <h3 className="text-white text-2xl font-medium mt-1">{value}</h3>
+              </div>
+              <div className="text-primary text-2xl">
+                {key === 'users' && <FaUsers />}
+                {key === 'restomods' && <FaCar />}
+                {key === 'brands' && <FaBuilding />}
+                {key === 'blogs' && <FaBlog />}
+                {key === 'packages' && <FaBox />}
+                {key === 'messages' && <FaEnvelope />}
+                {key === 'jobs' && <FaBriefcase />}
+                {key === 'customRequests' && <FaEnvelope />}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    );
+  };
+
 
   // Componente per la gestione degli utenti
   const UsersManagement = () => {
@@ -136,10 +157,10 @@ const Admin = () => {
 
     // Gestisce i cambiamenti nei campi del form
     const handleInputChange = (e) => {
-      const { name, value } = e.target;
+      const { name, value, type, checked } = e.target;
       setFormData({
         ...formData,
-        [name]: value
+        [name]: type === 'checkbox' ? checked : value
       });
     };
 
@@ -238,11 +259,11 @@ const Admin = () => {
                 Annulla
               </button>
               <button
-                onClick={handleSaveChanges}
+                onClick={editingPackage._id ? handleSaveChanges : handleSaveNewPackage}
                 disabled={loading}
                 className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
+                {loading ? 'Salvataggio...' : (editingPackage._id ? 'Salva Modifiche' : 'Crea Pacchetto')}
               </button>
             </div>
           </div>
@@ -321,7 +342,6 @@ const Admin = () => {
       anno: '',
       descrizione: '',
       prezzo: '',
-      immagine: '',
       immagini: []
     });
 
@@ -349,22 +369,67 @@ const Admin = () => {
       setEditingRestomod(restomod);
       setFormData({
         nome: restomod.nome,
-        marca: restomod.marca,
-        modello: restomod.modello,
+        marca: restomod.marca || '',
+        modello: restomod.modello || '',
         anno: restomod.anno,
         descrizione: restomod.descrizione,
         prezzo: restomod.prezzo,
-        immagine: restomod.immagine || '',
         immagini: restomod.immagini || []
       });
     };
 
     // Gestisce i cambiamenti nei campi del form
     const handleInputChange = (e) => {
-      const { name, value } = e.target;
+      const { name, value, type, checked } = e.target;
       setFormData({
         ...formData,
-        [name]: value
+        [name]: type === 'checkbox' ? checked : value
+      });
+    };
+
+    // Gestisce l'aggiunta di una nuova immagine
+    const handleAddImage = () => {
+      setFormData({
+        ...formData,
+        immagini: [...formData.immagini, { url: '', alt: '', isPrimary: formData.immagini.length === 0 }]
+      });
+    };
+
+    // Gestisce la modifica di un'immagine esistente
+    const handleImageChange = (index, field, value) => {
+      const updatedImages = [...formData.immagini];
+      updatedImages[index] = { ...updatedImages[index], [field]: value };
+      setFormData({
+        ...formData,
+        immagini: updatedImages
+      });
+    };
+
+    // Gestisce l'impostazione di un'immagine come primaria
+    const handleSetPrimary = (index) => {
+      const updatedImages = formData.immagini.map((img, i) => ({
+        ...img,
+        isPrimary: i === index
+      }));
+      setFormData({
+        ...formData,
+        immagini: updatedImages
+      });
+    };
+
+    // Gestisce la rimozione di un'immagine
+    const handleRemoveImage = (index) => {
+      const updatedImages = [...formData.immagini];
+      updatedImages.splice(index, 1);
+      
+      // Se abbiamo rimosso l'immagine primaria e ci sono ancora immagini, impostiamo la prima come primaria
+      if (updatedImages.length > 0 && !updatedImages.some(img => img.isPrimary)) {
+        updatedImages[0].isPrimary = true;
+      }
+      
+      setFormData({
+        ...formData,
+        immagini: updatedImages
       });
     };
 
@@ -409,8 +474,14 @@ const Admin = () => {
     };
 
     // Formatta il prezzo
-    const formatPrice = (price) => {
-      return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(price);
+    const formatPrice = (price, currency = 'EUR') => {
+      return new Intl.NumberFormat('it-IT', { style: 'currency', currency }).format(price);
+    };
+    
+    // Ottiene l'immagine principale o la prima disponibile
+    const getPrimaryImage = (images) => {
+      if (!images || images.length === 0) return null;
+      return images.find(img => img.isPrimary) || images[0];
     };
 
     return (
@@ -477,17 +548,6 @@ const Admin = () => {
                   className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
                 />
               </div>
-              <div>
-                <label className="block text-secondary-400 mb-2">Immagine URL</label>
-                <input
-                  type="text"
-                  name="immagine"
-                  value={formData.immagine}
-                  onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
-                  placeholder="URL dell'immagine principale"
-                />
-              </div>
               <div className="md:col-span-2">
                 <label className="block text-secondary-400 mb-2">Descrizione</label>
                 <textarea
@@ -498,8 +558,90 @@ const Admin = () => {
                   className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
                 ></textarea>
               </div>
+              
+              {/* Gestione immagini */}
+              <div className="md:col-span-2 mt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h5 className="text-white text-md">Immagini</h5>
+                  <button
+                    type="button"
+                    onClick={handleAddImage}
+                    className="px-3 py-1 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors text-sm"
+                  >
+                    Aggiungi Immagine
+                  </button>
+                </div>
+                
+                {formData.immagini.length === 0 ? (
+                  <div className="text-secondary-400 text-center py-4 border border-dashed border-secondary-700 rounded-sm">
+                    Nessuna immagine. Clicca "Aggiungi Immagine" per iniziare.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {formData.immagini.map((img, index) => (
+                      <div key={index} className="p-4 border border-secondary-700 rounded-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                          <div className="md:col-span-2">
+                            <label className="block text-secondary-400 mb-2">URL Immagine</label>
+                            <input
+                              type="text"
+                              value={img.url}
+                              onChange={(e) => handleImageChange(index, 'url', e.target.value)}
+                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                              placeholder="https://esempio.com/immagine.jpg"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-secondary-400 mb-2">Testo Alternativo</label>
+                            <input
+                              type="text"
+                              value={img.alt}
+                              onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
+                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                              placeholder="Descrizione immagine"
+                            />
+                          </div>
+                        </div>
+                        
+                        {img.url && (
+                          <div className="mb-3">
+                            <img 
+                              src={img.url} 
+                              alt={img.alt || 'Anteprima'} 
+                              className="h-32 object-cover rounded-sm border border-secondary-700"
+                            />
+                          </div>
+                        )}
+                        
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id={`primary-${index}`}
+                              name="primaryImage"
+                              checked={img.isPrimary}
+                              onChange={() => handleSetPrimary(index)}
+                              className="mr-2"
+                            />
+                            <label htmlFor={`primary-${index}`} className="text-secondary-400 text-sm">
+                              Immagine principale
+                            </label>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(index)}
+                            className="text-red-400 hover:text-red-300 text-sm"
+                          >
+                            Rimuovi
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={handleCancelEdit}
                 className="px-4 py-2 bg-secondary-800 text-white rounded-sm hover:bg-secondary-700 transition-colors"
@@ -511,7 +653,7 @@ const Admin = () => {
                 disabled={loading}
                 className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
+                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Restomod' : 'Salva Modifiche')}
               </button>
             </div>
           </div>
@@ -526,6 +668,7 @@ const Admin = () => {
             <table className="w-full text-sm text-left text-white">
               <thead className="text-xs uppercase bg-secondary-800">
                 <tr>
+                  <th className="px-6 py-3">Immagine</th>
                   <th className="px-6 py-3">Nome</th>
                   <th className="px-6 py-3">Marca</th>
                   <th className="px-6 py-3">Modello</th>
@@ -538,6 +681,19 @@ const Admin = () => {
                 {restomods.length > 0 ? (
                   restomods.map((restomod) => (
                     <tr key={restomod._id} className="border-b border-secondary-800">
+                      <td className="px-6 py-4">
+                        {restomod.immagini && restomod.immagini.length > 0 ? (
+                          <img 
+                            src={getPrimaryImage(restomod.immagini)?.url} 
+                            alt={getPrimaryImage(restomod.immagini)?.alt || restomod.nome} 
+                            className="h-16 w-24 object-cover rounded-sm"
+                          />
+                        ) : (
+                          <div className="h-16 w-24 bg-secondary-800 flex items-center justify-center rounded-sm">
+                            <span className="text-secondary-500 text-xs">No img</span>
+                          </div>
+                        )}
+                      </td>
                       <td className="px-6 py-4">{restomod.nome}</td>
                       <td className="px-6 py-4">{restomod.marca}</td>
                       <td className="px-6 py-4">{restomod.modello}</td>
@@ -563,7 +719,7 @@ const Admin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center">
+                    <td colSpan="7" className="px-6 py-4 text-center">
                       Nessun restomod trovato
                     </td>
                   </tr>
@@ -587,7 +743,15 @@ const Admin = () => {
       nome: '',
       descrizione: '',
       logo: '',
-      paese: ''
+      storia: '',
+      sede: '',
+      annoFondazione: '',
+      sito: '',
+      contatti: {
+        email: '',
+        telefono: ''
+      },
+      immagini: []
     });
 
     // Carica i marchi
@@ -613,19 +777,66 @@ const Admin = () => {
     const handleEditClick = (brand) => {
       setEditingBrand(brand);
       setFormData({
-        nome: brand.nome,
-        descrizione: brand.descrizione,
-        logo: brand.logo,
-        paese: brand.paese
+        nome: brand.nome || '',
+        descrizione: brand.descrizione || '',
+        logo: brand.logo || '',
+        storia: brand.storia || '',
+        sede: brand.sede || '',
+        annoFondazione: brand.annoFondazione || '',
+        sito: brand.sito || '',
+        contatti: {
+          email: brand.contatti?.email || '',
+          telefono: brand.contatti?.telefono || ''
+        },
+        immagini: brand.immagini || []
       });
     };
 
     // Gestisce i cambiamenti nei campi del form
     const handleInputChange = (e) => {
       const { name, value } = e.target;
+      if (name.startsWith('contatti.')) {
+        const field = name.split('.')[1];
+        setFormData({
+          ...formData,
+          contatti: {
+            ...formData.contatti,
+            [field]: value
+          }
+        });
+      } else {
+        setFormData({
+          ...formData,
+          [name]: value
+        });
+      }
+    };
+
+    // Gestisce l'aggiunta di una nuova immagine
+    const handleAddImage = () => {
       setFormData({
         ...formData,
-        [name]: value
+        immagini: [...formData.immagini, { url: '', alt: '' }]
+      });
+    };
+
+    // Gestisce la modifica di un'immagine esistente
+    const handleImageChange = (index, field, value) => {
+      const updatedImages = [...formData.immagini];
+      updatedImages[index] = { ...updatedImages[index], [field]: value };
+      setFormData({
+        ...formData,
+        immagini: updatedImages
+      });
+    };
+
+    // Gestisce la rimozione di un'immagine
+    const handleRemoveImage = (index) => {
+      const updatedImages = [...formData.immagini];
+      updatedImages.splice(index, 1);
+      setFormData({
+        ...formData,
+        immagini: updatedImages
       });
     };
 
@@ -668,6 +879,12 @@ const Admin = () => {
     const handleCancelEdit = () => {
       setEditingBrand(null);
     };
+    
+    // Ottiene la prima immagine disponibile
+    const getFirstImage = (images) => {
+      if (!images || images.length === 0) return null;
+      return images[0];
+    };
 
     return (
       <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
@@ -694,16 +911,6 @@ const Admin = () => {
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Paese</label>
-                <input
-                  type="text"
-                  name="paese"
-                  value={formData.paese}
-                  onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
-                />
-              </div>
-              <div>
                 <label className="block text-secondary-400 mb-2">Logo URL</label>
                 <input
                   type="text"
@@ -713,18 +920,150 @@ const Admin = () => {
                   className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
                 />
               </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Sede</label>
+                <input
+                  type="text"
+                  name="sede"
+                  value={formData.sede}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Anno Fondazione</label>
+                <input
+                  type="number"
+                  name="annoFondazione"
+                  value={formData.annoFondazione}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Sito Web</label>
+                <input
+                  type="text"
+                  name="sito"
+                  value={formData.sito}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  placeholder="https://esempio.com"
+                />
+              </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Email</label>
+                <input
+                  type="email"
+                  name="contatti.email"
+                  value={formData.contatti.email}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  placeholder="info@esempio.com"
+                />
+              </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Telefono</label>
+                <input
+                  type="text"
+                  name="contatti.telefono"
+                  value={formData.contatti.telefono}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  placeholder="+39 123 456 7890"
+                />
+              </div>
               <div className="md:col-span-2">
                 <label className="block text-secondary-400 mb-2">Descrizione</label>
                 <textarea
                   name="descrizione"
                   value={formData.descrizione}
                   onChange={handleInputChange}
+                  rows="3"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                ></textarea>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-secondary-400 mb-2">Storia</label>
+                <textarea
+                  name="storia"
+                  value={formData.storia}
+                  onChange={handleInputChange}
                   rows="4"
                   className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
                 ></textarea>
               </div>
+              
+              {/* Gestione immagini */}
+              <div className="md:col-span-2 mt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h5 className="text-white text-md">Immagini</h5>
+                  <button
+                    type="button"
+                    onClick={handleAddImage}
+                    className="px-3 py-1 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors text-sm"
+                  >
+                    Aggiungi Immagine
+                  </button>
+                </div>
+                
+                {formData.immagini.length === 0 ? (
+                  <div className="text-secondary-400 text-center py-4 border border-dashed border-secondary-700 rounded-sm">
+                    Nessuna immagine. Clicca "Aggiungi Immagine" per iniziare.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {formData.immagini.map((img, index) => (
+                      <div key={index} className="p-4 border border-secondary-700 rounded-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                          <div>
+                            <label className="block text-secondary-400 mb-2">URL Immagine</label>
+                            <input
+                              type="text"
+                              value={img.url}
+                              onChange={(e) => handleImageChange(index, 'url', e.target.value)}
+                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                              placeholder="https://esempio.com/immagine.jpg"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-secondary-400 mb-2">Testo Alternativo</label>
+                            <input
+                              type="text"
+                              value={img.alt}
+                              onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
+                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                              placeholder="Descrizione immagine"
+                            />
+                          </div>
+                        </div>
+                        
+                        {img.url && (
+                          <div className="mb-3">
+                            <img 
+                              src={img.url} 
+                              alt={img.alt || 'Anteprima'} 
+                              className="h-32 object-cover rounded-sm border border-secondary-700"
+                            />
+                          </div>
+                        )}
+                        
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(index)}
+                            className="text-red-400 hover:text-red-300 text-sm"
+                          >
+                            Rimuovi
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={handleCancelEdit}
                 className="px-4 py-2 bg-secondary-800 text-white rounded-sm hover:bg-secondary-700 transition-colors"
@@ -736,7 +1075,7 @@ const Admin = () => {
                 disabled={loading}
                 className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
+                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Marchio' : 'Salva Modifiche')}
               </button>
             </div>
           </div>
@@ -751,9 +1090,11 @@ const Admin = () => {
             <table className="w-full text-sm text-left text-white">
               <thead className="text-xs uppercase bg-secondary-800">
                 <tr>
-                  <th className="px-6 py-3">Nome</th>
-                  <th className="px-6 py-3">Paese</th>
                   <th className="px-6 py-3">Logo</th>
+                  <th className="px-6 py-3">Nome</th>
+                  <th className="px-6 py-3">Sede</th>
+                  <th className="px-6 py-3">Anno</th>
+                  <th className="px-6 py-3">Immagini</th>
                   <th className="px-6 py-3">Azioni</th>
                 </tr>
               </thead>
@@ -761,11 +1102,32 @@ const Admin = () => {
                 {brands.length > 0 ? (
                   brands.map((brand) => (
                     <tr key={brand._id} className="border-b border-secondary-800">
-                      <td className="px-6 py-4">{brand.nome}</td>
-                      <td className="px-6 py-4">{brand.paese}</td>
                       <td className="px-6 py-4">
-                        {brand.logo && (
-                          <img src={brand.logo} alt={brand.nome} className="h-8 w-auto" />
+                        {brand.logo ? (
+                          <img src={brand.logo} alt={brand.nome} className="h-10 w-auto" />
+                        ) : (
+                          <div className="h-10 w-10 bg-secondary-800 flex items-center justify-center rounded-sm">
+                            <span className="text-secondary-500 text-xs">No logo</span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">{brand.nome}</td>
+                      <td className="px-6 py-4">{brand.sede}</td>
+                      <td className="px-6 py-4">{brand.annoFondazione}</td>
+                      <td className="px-6 py-4">
+                        {brand.immagini && brand.immagini.length > 0 ? (
+                          <div className="flex items-center">
+                            <img 
+                              src={getFirstImage(brand.immagini)?.url} 
+                              alt={getFirstImage(brand.immagini)?.alt || brand.nome} 
+                              className="h-10 w-16 object-cover rounded-sm mr-2"
+                            />
+                            {brand.immagini.length > 1 && (
+                              <span className="text-xs text-secondary-400">+{brand.immagini.length - 1}</span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-secondary-500 text-xs">Nessuna</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
@@ -788,7 +1150,7 @@ const Admin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="px-6 py-4 text-center">
+                    <td colSpan="6" className="px-6 py-4 text-center">
                       Nessun marchio trovato
                     </td>
                   </tr>
@@ -812,8 +1174,11 @@ const Admin = () => {
       contenuto: '',
       autore: '',
       immagineCopertina: '',
-      categorie: '',
-      stato: 'bozza'
+      categoria: '',
+      tags: '',
+      stato: 'bozza',
+      inEvidenza: false,
+      commentiAbilitati: true
     });
     const [isCreating, setIsCreating] = useState(false);
 
@@ -878,17 +1243,20 @@ const Admin = () => {
         contenuto: blog.contenuto,
         autore: blog.autore,
         immagineCopertina: blog.immagineCopertina,
-        categorie: blog.categorie ? blog.categorie.join(', ') : '',
-        stato: blog.stato || 'bozza'
+        categoria: blog.categoria || '',
+        tags: blog.tags ? blog.tags.join(', ') : '',
+        stato: blog.stato || 'bozza',
+        inEvidenza: blog.inEvidenza || false,
+        commentiAbilitati: blog.commentiAbilitati !== undefined ? blog.commentiAbilitati : true
       });
     };
 
     // Gestisce i cambiamenti nei campi del form
     const handleInputChange = (e) => {
-      const { name, value } = e.target;
+      const { name, value, type, checked } = e.target;
       setFormData({
         ...formData,
-        [name]: value
+        [name]: type === 'checkbox' ? checked : value
       });
     };
 
@@ -897,10 +1265,10 @@ const Admin = () => {
       setLoading(true);
       setError('');
       try {
-        // Converti le categorie da stringa a array
+        // Converti i tags da stringa a array
         const processedData = {
           ...formData,
-          categorie: formData.categorie.split(',').map(cat => cat.trim()).filter(cat => cat)
+          tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
         };
         
         let updatedBlog;
@@ -921,8 +1289,11 @@ const Admin = () => {
           contenuto: '',
           autore: '',
           immagineCopertina: '',
-          categorie: '',
-          stato: 'bozza'
+          categoria: '',
+          tags: '',
+          stato: 'bozza',
+          inEvidenza: false,
+          commentiAbilitati: true
         });
       } catch (err) {
         console.error('Errore durante il salvataggio del post del blog:', err);
@@ -970,6 +1341,46 @@ const Admin = () => {
         setLoading(false);
       }
     };
+    
+    // Gestisce il cambio dello stato di evidenza di un blog
+    const handleFeaturedToggle = async (blogId, currentFeatured) => {
+      setLoading(true);
+      setError('');
+      try {
+        await adminService.updateBlogFeaturedStatus(blogId, !currentFeatured);
+        setBlogs(blogs.map(blog => {
+          if (blog._id === blogId) {
+            return { ...blog, inEvidenza: !currentFeatured };
+          }
+          return blog;
+        }));
+      } catch (err) {
+        console.error('Errore durante l\'aggiornamento dello stato di evidenza del post del blog:', err);
+        setError('Impossibile aggiornare lo stato di evidenza del post del blog. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    // Gestisce il cambio dello stato dei commenti di un blog
+    const handleCommentsToggle = async (blogId, currentCommentsEnabled) => {
+      setLoading(true);
+      setError('');
+      try {
+        await adminService.updateBlogCommentsStatus(blogId, !currentCommentsEnabled);
+        setBlogs(blogs.map(blog => {
+          if (blog._id === blogId) {
+            return { ...blog, commentiAbilitati: !currentCommentsEnabled };
+          }
+          return blog;
+        }));
+      } catch (err) {
+        console.error('Errore durante l\'aggiornamento dello stato dei commenti del post del blog:', err);
+        setError('Impossibile aggiornare lo stato dei commenti del post del blog. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
     // Annulla la modifica
     const handleCancelEdit = () => {
@@ -980,8 +1391,11 @@ const Admin = () => {
         contenuto: '',
         autore: '',
         immagineCopertina: '',
-        categorie: '',
-        stato: 'bozza'
+        categoria: '',
+        tags: '',
+        stato: 'bozza',
+        inEvidenza: false,
+        commentiAbilitati: true
       });
     };
     
@@ -994,8 +1408,11 @@ const Admin = () => {
         contenuto: '',
         autore: '',
         immagineCopertina: '',
-        categorie: '',
-        stato: 'bozza'
+        categoria: '',
+        tags: '',
+        stato: 'bozza',
+        inEvidenza: false,
+        commentiAbilitati: true
       });
     };
 
@@ -1060,11 +1477,21 @@ const Admin = () => {
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Categorie (separate da virgola)</label>
+                <label className="block text-secondary-400 mb-2">Categoria</label>
                 <input
                   type="text"
-                  name="categorie"
-                  value={formData.categorie}
+                  name="categoria"
+                  value={formData.categoria}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Tags (separati da virgola)</label>
+                <input
+                  type="text"
+                  name="tags"
+                  value={formData.tags}
                   onChange={handleInputChange}
                   className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
                 />
@@ -1081,6 +1508,28 @@ const Admin = () => {
                   <option value="pubblicato">Pubblicato</option>
                   <option value="archiviato">Archiviato</option>
                 </select>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="inEvidenza"
+                  name="inEvidenza"
+                  checked={formData.inEvidenza}
+                  onChange={(e) => setFormData({...formData, inEvidenza: e.target.checked})}
+                  className="bg-secondary-800 border border-secondary-700 text-primary rounded-sm focus:ring-primary"
+                />
+                <label htmlFor="inEvidenza" className="text-secondary-400">In Evidenza</label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="commentiAbilitati"
+                  name="commentiAbilitati"
+                  checked={formData.commentiAbilitati}
+                  onChange={(e) => setFormData({...formData, commentiAbilitati: e.target.checked})}
+                  className="bg-secondary-800 border border-secondary-700 text-primary rounded-sm focus:ring-primary"
+                />
+                <label htmlFor="commentiAbilitati" className="text-secondary-400">Commenti Abilitati</label>
               </div>
               <div className="md:col-span-2">
                 <label className="block text-secondary-400 mb-2">Contenuto</label>
@@ -1101,11 +1550,11 @@ const Admin = () => {
                 Annulla
               </button>
               <button
-                onClick={handleSaveChanges}
+                onClick={editingPackage._id ? handleSaveChanges : handleSaveNewPackage}
                 disabled={loading}
                 className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
+                {loading ? 'Salvataggio...' : (editingPackage._id ? 'Salva Modifiche' : 'Crea Pacchetto')}
               </button>
             </div>
           </div>
@@ -1122,8 +1571,12 @@ const Admin = () => {
                 <tr>
                   <th className="px-6 py-3">Titolo</th>
                   <th className="px-6 py-3">Autore</th>
+                  <th className="px-6 py-3">Categoria</th>
                   <th className="px-6 py-3">Data</th>
                   <th className="px-6 py-3">Stato</th>
+                  <th className="px-6 py-3">Visualizzazioni</th>
+                  <th className="px-6 py-3">In Evidenza</th>
+                  <th className="px-6 py-3">Commenti</th>
                   <th className="px-6 py-3">Azioni</th>
                 </tr>
               </thead>
@@ -1137,6 +1590,7 @@ const Admin = () => {
                       <tr key={blog._id} className="border-b border-secondary-800">
                         <td className="px-6 py-4">{blog.titolo || 'Titolo non disponibile'}</td>
                         <td className="px-6 py-4">{blog.autore || 'Autore non disponibile'}</td>
+                        <td className="px-6 py-4">{blog.categoria || 'Non categorizzato'}</td>
                         <td className="px-6 py-4">
                           {blog.dataCreazione ? formatDate(blog.dataCreazione) : 'Data non disponibile'}
                         </td>
@@ -1149,6 +1603,21 @@ const Admin = () => {
                             {blog.stato === 'pubblicato' ? 'Pubblicato' : 
                              blog.stato === 'archiviato' ? 'Archiviato' : 'Bozza'}
                           </span>
+                        </td>
+                        <td className="px-6 py-4">{blog.visualizzazioni || 0}</td>
+                        <td className="px-6 py-4">
+                          {blog.inEvidenza ? (
+                            <span className="px-2 py-1 rounded-full text-xs bg-blue-900/20 text-blue-500">Sì</span>
+                          ) : (
+                            <span className="px-2 py-1 rounded-full text-xs bg-gray-900/20 text-gray-500">No</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {blog.commentiAbilitati ? (
+                            <span className="px-2 py-1 rounded-full text-xs bg-green-900/20 text-green-500">Abilitati</span>
+                          ) : (
+                            <span className="px-2 py-1 rounded-full text-xs bg-red-900/20 text-red-500">Disabilitati</span>
+                          )}
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex space-x-2">
@@ -1188,6 +1657,18 @@ const Admin = () => {
                                 Archivia
                               </button>
                             )}
+                            <button
+                              onClick={() => handleFeaturedToggle(blog._id, blog.inEvidenza)}
+                              className={`${blog.inEvidenza ? 'text-blue-400 hover:text-blue-300' : 'text-gray-400 hover:text-gray-300'}`}
+                            >
+                              {blog.inEvidenza ? 'Rimuovi Evidenza' : 'Metti in Evidenza'}
+                            </button>
+                            <button
+                              onClick={() => handleCommentsToggle(blog._id, blog.commentiAbilitati)}
+                              className={`${blog.commentiAbilitati ? 'text-green-400 hover:text-green-300' : 'text-red-400 hover:text-red-300'}`}
+                            >
+                              {blog.commentiAbilitati ? 'Disabilita Commenti' : 'Abilita Commenti'}
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -1195,7 +1676,7 @@ const Admin = () => {
                   }).filter(Boolean) // Filtra eventuali elementi null
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center">
+                    <td colSpan="9" className="px-6 py-4 text-center">
                       Nessun post del blog trovato
                     </td>
                   </tr>
@@ -1219,9 +1700,13 @@ const Admin = () => {
       nome: '',
       descrizione: '',
       prezzo: '',
+      valuta: 'EUR',
       durata: '',
-      inclusi: '',
-      immagine: ''
+      caratteristiche: '',
+      immagine: '',
+      attivo: true,
+      stripeProductId: '',
+      stripePriceId: ''
     });
 
     // Carica i pacchetti
@@ -1250,18 +1735,22 @@ const Admin = () => {
         nome: pkg.nome,
         descrizione: pkg.descrizione,
         prezzo: pkg.prezzo.toString(),
+        valuta: pkg.valuta || 'EUR',
         durata: pkg.durata,
-        inclusi: pkg.inclusi ? pkg.inclusi.join('\n') : '',
-        immagine: pkg.immagine || ''
+        caratteristiche: pkg.caratteristiche ? pkg.caratteristiche.join('\n') : '',
+        immagine: pkg.immagine || '',
+        attivo: pkg.attivo !== undefined ? pkg.attivo : true,
+        stripeProductId: pkg.stripeProductId || '',
+        stripePriceId: pkg.stripePriceId || ''
       });
     };
 
     // Gestisce i cambiamenti nei campi del form
     const handleInputChange = (e) => {
-      const { name, value } = e.target;
+      const { name, value, type, checked } = e.target;
       setFormData({
         ...formData,
-        [name]: value
+        [name]: type === 'checkbox' ? checked : value
       });
     };
 
@@ -1274,7 +1763,8 @@ const Admin = () => {
         const processedData = {
           ...formData,
           prezzo: parseFloat(formData.prezzo),
-          inclusi: formData.inclusi.split('\n').map(item => item.trim()).filter(item => item)
+          caratteristiche: formData.caratteristiche.split('\n').map(item => item.trim()).filter(item => item),
+          attivo: Boolean(formData.attivo)
         };
         
         const updatedPackage = await adminService.updatePackage(editingPackage._id, processedData);
@@ -1310,11 +1800,91 @@ const Admin = () => {
     // Annulla la modifica
     const handleCancelEdit = () => {
       setEditingPackage(null);
+      setFormData({
+        nome: '',
+        descrizione: '',
+        prezzo: '',
+        valuta: 'EUR',
+        durata: '',
+        caratteristiche: '',
+        immagine: '',
+        attivo: true,
+        stripeProductId: '',
+        stripePriceId: ''
+      });
+    };
+    
+    // Gestisce il toggle dello stato attivo di un pacchetto
+    const handleToggleActive = async (packageId, currentStatus) => {
+      setLoading(true);
+      setError('');
+      try {
+        const updatedPackage = await adminService.updatePackage(packageId, { attivo: !currentStatus });
+        setPackages(packages.map(pkg => pkg._id === packageId ? updatedPackage : pkg));
+      } catch (err) {
+        console.error('Errore durante l\'aggiornamento dello stato del pacchetto:', err);
+        setError('Impossibile aggiornare lo stato del pacchetto. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    // Gestisce la creazione di un nuovo pacchetto
+    const handleCreatePackage = () => {
+      setEditingPackage({});
+      setFormData({
+        nome: '',
+        descrizione: '',
+        prezzo: '',
+        valuta: 'EUR',
+        durata: '',
+        caratteristiche: '',
+        immagine: '',
+        attivo: true,
+        stripeProductId: '',
+        stripePriceId: ''
+      });
+    };
+
+    // Gestisce il salvataggio di un nuovo pacchetto
+    const handleSaveNewPackage = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        // Converti i campi necessari
+        const processedData = {
+          ...formData,
+          prezzo: parseFloat(formData.prezzo),
+          caratteristiche: formData.caratteristiche.split('\n').map(item => item.trim()).filter(item => item),
+          attivo: Boolean(formData.attivo)
+        };
+        
+        const newPackage = await adminService.createPackage(processedData);
+        setPackages([...packages, newPackage]);
+        setEditingPackage(null);
+        setFormData({
+          nome: '',
+          descrizione: '',
+          prezzo: '',
+          valuta: 'EUR',
+          durata: '',
+          caratteristiche: '',
+          immagine: '',
+          attivo: true,
+          stripeProductId: '',
+          stripePriceId: ''
+        });
+      } catch (err) {
+        console.error('Errore durante la creazione del pacchetto:', err);
+        setError('Impossibile creare il pacchetto. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     // Formatta il prezzo
-    const formatPrice = (price) => {
-      return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(price);
+    const formatPrice = (price, currency = 'EUR') => {
+      return new Intl.NumberFormat('it-IT', { style: 'currency', currency }).format(price);
     };
 
     return (
@@ -1342,14 +1912,26 @@ const Admin = () => {
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Prezzo (€)</label>
-                <input
-                  type="number"
-                  name="prezzo"
-                  value={formData.prezzo}
-                  onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
-                />
+                <label className="block text-secondary-400 mb-2">Prezzo</label>
+                <div className="flex">
+                  <input
+                    type="number"
+                    name="prezzo"
+                    value={formData.prezzo}
+                    onChange={handleInputChange}
+                    className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-l-sm"
+                  />
+                  <select
+                    name="valuta"
+                    value={formData.valuta}
+                    onChange={handleInputChange}
+                    className="bg-secondary-800 border border-secondary-700 text-white p-2 rounded-r-sm"
+                  >
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label className="block text-secondary-400 mb-2">Durata</label>
@@ -1371,6 +1953,39 @@ const Admin = () => {
                   className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
                 />
               </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Stato</label>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="attivo"
+                    checked={formData.attivo}
+                    onChange={(e) => setFormData({...formData, attivo: e.target.checked})}
+                    className="mr-2 h-4 w-4"
+                  />
+                  <span className="text-white">Pacchetto attivo</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Stripe Product ID</label>
+                <input
+                  type="text"
+                  name="stripeProductId"
+                  value={formData.stripeProductId}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Stripe Price ID</label>
+                <input
+                  type="text"
+                  name="stripePriceId"
+                  value={formData.stripePriceId}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                />
+              </div>
               <div className="md:col-span-2">
                 <label className="block text-secondary-400 mb-2">Descrizione</label>
                 <textarea
@@ -1382,10 +1997,10 @@ const Admin = () => {
                 ></textarea>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-secondary-400 mb-2">Inclusi (uno per riga)</label>
+                <label className="block text-secondary-400 mb-2">Caratteristiche (una per riga)</label>
                 <textarea
-                  name="inclusi"
-                  value={formData.inclusi}
+                  name="caratteristiche"
+                  value={formData.caratteristiche}
                   onChange={handleInputChange}
                   rows="6"
                   className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
@@ -1401,15 +2016,26 @@ const Admin = () => {
                 Annulla
               </button>
               <button
-                onClick={handleSaveChanges}
+                onClick={editingPackage._id ? handleSaveChanges : handleSaveNewPackage}
                 disabled={loading}
                 className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
+                {loading ? 'Salvataggio...' : (editingPackage._id ? 'Salva Modifiche' : 'Crea Pacchetto')}
               </button>
             </div>
           </div>
         ) : null}
+
+        {!editingPackage && (
+          <div className="mb-6">
+            <button
+              onClick={handleCreatePackage}
+              className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors"
+            >
+              Nuovo Pacchetto
+            </button>
+          </div>
+        )}
 
         {loading && !editingPackage ? (
           <div className="flex justify-center items-center h-64">
@@ -1422,7 +2048,9 @@ const Admin = () => {
                 <tr>
                   <th className="px-6 py-3">Nome</th>
                   <th className="px-6 py-3">Prezzo</th>
+                  <th className="px-6 py-3">Valuta</th>
                   <th className="px-6 py-3">Durata</th>
+                  <th className="px-6 py-3">Stato</th>
                   <th className="px-6 py-3">Azioni</th>
                 </tr>
               </thead>
@@ -1431,8 +2059,14 @@ const Admin = () => {
                   packages.map((pkg) => (
                     <tr key={pkg._id} className="border-b border-secondary-800">
                       <td className="px-6 py-4">{pkg.nome}</td>
-                      <td className="px-6 py-4">{formatPrice(pkg.prezzo)}</td>
+                      <td className="px-6 py-4">{formatPrice(pkg.prezzo, pkg.valuta)}</td>
+                      <td className="px-6 py-4">{pkg.valuta || 'EUR'}</td>
                       <td className="px-6 py-4">{pkg.durata}</td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2 py-1 rounded-full text-xs ${pkg.attivo ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}>
+                          {pkg.attivo ? 'Attivo' : 'Inattivo'}
+                        </span>
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex space-x-2">
                           <button
@@ -1440,6 +2074,12 @@ const Admin = () => {
                             className="text-blue-400 hover:text-blue-300"
                           >
                             Modifica
+                          </button>
+                          <button
+                            onClick={() => handleToggleActive(pkg._id, pkg.attivo)}
+                            className={pkg.attivo ? 'text-red-400 hover:text-red-300' : 'text-green-400 hover:text-green-300'}
+                          >
+                            {pkg.attivo ? 'Disattiva' : 'Attiva'}
                           </button>
                           <button
                             onClick={() => handleDeletePackage(pkg._id)}
@@ -1474,13 +2114,17 @@ const Admin = () => {
     const [editingJob, setEditingJob] = useState(null);
     const [formData, setFormData] = useState({
       titolo: '',
+      azienda: '',
       descrizione: '',
       requisiti: '',
-      tipo: 'Full-time',
+      tipo: 'full-time',
       luogo: '',
+      remoto: false,
       salarioMin: '',
       salarioMax: '',
-      dataScadenza: ''
+      valuta: 'EUR',
+      dataScadenza: '',
+      attivo: true
     });
 
     // Carica i lavori
@@ -1531,22 +2175,26 @@ const Admin = () => {
       
       setFormData({
         titolo: job.titolo,
+        azienda: job.azienda || '',
         descrizione: job.descrizione,
-        requisiti: job.requisiti,
+        requisiti: Array.isArray(job.requisiti) ? job.requisiti.join('\n') : job.requisiti,
         tipo: job.tipo,
         luogo: job.luogo,
+        remoto: job.remoto || false,
         salarioMin,
         salarioMax,
-        dataScadenza: job.dataScadenza ? new Date(job.dataScadenza).toISOString().split('T')[0] : ''
+        valuta: job.salario?.valuta || job.valuta || 'EUR',
+        dataScadenza: job.dataScadenza ? new Date(job.dataScadenza).toISOString().split('T')[0] : '',
+        attivo: job.attivo !== undefined ? job.attivo : true
       });
     };
 
     // Gestisce i cambiamenti nei campi del form
     const handleInputChange = (e) => {
-      const { name, value } = e.target;
+      const { name, value, type, checked } = e.target;
       setFormData({
         ...formData,
-        [name]: value
+        [name]: type === 'checkbox' ? checked : value
       });
     };
 
@@ -1558,14 +2206,14 @@ const Admin = () => {
         // Prepara i dati da inviare al backend
         const jobData = {
           ...formData,
-          // Formatta il salario come intervallo se entrambi i valori sono presenti
-          salario: formData.salarioMin && formData.salarioMax 
-            ? `${formData.salarioMin} - ${formData.salarioMax} €` 
-            : formData.salarioMin 
-              ? `${formData.salarioMin} €` 
-              : formData.salarioMax 
-                ? `${formData.salarioMax} €` 
-                : ''
+          // Converte i requisiti da stringa a array
+          requisiti: formData.requisiti ? formData.requisiti.split('\n').filter(req => req.trim() !== '') : [],
+          // Struttura il campo salario secondo lo schema
+          salario: {
+            min: formData.salarioMin ? parseFloat(formData.salarioMin) : undefined,
+            max: formData.salarioMax ? parseFloat(formData.salarioMax) : undefined,
+            valuta: formData.valuta
+          }
         };
         
         let updatedJob;
@@ -1579,13 +2227,17 @@ const Admin = () => {
         setEditingJob(null);
         setFormData({
           titolo: '',
+          azienda: '',
           descrizione: '',
           requisiti: '',
-          tipo: 'Full-time',
+          tipo: 'full-time',
           luogo: '',
+          remoto: false,
           salarioMin: '',
           salarioMax: '',
-          dataScadenza: ''
+          valuta: 'EUR',
+          dataScadenza: '',
+          attivo: true
         });
       } catch (err) {
         console.error('Errore durante il salvataggio del lavoro:', err);
@@ -1613,19 +2265,41 @@ const Admin = () => {
         setLoading(false);
       }
     };
+    
+    // Gestisce l'attivazione/disattivazione di un lavoro
+    const handleToggleActive = async (job) => {
+      setLoading(true);
+      setError('');
+      try {
+        const updatedJob = await adminService.updateJob(job._id, {
+          ...job,
+          attivo: !job.attivo
+        });
+        setJobs(jobs.map(j => j._id === updatedJob._id ? updatedJob : j));
+      } catch (err) {
+        console.error('Errore durante l\'aggiornamento dello stato del lavoro:', err);
+        setError('Impossibile aggiornare lo stato del lavoro. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
     // Annulla la modifica
     const handleCancelEdit = () => {
       setEditingJob(null);
       setFormData({
         titolo: '',
+        azienda: '',
         descrizione: '',
         requisiti: '',
-        tipo: 'Full-time',
+        tipo: 'full-time',
         luogo: '',
+        remoto: false,
         salarioMin: '',
         salarioMax: '',
-        dataScadenza: ''
+        valuta: 'EUR',
+        dataScadenza: '',
+        attivo: true
       });
     };
 
@@ -1634,13 +2308,17 @@ const Admin = () => {
       setEditingJob(null); // Non stiamo modificando un lavoro esistente
       setFormData({
         titolo: '',
+        azienda: '',
         descrizione: '',
         requisiti: '',
-        tipo: 'Full-time',
+        tipo: 'full-time',
         luogo: '',
+        remoto: false,
         salarioMin: '',
         salarioMax: '',
-        dataScadenza: ''
+        valuta: 'EUR',
+        dataScadenza: '',
+        attivo: true
       });
     };
 
@@ -1686,6 +2364,17 @@ const Admin = () => {
                 />
               </div>
               <div>
+                <label className="block text-secondary-400 mb-2">Azienda</label>
+                <input
+                  type="text"
+                  name="azienda"
+                  value={formData.azienda}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  required
+                />
+              </div>
+              <div>
                 <label className="block text-secondary-400 mb-2">Tipo</label>
                 <select
                   name="tipo"
@@ -1693,10 +2382,10 @@ const Admin = () => {
                   onChange={handleInputChange}
                   className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
                 >
-                  <option value="Full-time">Full-time</option>
-                  <option value="Part-time">Part-time</option>
-                  <option value="Freelance">Freelance</option>
-                  <option value="Stage">Stage</option>
+                  <option value="full-time">Full-time</option>
+                  <option value="part-time">Part-time</option>
+                  <option value="freelance">Freelance</option>
+                  <option value="stage">Stage</option>
                 </select>
               </div>
               <div>
@@ -1709,8 +2398,30 @@ const Admin = () => {
                   className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
                 />
               </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="remoto"
+                  name="remoto"
+                  checked={formData.remoto}
+                  onChange={handleInputChange}
+                  className="mr-2 h-4 w-4"
+                />
+                <label htmlFor="remoto" className="text-secondary-400">Lavoro Remoto</label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="attivo"
+                  name="attivo"
+                  checked={formData.attivo}
+                  onChange={handleInputChange}
+                  className="mr-2 h-4 w-4"
+                />
+                <label htmlFor="attivo" className="text-secondary-400">Annuncio Attivo</label>
+              </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Salario Minimo (€)</label>
+                <label className="block text-secondary-400 mb-2">Salario Minimo</label>
                 <input
                   type="number"
                   name="salarioMin"
@@ -1721,7 +2432,7 @@ const Admin = () => {
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Salario Massimo (€)</label>
+                <label className="block text-secondary-400 mb-2">Salario Massimo</label>
                 <input
                   type="number"
                   name="salarioMax"
@@ -1730,6 +2441,19 @@ const Admin = () => {
                   className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
                   placeholder="Es. 2000"
                 />
+              </div>
+              <div>
+                <label className="block text-secondary-400 mb-2">Valuta</label>
+                <select
+                  name="valuta"
+                  value={formData.valuta}
+                  onChange={handleInputChange}
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                >
+                  <option value="EUR">EUR</option>
+                  <option value="USD">USD</option>
+                  <option value="GBP">GBP</option>
+                </select>
               </div>
               <div>
                 <label className="block text-secondary-400 mb-2">Data di Scadenza</label>
@@ -1786,8 +2510,11 @@ const Admin = () => {
               <thead className="bg-secondary-800">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Titolo</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Azienda</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Tipo</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Luogo</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Remoto</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Stato</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Scadenza</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Azioni</th>
                 </tr>
@@ -1797,8 +2524,31 @@ const Admin = () => {
                   jobs.map((job) => (
                     <tr key={job._id} className="border-b border-secondary-800">
                       <td className="px-6 py-4">{job.titolo}</td>
+                      <td className="px-6 py-4">{job.azienda || 'Non specificata'}</td>
                       <td className="px-6 py-4">{job.tipo}</td>
                       <td className="px-6 py-4">{job.luogo || 'Non specificato'}</td>
+                      <td className="px-6 py-4">
+                        {job.remoto ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Sì
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            No
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        {job.attivo ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Attivo
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            Inattivo
+                          </span>
+                        )}
+                      </td>
                       <td className="px-6 py-4">{job.dataScadenza ? formatDate(job.dataScadenza) : 'Non specificata'}</td>
                       <td className="px-6 py-4">
                         <div className="flex space-x-2">
@@ -1807,6 +2557,12 @@ const Admin = () => {
                             className="text-blue-400 hover:text-blue-300"
                           >
                             Modifica
+                          </button>
+                          <button
+                            onClick={() => handleToggleActive(job)}
+                            className={job.attivo ? "text-yellow-400 hover:text-yellow-300" : "text-green-400 hover:text-green-300"}
+                          >
+                            {job.attivo ? 'Disattiva' : 'Attiva'}
                           </button>
                           <button
                             onClick={() => handleDeleteJob(job._id)}
@@ -1820,7 +2576,7 @@ const Admin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center">
+                    <td colSpan="8" className="px-6 py-4 text-center">
                       Nessun lavoro trovato
                     </td>
                   </tr>
@@ -1833,6 +2589,369 @@ const Admin = () => {
     );
   };
 
+  // Componente per la gestione delle richieste personalizzate
+  const CustomRequestsManagement = () => {
+    const [customRequests, setCustomRequests] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [selectedRequest, setSelectedRequest] = useState(null);
+    const [responseData, setResponseData] = useState({
+      testo: '',
+      preventivo: ''
+    });
+
+    // Formatta la data
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return new Date(dateString).toLocaleDateString('it-IT', options);
+    };
+
+    // Carica le richieste personalizzate
+    useEffect(() => {
+      const fetchCustomRequests = async () => {
+        setLoading(true);
+        setError('');
+        try {
+          const data = await adminService.getCustomRequests();
+          setCustomRequests(data);
+        } catch (err) {
+          console.error('Errore durante il recupero delle richieste personalizzate:', err);
+          setError('Impossibile caricare le richieste personalizzate. Riprova più tardi.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchCustomRequests();
+    }, []);
+
+    // Gestisce il click sul pulsante di visualizzazione/risposta
+    const handleViewRequest = (request) => {
+      setSelectedRequest(request);
+      setResponseData({
+        testo: request.rispostaAdmin?.testo || '',
+        preventivo: request.rispostaAdmin?.preventivo || ''
+      });
+    };
+
+    // Gestisce i cambiamenti nei campi del form di risposta
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setResponseData({
+        ...responseData,
+        [name]: value
+      });
+    };
+
+    // Gestisce l'invio della risposta
+    const handleSendResponse = async () => {
+      if (!responseData.testo) {
+        setError('Il testo della risposta è obbligatorio');
+        return;
+      }
+
+      setLoading(true);
+      setError('');
+      try {
+        await adminService.respondToCustomRequest(selectedRequest._id, responseData);
+        
+        // Aggiorna la lista delle richieste
+        const updatedRequests = await adminService.getCustomRequests();
+        setCustomRequests(updatedRequests);
+        
+        // Aggiorna la richiesta selezionata
+        const updatedRequest = updatedRequests.find(req => req._id === selectedRequest._id);
+        setSelectedRequest(updatedRequest);
+        
+        // Resetta il form
+        setResponseData({
+          testo: updatedRequest.rispostaAdmin?.testo || '',
+          preventivo: updatedRequest.rispostaAdmin?.preventivo || ''
+        });
+      } catch (err) {
+        console.error('Errore durante l\'invio della risposta:', err);
+        setError('Impossibile inviare la risposta. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Gestisce l'eliminazione di una richiesta
+    const handleDeleteRequest = async (requestId) => {
+      if (!window.confirm('Sei sicuro di voler eliminare questa richiesta? Questa azione non può essere annullata.')) {
+        return;
+      }
+
+      setLoading(true);
+      setError('');
+      try {
+        await adminService.deleteCustomRequest(requestId);
+        
+        // Aggiorna la lista delle richieste
+        const updatedRequests = await adminService.getCustomRequests();
+        setCustomRequests(updatedRequests);
+        
+        // Se la richiesta eliminata era quella selezionata, deselezionala
+        if (selectedRequest && selectedRequest._id === requestId) {
+          setSelectedRequest(null);
+          setResponseData({
+            testo: '',
+            preventivo: ''
+          });
+        }
+      } catch (err) {
+        console.error('Errore durante l\'eliminazione della richiesta:', err);
+        setError('Impossibile eliminare la richiesta. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Ottieni il colore del badge in base allo stato
+    const getStatusBadgeColor = (status) => {
+      switch (status) {
+        case 'inviata':
+          return 'bg-blue-500';
+        case 'in_revisione':
+          return 'bg-yellow-500';
+        case 'preventivo_inviato':
+          return 'bg-purple-500';
+        case 'accettata':
+          return 'bg-green-500';
+        case 'rifiutata':
+          return 'bg-red-500';
+        case 'completata':
+          return 'bg-green-700';
+        default:
+          return 'bg-gray-500';
+      }
+    };
+
+    // Ottieni il testo dello stato
+    const getStatusText = (status) => {
+      switch (status) {
+        case 'inviata':
+          return 'Inviata';
+        case 'in_revisione':
+          return 'In Revisione';
+        case 'preventivo_inviato':
+          return 'Preventivo Inviato';
+        case 'accettata':
+          return 'Accettata';
+        case 'rifiutata':
+          return 'Rifiutata';
+        case 'completata':
+          return 'Completata';
+        default:
+          return status;
+      }
+    };
+
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="bg-secondary-900 p-6 rounded-sm border border-secondary-800"
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-light text-white">Gestione Richieste Personalizzate</h2>
+          <div className="text-primary text-2xl">
+            <FaEnvelope />
+          </div>
+        </div>
+        
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm"
+          >
+            {error}
+          </motion.div>
+        )}
+
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Lista delle richieste */}
+          <div className="lg:w-1/2">
+            <div className="bg-secondary-800 p-4 rounded-sm mb-4 shadow-md">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-white text-lg">Richieste Ricevute</h3>
+                <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs">
+                  {customRequests.length} richieste
+                </span>
+              </div>
+              
+              {loading && !customRequests.length ? (
+                <div className="flex justify-center items-center h-32">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+                </div>
+              ) : customRequests.length === 0 ? (
+                <div className="bg-secondary-700/30 p-6 rounded-sm text-center">
+                  <FaEnvelope className="text-secondary-500 text-4xl mx-auto mb-2" />
+                  <p className="text-secondary-400">Nessuna richiesta personalizzata trovata.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-secondary-700">
+                    <thead>
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Titolo</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Utente</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Data</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Stato</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Azioni</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-secondary-700">
+                      {customRequests.map((request) => (
+                        <motion.tr 
+                          key={request._id} 
+                          className={`cursor-pointer hover:bg-secondary-700/50 transition-colors duration-150 ${selectedRequest && selectedRequest._id === request._id ? 'bg-secondary-700' : ''}`}
+                          onClick={() => handleViewRequest(request)}
+                          whileHover={{ scale: 1.01 }}
+                          transition={{ duration: 0.1 }}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{request.titolo}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{request.utente ? request.utente.nome : 'Utente sconosciuto'}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{formatDate(request.createdAt)}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeColor(request.stato)} text-white`}>
+                              {getStatusText(request.stato)}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleViewRequest(request);
+                              }}
+                              className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-sm text-xs mr-2 transition-colors duration-300"
+                            >
+                              {request.stato === 'inviata' ? 'Rispondi' : 'Visualizza'}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteRequest(request._id);
+                              }}
+                              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-sm text-xs transition-colors duration-300"
+                            >
+                              Elimina
+                            </button>
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Dettaglio richiesta e form di risposta */}
+          <div className="lg:w-1/2">
+            {selectedRequest ? (
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-secondary-800 p-6 rounded-sm shadow-md"
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-white text-lg">Dettaglio Richiesta</h3>
+                  <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeColor(selectedRequest.stato)} text-white`}>
+                    {getStatusText(selectedRequest.stato)}
+                  </span>
+                </div>
+                
+                <div className="mb-6 bg-secondary-700/30 p-4 rounded-sm">
+                  <h4 className="text-white text-md font-medium mb-2">{selectedRequest.titolo}</h4>
+                  <p className="text-secondary-300 text-sm mb-4">{selectedRequest.descrizione}</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="bg-secondary-700/50 p-3 rounded-sm">
+                      <p className="text-secondary-400 text-xs uppercase">Budget</p>
+                      <p className="text-white font-medium">{selectedRequest.budget ? `€${selectedRequest.budget.toLocaleString('it-IT')}` : 'Non specificato'}</p>
+                    </div>
+                    <div className="bg-secondary-700/50 p-3 rounded-sm">
+                      <p className="text-secondary-400 text-xs uppercase">Tempistiche</p>
+                      <p className="text-white font-medium">{selectedRequest.tempistiche || 'Non specificate'}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-secondary-700/50 p-3 rounded-sm mb-4">
+                    <p className="text-secondary-400 text-xs uppercase">Modello Base</p>
+                    <p className="text-white font-medium">{selectedRequest.modelloBase ? selectedRequest.modelloBase.nome : 'Nessun modello selezionato'}</p>
+                  </div>
+                  
+                  <div className="bg-secondary-700/50 p-3 rounded-sm">
+                    <p className="text-secondary-400 text-xs uppercase">Contatto</p>
+                    <p className="text-white font-medium">
+                      {selectedRequest.contatto?.nome || (selectedRequest.utente ? selectedRequest.utente.nome : 'Utente sconosciuto')} - {selectedRequest.contatto?.email || (selectedRequest.utente ? selectedRequest.utente.email : 'Email sconosciuta')}
+                      {selectedRequest.contatto?.telefono && ` - ${selectedRequest.contatto.telefono}`}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="border-t border-secondary-700 pt-6">
+                  <h4 className="text-white text-md font-medium mb-4">Risposta</h4>
+                  
+                  <div className="mb-4">
+                    <label htmlFor="testo" className="block text-secondary-400 text-sm mb-1">Testo della risposta</label>
+                    <textarea
+                      id="testo"
+                      name="testo"
+                      value={responseData.testo}
+                      onChange={handleInputChange}
+                      rows="4"
+                      className="w-full bg-secondary-700 border border-secondary-600 rounded-sm px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                      placeholder="Inserisci la tua risposta..."
+                    ></textarea>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <label htmlFor="preventivo" className="block text-secondary-400 text-sm mb-1">Preventivo (€)</label>
+                    <input
+                      type="number"
+                      id="preventivo"
+                      name="preventivo"
+                      value={responseData.preventivo}
+                      onChange={handleInputChange}
+                      className="w-full bg-secondary-700 border border-secondary-600 rounded-sm px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                      placeholder="Inserisci l'importo del preventivo..."
+                    />
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <button
+                      onClick={handleSendResponse}
+                      disabled={loading}
+                      className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-sm transition-colors duration-300 flex items-center"
+                    >
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                          Invio in corso...
+                        </>
+                      ) : (
+                        'Invia Risposta'
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="bg-secondary-800 p-8 rounded-sm flex flex-col items-center justify-center h-64 shadow-md">
+                <FaEnvelope className="text-secondary-600 text-5xl mb-4" />
+                <p className="text-secondary-400 text-center">Seleziona una richiesta per visualizzarne i dettagli</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
 
   // Renderizza la sezione attiva
   const renderActiveSection = () => {
@@ -1853,6 +2972,8 @@ const Admin = () => {
         return <MessagesManagement />;
       case 'jobs':
         return <JobsManagement />;
+      case 'customRequests':
+        return <CustomRequestsManagement />;
       default:
         return <Dashboard />;
     }

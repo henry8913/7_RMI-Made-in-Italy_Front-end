@@ -247,6 +247,26 @@ export const adminService = {
     }
   },
 
+  async updateBlogFeaturedStatus(postId, featured) {
+    try {
+      const response = await api.patch(`/blog/${postId}`, { inEvidenza: featured });
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante l\'aggiornamento dello stato di evidenza del post del blog:', error);
+      throw error;
+    }
+  },
+
+  async updateBlogCommentsStatus(postId, commentsEnabled) {
+    try {
+      const response = await api.patch(`/blog/${postId}`, { commentiAbilitati: commentsEnabled });
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante l\'aggiornamento dello stato dei commenti del post del blog:', error);
+      throw error;
+    }
+  },
+
   async getBlogStats() {
     try {
       const response = await api.get('/blog/stats');
@@ -389,16 +409,58 @@ export const adminService = {
     }
   },
 
+  // RICHIESTE PERSONALIZZATE
+  async getCustomRequests() {
+    try {
+      const response = await api.get('/custom-requests');
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante il recupero delle richieste personalizzate:', error);
+      throw error;
+    }
+  },
+
+  async getCustomRequest(requestId) {
+    try {
+      const response = await api.get(`/custom-requests/${requestId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante il recupero della richiesta personalizzata:', error);
+      throw error;
+    }
+  },
+
+  async respondToCustomRequest(requestId, responseData) {
+    try {
+      const response = await api.post(`/custom-requests/${requestId}/risposta`, responseData);
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante l\'invio della risposta:', error);
+      throw error;
+    }
+  },
+
+  async deleteCustomRequest(requestId) {
+    try {
+      const response = await api.delete(`/custom-requests/${requestId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante l\'eliminazione della richiesta personalizzata:', error);
+      throw error;
+    }
+  },
+
   // DASHBOARD
   async getDashboardStats() {
     try {
       // Ottieni i conteggi da varie API
-      const [users, restomods, brands, packages, jobs] = await Promise.all([
+      const [users, restomods, brands, packages, jobs, customRequests] = await Promise.all([
         this.getUsers(),
         this.getRestomods(),
         this.getBrands(),
         this.getPackages(),
-        this.getJobs()
+        this.getJobs(),
+        this.getCustomRequests()
       ]);
 
       // Ottieni i blog posts
@@ -410,7 +472,8 @@ export const adminService = {
         brands: brands.length,
         blogs: blogs.length,
         packages: packages.length,
-        jobs: jobs.length
+        jobs: jobs.length,
+        customRequests: customRequests.length
       };
     } catch (error) {
       console.error('Errore durante il recupero delle statistiche della dashboard:', error);
@@ -421,7 +484,8 @@ export const adminService = {
         brands: 0,
         blogs: 0,
         packages: 0,
-        jobs: 0
+        jobs: 0,
+        customRequests: 0
       };
     }
   },
