@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 70" width="100%" height="100%">
+  <!-- RMI Restomode in bianco elegante -->
+  <text x="10" y="35" font-family="'Playfair Display', serif" font-weight="700" font-size="32" fill="#FFFFFF" letter-spacing="1">
+    RMI
+  </text>
+  
+  <text x="85" y="35" font-family="'Playfair Display', serif" font-weight="500" font-size="28" fill="#FFFFFF" letter-spacing="0.8">
+    Restomode
+  </text>
+  
+  <!-- Made in Italy con i colori della bandiera italiana -->
+  <g>
+    <!-- Rettangolo verde -->
+    <rect x="10" y="45" width="60" height="18" fill="#009246" rx="2" ry="2" />
+    <!-- Testo Made -->
+    <text x="18" y="59" font-family="'Montserrat', sans-serif" font-weight="600" font-size="14" fill="#FFFFFF">
+      MADE
+    </text>
+    
+    <!-- Rettangolo bianco -->
+    <rect x="72" y="45" width="30" height="18" fill="#FFFFFF" rx="2" ry="2" />
+    <!-- Testo in -->
+    <text x="78" y="59" font-family="'Montserrat', sans-serif" font-weight="600" font-size="14" fill="#0A0A0A">
+      IN
+    </text>
+    
+    <!-- Rettangolo rosso -->
+    <rect x="104" y="45" width="60" height="18" fill="#CE2B37" rx="2" ry="2" />
+    <!-- Testo Italy -->
+    <text x="112" y="59" font-family="'Montserrat', sans-serif" font-weight="600" font-size="14" fill="#FFFFFF">
+      ITALY
+    </text>
+  </g>
+</svg>
