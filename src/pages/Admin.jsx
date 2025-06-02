@@ -202,11 +202,56 @@ const Admin = () => {
     // Annulla la modifica
     const handleCancelEdit = () => {
       setEditingUser(null);
+      setFormData({
+        nome: '',
+        email: '',
+        ruolo: 'user'
+      });
+    };
+
+    // Gestisce la creazione di un nuovo utente
+    const handleSaveNewUser = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const newUser = await adminService.createUser(formData);
+        setUsers([...users, newUser]);
+        setEditingUser(null);
+        setFormData({
+          nome: '',
+          email: '',
+          ruolo: 'user'
+        });
+      } catch (err) {
+        console.error('Errore durante la creazione dell\'utente:', err);
+        setError('Impossibile creare l\'utente. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     return (
       <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-        <h3 className="text-white text-xl font-medium mb-4">Gestione Utenti</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-white text-xl font-medium">Gestione Utenti</h3>
+          <button
+            onClick={() => {
+              setEditingUser({
+                nome: '',
+                email: '',
+                ruolo: 'user'
+              });
+              setFormData({
+                nome: '',
+                email: '',
+                ruolo: 'user'
+              });
+            }}
+            className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors"
+          >
+            Crea Nuovo Utente
+          </button>
+        </div>
         
         {error && (
           <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
@@ -259,11 +304,11 @@ const Admin = () => {
                 Annulla
               </button>
               <button
-                onClick={editingPackage._id ? handleSaveChanges : handleSaveNewPackage}
+                onClick={handleSaveChanges}
                 disabled={loading}
                 className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Salvataggio...' : (editingPackage._id ? 'Salva Modifiche' : 'Crea Pacchetto')}
+                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
               </button>
             </div>
           </div>
@@ -486,7 +531,27 @@ const Admin = () => {
 
     return (
       <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-        <h3 className="text-white text-xl font-medium mb-4">Gestione Restomods</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-white text-xl font-medium">Gestione Restomods</h3>
+          <button
+            onClick={() => {
+              setEditingRestomod({});
+              setIsCreating(true);
+              setFormData({
+                nome: '',
+                marca: '',
+                modello: '',
+                anno: '',
+                descrizione: '',
+                prezzo: '',
+                immagini: []
+              });
+            }}
+            className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors"
+          >
+            Crea Nuovo Restomod
+          </button>
+        </div>
         
         {error && (
           <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
@@ -845,15 +910,41 @@ const Admin = () => {
       setLoading(true);
       setError('');
       try {
-        const updatedBrand = await adminService.updateBrand(editingBrand._id, formData);
-        setBrands(brands.map(brand => brand._id === updatedBrand._id ? updatedBrand : brand));
+        if (isCreating) {
+          const newBrand = await adminService.createBrand(formData);
+          setBrands([...brands, newBrand]);
+        } else {
+          const updatedBrand = await adminService.updateBrand(editingBrand._id, formData);
+          setBrands(brands.map(brand => brand._id === updatedBrand._id ? updatedBrand : brand));
+        }
         setEditingBrand(null);
+        setIsCreating(false);
       } catch (err) {
         console.error('Errore durante l\'aggiornamento del marchio:', err);
         setError('Impossibile aggiornare il marchio. Riprova più tardi.');
       } finally {
         setLoading(false);
       }
+    };
+
+    // Gestisce la creazione di un nuovo marchio
+    const handleCreateNew = () => {
+      setFormData({
+        nome: '',
+        descrizione: '',
+        logo: '',
+        storia: '',
+        sede: '',
+        annoFondazione: '',
+        sito: '',
+        contatti: {
+          email: '',
+          telefono: ''
+        },
+        immagini: []
+      });
+      setEditingBrand({});
+      setIsCreating(true);
     };
 
     // Gestisce l'eliminazione di un marchio
@@ -878,6 +969,7 @@ const Admin = () => {
     // Annulla la modifica
     const handleCancelEdit = () => {
       setEditingBrand(null);
+      setIsCreating(false);
     };
     
     // Ottiene la prima immagine disponibile
@@ -893,6 +985,17 @@ const Admin = () => {
         {error && (
           <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
             {error}
+          </div>
+        )}
+
+        {!editingBrand && (
+          <div className="mb-6">
+            <button
+              onClick={handleCreateNew}
+              className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors"
+            >
+              Crea Nuovo Marchio
+            </button>
           </div>
         )}
 
@@ -1550,11 +1653,11 @@ const Admin = () => {
                 Annulla
               </button>
               <button
-                onClick={editingPackage._id ? handleSaveChanges : handleSaveNewPackage}
+                onClick={handleSaveChanges}
                 disabled={loading}
                 className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Salvataggio...' : (editingPackage._id ? 'Salva Modifiche' : 'Crea Pacchetto')}
+                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
               </button>
             </div>
           </div>
@@ -2016,11 +2119,11 @@ const Admin = () => {
                 Annulla
               </button>
               <button
-                onClick={editingPackage._id ? handleSaveChanges : handleSaveNewPackage}
+                onClick={handleSaveChanges}
                 disabled={loading}
                 className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {loading ? 'Salvataggio...' : (editingPackage._id ? 'Salva Modifiche' : 'Crea Pacchetto')}
+                {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
               </button>
             </div>
           </div>

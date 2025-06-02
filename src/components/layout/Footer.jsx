@@ -144,18 +144,13 @@ const Footer = () => {
             </h3>
             <ul className="space-y-6">
               <li>
-                <Link to="/profile" className="text-secondary-300 hover:text-primary transition-all duration-500 inline-block py-1 text-sm font-extralight tracking-wide">
-                  Profilo
-                </Link>
-              </li>
-              <li>
-                <Link to="/wishlist" className="text-secondary-300 hover:text-primary transition-all duration-500 inline-block py-1 text-sm font-extralight tracking-wide">
-                  Wishlist
-                </Link>
-              </li>
-              <li>
                 <Link to="/login" className="text-secondary-300 hover:text-primary transition-all duration-500 inline-block py-1 text-sm font-extralight tracking-wide">
                   Accedi
+                </Link>
+              </li>
+              <li>
+                <Link to="/profile" className="text-secondary-300 hover:text-primary transition-all duration-500 inline-block py-1 text-sm font-extralight tracking-wide">
+                  Profilo
                 </Link>
               </li>
               <li>

@@ -13,6 +13,16 @@ export const adminService = {
     }
   },
 
+  async createUser(userData) {
+    try {
+      const response = await api.post('/auth/users', userData);
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante la creazione dell\'utente:', error);
+      throw error;
+    }
+  },
+
   async updateUser(userId, userData) {
     try {
       const response = await api.put(`/auth/users/${userId}`, userData);
