@@ -51,19 +51,19 @@ const PackagesSection = () => {
   };
 
   return (
-    <section id="packages-section" className="section-padding bg-secondary-950">
+    <section id="packages-section" className="py-16 md:py-20 bg-secondary-950">
       <div className="container-custom">
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="text-primary-500 font-medium tracking-wider uppercase block mb-2">
+          <span className="text-primary-500 font-medium tracking-wider uppercase block mb-1">
             I Nostri Pacchetti
           </span>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-3">
             Soluzioni su Misura per Te
           </h2>
           <p className="text-secondary-400 max-w-2xl mx-auto">
@@ -73,16 +73,16 @@ const PackagesSection = () => {
         </motion.div>
 
         {loading ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex justify-center items-center py-16">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : error ? (
-          <div className="text-center py-10">
+          <div className="text-center py-8">
             <p className="text-red-500">{error}</p>
           </div>
         ) : (
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -103,13 +103,13 @@ const PackagesSection = () => {
                     />
                   </div>
                 )}
-                <div className="p-6 flex-grow">
-                  <h3 className="text-xl font-heading font-bold mb-3">{pkg.nome}</h3>
-                  <div className="text-primary-500 text-2xl font-bold mb-4">
+                <div className="p-5 flex-grow">
+                  <h3 className="text-xl font-heading font-bold mb-2">{pkg.nome}</h3>
+                  <div className="text-primary-500 text-2xl font-bold mb-3">
                     €{pkg.prezzo ? pkg.prezzo.toFixed(2) : '0.00'}
                   </div>
-                  <p className="text-secondary-400 mb-6 line-clamp-3">{pkg.descrizione}</p>
-                  <ul className="space-y-2 mb-6">
+                  <p className="text-secondary-400 mb-4 line-clamp-3">{pkg.descrizione}</p>
+                  <ul className="space-y-1 mb-4">
                     {pkg.caratteristiche && pkg.caratteristiche.slice(0, 3).map((feature, index) => (
                       <li key={`${pkg._id}-feature-${index}`} className="flex items-start">
                         <span className="text-primary-500 mr-2">✓</span>
@@ -121,7 +121,7 @@ const PackagesSection = () => {
                     )}
                   </ul>
                 </div>
-                <div className="p-6 pt-0 mt-auto">
+                <div className="p-5 pt-0 mt-auto">
                   <Link to={`/packages/${pkg._id}`}>
                     <Button variant="primary" className="w-full">
                       Scopri di più
@@ -134,7 +134,7 @@ const PackagesSection = () => {
         )}
 
         <motion.div
-          className="text-center mt-12"
+          className="text-center mt-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

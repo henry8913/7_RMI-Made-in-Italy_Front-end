@@ -22,6 +22,8 @@ import {
   Login,
   Register,
   GoogleAuthCallback,
+  Cart,
+  CheckoutSuccess,
 } from "./pages";
 
 import {
@@ -31,45 +33,54 @@ import {
   Consulting
 } from "./pages/services";
 
+import { CartProvider } from "./contexts/CartContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Rotta per il callback di autenticazione Google */}
-        <Route path="/auth/google/success" element={<GoogleAuthCallback />} />
-        
-        {/* Rotte con layout comune (navbar e footer) */}
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="brands" element={<Brands />} />
-          <Route path="brands/:id" element={<BrandDetail />} />
-          <Route path="restomods" element={<Restomods />} />
-          <Route path="restomods/:id" element={<RestomodDetail />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="blog" element={<Blog />} />
-          <Route path="blog/:id" element={<BlogPost />} />
-          <Route path="test-drive" element={<TestDrive />} />
-          <Route path="wishlist" element={<Wishlist />} />
-          <Route path="custom-requests" element={<CustomRequest />} />
-          <Route path="packages" element={<Packages />} />
-          <Route path="packages/:id" element={<PackageDetail />} />
-          <Route path="jobs" element={<Jobs />} />
-          <Route path="faq" element={<FAQ />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+    <CartProvider>
+      <Router>
+        <ToastContainer position="bottom-right" autoClose={3000} />
+        <Routes>
+          {/* Rotta per il callback di autenticazione Google */}
+          <Route path="/auth/google/success" element={<GoogleAuthCallback />} />
           
-          {/* Rotte per i servizi */}
-          <Route path="services/restoration" element={<Restoration />} />
-          <Route path="services/customization" element={<Customization />} />
-          <Route path="services/maintenance" element={<Maintenance />} />
-          <Route path="services/consulting" element={<Consulting />} />
-          
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </Router>
+          {/* Rotte con layout comune (navbar e footer) */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="brands" element={<Brands />} />
+            <Route path="brands/:id" element={<BrandDetail />} />
+            <Route path="restomods" element={<Restomods />} />
+            <Route path="restomods/:id" element={<RestomodDetail />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="blog/:id" element={<BlogPost />} />
+            <Route path="test-drive" element={<TestDrive />} />
+            <Route path="wishlist" element={<Wishlist />} />
+            <Route path="custom-requests" element={<CustomRequest />} />
+            <Route path="packages" element={<Packages />} />
+            <Route path="packages/:id" element={<PackageDetail />} />
+            <Route path="jobs" element={<Jobs />} />
+            <Route path="faq" element={<FAQ />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="checkout-success" element={<CheckoutSuccess />} />
+            
+            {/* Rotte per i servizi */}
+            <Route path="services/restoration" element={<Restoration />} />
+            <Route path="services/customization" element={<Customization />} />
+            <Route path="services/maintenance" element={<Maintenance />} />
+            <Route path="services/consulting" element={<Consulting />} />
+            
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </Router>
+    </CartProvider>
   );
 }
 

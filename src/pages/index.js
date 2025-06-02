@@ -19,6 +19,8 @@ import FAQ from "./FAQ";
 import Login from "./Login";
 import Register from "./Register";
 import GoogleAuthCallback from './GoogleAuthCallback';
+import Cart from './Cart';
+import CheckoutSuccess from './CheckoutSuccess';
 
 export {
   Home,
@@ -42,4 +44,6 @@ export {
   Login,
   Register,
   GoogleAuthCallback,
+  Cart,
+  CheckoutSuccess,
 };

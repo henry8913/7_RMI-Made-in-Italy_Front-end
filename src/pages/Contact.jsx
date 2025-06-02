@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Button from '../components/UI/Button';
+import Button from '../components/ui/Button';
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 import { contactService } from '../services';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaClock, FaTwitter, FaInstagram, FaFacebookF, FaYoutube, FaLinkedinIn } from 'react-icons/fa';
@@ -207,26 +207,27 @@ const Contact = () => {
   };
 
   return (
-    <div className="bg-secondary-950 min-h-screen">
+    <div className="min-h-screen bg-secondary-950">
       {/* Hero Section */}
-      <section className="relative h-[40vh] md:h-[50vh] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-950 to-secondary-950 z-0">
-          <div className="absolute inset-0 bg-pattern opacity-10" />
-        </div>
-        <div className="absolute inset-0 flex items-center">
-          <div className="container-custom">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
+      <section className="relative py-16 md:py-20 overflow-hidden"> 
+        <div className="container-custom">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.h1 
+              className="text-4xl md:text-5xl lg:text-6xl font-heading mb-4"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
             >
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold mb-4">
-                <span className="text-gradient">Contattaci</span>
-              </h1>
-              <p className="text-xl text-secondary-300 max-w-2xl mb-8">
-                Siamo qui per rispondere a tutte le tue domande sui nostri modelli restomod e per aiutarti a realizzare la tua auto dei sogni.
-              </p>
-            </motion.div>
+              Contattaci
+            </motion.h1>
+            <motion.p 
+              className="text-lg text-secondary-300 mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              Siamo qui per rispondere a tutte le tue domande e aiutarti a realizzare la tua auto dei sogni.
+            </motion.p>
           </div>
         </div>
       </section>

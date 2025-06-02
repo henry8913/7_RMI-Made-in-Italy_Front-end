@@ -118,9 +118,10 @@ const BrandDetail = () => {
       </section>
 
       {/* Brand Info Section */}
-      <section className="section-padding">
+      {/* Brand History */}
+      <section className="py-16 md:py-20 bg-secondary-900/30"> {/* Modificato da section-padding a py-16 md:py-20 */}
         <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center"> {/* Ridotto da gap-16 a gap-10 */}
             {/* Colonna Sinistra - Descrizione */}
             <div className="lg:col-span-2">
               <motion.div

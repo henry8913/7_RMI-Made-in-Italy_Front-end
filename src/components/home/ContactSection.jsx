@@ -58,20 +58,20 @@ const ContactSection = () => {
   };
 
   return (
-    <section className="section-padding bg-secondary-950 py-36 relative overflow-hidden">
+    <section className="py-16 md:py-20 bg-secondary-950 relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 bg-pattern opacity-3"></div>
       
       <div className="container-custom relative z-10">
         <motion.div 
-          className="text-center mb-24"
+          className="text-center mb-10"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1.2, ease: "easeOut" }}
         >
-          <p className="text-primary uppercase tracking-[0.3em] font-extralight text-sm mb-6">Comunicazioni</p>
-          <h2 className="text-4xl md:text-5xl font-heading font-light mb-8 text-white">
+          <p className="text-primary uppercase tracking-[0.3em] font-extralight text-sm mb-3">Comunicazioni</p>
+          <h2 className="text-4xl md:text-5xl font-heading font-light mb-4 text-white">
             Contattaci
           </h2>
           <p className="text-lg text-secondary-300 max-w-3xl mx-auto font-light leading-relaxed">
@@ -79,7 +79,7 @@ const ContactSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Informazioni di contatto */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -87,10 +87,10 @@ const ContactSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            <div className="p-10 rounded-lg h-full bg-secondary-900/20 border border-secondary-800">
-              <h3 className="text-2xl font-heading font-light mb-10 text-white">Informazioni di Contatto</h3>
+            <div className="p-8 rounded-lg h-full bg-secondary-900/20 border border-secondary-800">
+              <h3 className="text-2xl font-heading font-light mb-6 text-white">Informazioni di Contatto</h3>
               
-              <div className="space-y-10">
+              <div className="space-y-8">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 w-12 h-12 rounded-full bg-secondary-900 border border-secondary-800 flex items-center justify-center mr-6">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -132,8 +132,8 @@ const ContactSection = () => {
                 </div>
               </div>
 
-              <div className="mt-16">
-                <h4 className="text-lg font-light mb-6 text-white">Seguici</h4>
+              <div className="mt-12">
+                <h4 className="text-lg font-light mb-4 text-white">Seguici</h4>
                 <div className="flex space-x-5">
                   <a href="#" className="w-10 h-10 rounded-full bg-secondary-900 border border-secondary-800 flex items-center justify-center hover:text-primary transition-all duration-500">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -167,12 +167,12 @@ const ContactSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            <div className="p-10 rounded-lg bg-secondary-900/20 border border-secondary-800">
-              <h3 className="text-2xl font-heading font-light mb-10 text-white">Invia un Messaggio</h3>
+            <div className="p-8 rounded-lg bg-secondary-900/20 border border-secondary-800">
+              <h3 className="text-2xl font-heading font-light mb-6 text-white">Invia un Messaggio</h3>
               
               {formStatus.submitted ? (
                 <motion.div 
-                  className={`p-4 rounded-lg mb-8 ${formStatus.success ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}
+                  className={`p-4 rounded-lg mb-5 ${formStatus.success ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
@@ -180,10 +180,10 @@ const ContactSection = () => {
                 </motion.div>
               ) : null}
               
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-light text-secondary-300 mb-3">Nome Completo</label>
+                    <label htmlFor="name" className="block text-sm font-light text-secondary-300 mb-2">Nome Completo</label>
                     <input
                       type="text"
                       id="name"
@@ -195,7 +195,7 @@ const ContactSection = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-light text-secondary-300 mb-3">Email</label>
+                    <label htmlFor="email" className="block text-sm font-light text-secondary-300 mb-2">Email</label>
                     <input
                       type="email"
                       id="email"
@@ -208,9 +208,9 @@ const ContactSection = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-light text-secondary-300 mb-3">Telefono</label>
+                    <label htmlFor="phone" className="block text-sm font-light text-secondary-300 mb-2">Telefono</label>
                     <input
                       type="tel"
                       id="phone"
@@ -221,7 +221,7 @@ const ContactSection = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-light text-secondary-300 mb-3">Oggetto</label>
+                    <label htmlFor="subject" className="block text-sm font-light text-secondary-300 mb-2">Oggetto</label>
                     <input
                       type="text"
                       id="subject"
@@ -235,7 +235,7 @@ const ContactSection = () => {
                 </div>
                 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-light text-secondary-300 mb-3">Messaggio</label>
+                  <label htmlFor="message" className="block text-sm font-light text-secondary-300 mb-2">Messaggio</label>
                   <textarea
                     id="message"
                     name="message"

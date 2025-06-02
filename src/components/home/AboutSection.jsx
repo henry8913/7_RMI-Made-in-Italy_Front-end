@@ -4,9 +4,9 @@ import heroBg from '../../assets/images/hero-bg.jpg';
 
 const AboutSection = () => {
   return (
-    <section id="about-section" className="section-padding bg-secondary-950 py-32">
+    <section id="about-section" className="section-padding bg-secondary-950 py-24"> {/* Ridotto da py-32 a py-24 */}
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16"> {/* Ridotto da gap-20 a gap-16 */}
           {/* Immagine */}
           <motion.div
             className="relative overflow-hidden"

@@ -4,9 +4,12 @@ import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import restomodService from '../services/restomodService';
 import { formatPrice } from '../utils/formatters';
+import { useCart } from '../contexts/CartContext';
+import { toast } from 'react-toastify';
 
 const RestomodDetail = () => {
   const { id } = useParams();
+  const { addToCart } = useCart();
   const [restomod, setRestomod] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -49,13 +52,29 @@ const RestomodDetail = () => {
     e.preventDefault();
     // Qui andrebbe implementata la logica per inviare il form
     console.log('Form inviato:', formData);
-    alert('Grazie per il tuo interesse! Ti contatteremo presto.');
+    toast.success('Grazie per il tuo interesse! Ti contatteremo presto.');
     setFormData({
       name: '',
       email: '',
       phone: '',
       message: ''
     });
+  };
+  
+  const handleAddToCart = () => {
+    if (restomod && restomod.stato === 'available') {
+      const cartItem = {
+        id: restomod._id,
+        type: 'restomod',
+        name: restomod.nome,
+        price: restomod.prezzo,
+        image: restomod.immagini && restomod.immagini.length > 0 ? restomod.immagini[0].url : null,
+        brand: restomod.costruttore.nome,
+        year: restomod.anno
+      };
+      
+      addToCart(cartItem);
+    }
   };
 
   if (loading) {
@@ -89,9 +108,9 @@ const RestomodDetail = () => {
   }
 
   return (
-    <div className="bg-secondary-950 min-h-screen">
+    <div className="bg-secondary-950 min-h-screen pt-20">
       {/* Breadcrumb */}
-      <div className="container-custom pt-8">
+      <div className="container-custom pt-6"> {/* Ridotto da pt-8 a pt-6 */}
         <div className="flex items-center text-sm text-secondary-400">
           <Link to="/" className="hover:text-white transition-colors">Home</Link>
           <span className="mx-2">/</span>
@@ -102,7 +121,7 @@ const RestomodDetail = () => {
       </div>
 
       {/* Dettagli Restomod */}
-      <section className="section-padding pt-8">
+      <section className="section-padding pt-6"> {/* Ridotto da pt-8 a pt-6 */}
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Galleria Immagini */}
@@ -177,15 +196,25 @@ const RestomodDetail = () => {
                     {formatPrice(restomod.prezzo)}
                   </div>
                   {restomod.stato === 'available' && (
-                    <Button to={`/test-drive?modelId=${restomod._id}`} variant="primary" className="mt-2 sm:mt-0">
-                      <span className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                          <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h3.5a1 1 0 00.8-.4l3-4a1 1 0 00.2-.6V8a1 1 0 00-1-1h-3.8L11.35 3.3a1 1 0 00-.8-.3H3z" />
-                        </svg>
-                        Prenota Test Drive
-                      </span>
-                    </Button>
+                    <div className="flex flex-wrap gap-3 mt-2 sm:mt-0 pt-5">
+                      <Button onClick={handleAddToCart} variant="primary">
+                        <span className="flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                          </svg>
+                          Aggiungi al carrello
+                        </span>
+                      </Button>
+                      <Button to={`/test-drive?modelId=${restomod._id}`} variant="outline">
+                        <span className="flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h3.5a1 1 0 00.8-.4l3-4a1 1 0 00.2-.6V8a1 1 0 00-1-1h-3.8L11.35 3.3a1 1 0 00-.8-.3H3z" />
+                          </svg>
+                          Prenota Test Drive
+                        </span>
+                      </Button>
+                    </div>
                   )}
                 </div>
                 
@@ -317,9 +346,14 @@ const RestomodDetail = () => {
               Esplora {restomod.costruttore.nome}
             </Button>
             {restomod.stato === 'available' && (
-              <Button to={`/test-drive?modelId=${restomod._id}`} variant="primary">
-                Prenota Test Drive
-              </Button>
+              <>
+                <Button onClick={handleAddToCart} variant="primary">
+                  Aggiungi al carrello
+                </Button>
+                <Button to={`/test-drive?modelId=${restomod._id}`} variant="outline">
+                  Prenota Test Drive
+                </Button>
+              </>
             )}
           </div>
         </div>

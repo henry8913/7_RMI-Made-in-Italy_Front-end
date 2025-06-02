@@ -51,12 +51,12 @@ const FeaturedRestomods = () => {
   };
 
   return (
-    <section id="featured-section" className="section-padding bg-secondary-950 py-32">
+    <section id="featured-section" className="section-padding bg-secondary-950 py-24"> 
       <div className="container-custom">
         {/* Intestazione della sezione */}
-        <div className="text-center mb-24">
+        <div className="text-center mb-16"> 
           <motion.span
-            className="text-primary font-light tracking-[0.4em] uppercase text-xs block mb-6"
+            className="text-primary font-light tracking-[0.4em] uppercase text-xs block mb-4"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -65,7 +65,7 @@ const FeaturedRestomods = () => {
             Collezione
           </motion.span>
           <motion.h2 
-            className="text-3xl md:text-4xl font-light mb-8 text-white tracking-wider"
+            className="text-3xl md:text-4xl font-light mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
