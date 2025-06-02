@@ -89,7 +89,7 @@ const BlogPost = () => {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      navigate("/auth", { state: { from: `/blog/${slug}` } });
+      navigate("/auth", { state: { from: `/blog/${id}` } });
       return;
     }
 
@@ -97,9 +97,16 @@ const BlogPost = () => {
 
     try {
       setCommentSubmitting(true);
+      
+      // Verifica se i commenti sono abilitati
+      if (!post.commentiAbilitati) {
+        alert("I commenti sono disabilitati per questo post.");
+        return;
+      }
+      
       await blogService.addComment(post._id, { testo: comment });
       // Refresh post to get updated comments
-      const updatedPost = await blogService.getById(slug);
+      const updatedPost = await blogService.getById(id);
       setPost(updatedPost);
       setComment("");
     } catch (err) {
@@ -114,7 +121,7 @@ const BlogPost = () => {
 
   const handleLike = async () => {
     if (!isAuthenticated) {
-      navigate("/auth", { state: { from: `/blog/${slug}` } });
+      navigate("/auth", { state: { from: `/blog/${id}` } });
       return;
     }
 
@@ -122,11 +129,19 @@ const BlogPost = () => {
       if (liked) {
         await blogService.unlikePost(post._id);
         setLiked(false);
-        setPost((prev) => ({ ...prev, likes: prev.likes - 1 }));
+        // Rimuovi l'utente corrente dall'array miPiace
+        setPost((prev) => ({
+          ...prev,
+          miPiace: prev.miPiace ? prev.miPiace.filter(id => id !== user?._id) : []
+        }));
       } else {
         await blogService.likePost(post._id);
         setLiked(true);
-        setPost((prev) => ({ ...prev, likes: prev.likes + 1 }));
+        // Aggiungi l'utente corrente all'array miPiace
+        setPost((prev) => ({
+          ...prev,
+          miPiace: prev.miPiace ? [...prev.miPiace, user?._id] : [user?._id]
+        }));
       }
     } catch (err) {
       console.error("Errore nella gestione del mi piace:", err);
@@ -243,7 +258,7 @@ const BlogPost = () => {
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
-                <span>{post.likes || 0} Mi piace</span>
+                <span>{post.miPiace?.length || 0} Mi piace</span>
               </button>
               <div className="flex gap-3">
                 <a
@@ -300,87 +315,80 @@ const BlogPost = () => {
               </div>
             </div>
 
-            {/* Author Info */}
-            <div className="mt-12 bg-secondary-800 rounded-lg p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-secondary-700 flex items-center justify-center text-2xl font-bold">
-                  {post.autore?.charAt(0) || "A"}
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold">{post.autore}</h3>
-                  <p className="text-secondary-300">Autore</p>
-                </div>
-              </div>
-              <p className="mt-4 text-secondary-300">
-                Esperto di auto d'epoca e restomod con una passione per la
-                conservazione del patrimonio automobilistico italiano.
-              </p>
-            </div>
-
             {/* Comments Section */}
             <div className="mt-12">
               <h3 className="text-2xl font-bold mb-6">
                 Commenti ({post.commenti?.length || 0})
               </h3>
 
-              {/* Comment Form */}
-              <form onSubmit={handleCommentSubmit} className="mb-8">
-                <textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder={
-                    isAuthenticated
-                      ? "Scrivi un commento..."
-                      : "Accedi per lasciare un commento"
-                  }
-                  disabled={!isAuthenticated || commentSubmitting}
-                  className="w-full p-4 rounded-lg bg-secondary-800 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none min-h-[120px]"
-                  required
-                ></textarea>
-                <div className="mt-2 flex justify-end">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    disabled={!isAuthenticated || commentSubmitting}
-                  >
-                    {commentSubmitting
-                      ? "Invio in corso..."
-                      : "Pubblica commento"}
-                  </Button>
-                </div>
-              </form>
-
-              {/* Comments List */}
-              {post.commenti && post.commenti.length > 0 ? (
-                <div className="space-y-6">
-                  {post.commenti.map((comment) => (
-                    <div
-                      key={comment._id}
-                      className="bg-secondary-800 rounded-lg p-4"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-secondary-700 flex items-center justify-center font-bold">
-                            {comment.utente?.nome?.charAt(0) || "U"}
-                          </div>
-                          <div>
-                            <h4 className="font-semibold">
-                              {comment.utente?.nome || "Utente"}
-                            </h4>
-                            <p className="text-sm text-secondary-400">
-                              {formatDate(comment.dataCreazione)}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-secondary-300">{comment.testo}</p>
+              {post.commentiAbilitati ? (
+                <>
+                  {/* Comment Form */}
+                  <form onSubmit={handleCommentSubmit} className="mb-8">
+                    <textarea
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      placeholder={
+                        isAuthenticated
+                          ? "Scrivi un commento..."
+                          : "Accedi per lasciare un commento"
+                      }
+                      disabled={!isAuthenticated || commentSubmitting}
+                      className="w-full p-4 rounded-lg bg-secondary-800 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none min-h-[120px]"
+                      required
+                    ></textarea>
+                    <div className="mt-2 flex justify-end">
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={!isAuthenticated || commentSubmitting}
+                      >
+                        {commentSubmitting
+                          ? "Invio in corso..."
+                          : "Pubblica commento"}
+                      </Button>
                     </div>
-                  ))}
-                </div>
+                  </form>
+
+                  {/* Comments List */}
+                  {post.commenti && post.commenti.length > 0 ? (
+                    <div className="space-y-6">
+                      {post.commenti.map((comment) => (
+                        <div
+                          key={comment._id}
+                          className="bg-secondary-800 rounded-lg p-4"
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-secondary-700 flex items-center justify-center font-bold">
+                                {comment.utente?.nome?.charAt(0) || "U"}
+                              </div>
+                              <div>
+                                <h4 className="font-semibold">
+                                  {comment.utente?.nome || "Utente"}
+                                </h4>
+                                <p className="text-sm text-secondary-400">
+                                  {formatDate(comment.dataCreazione)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-secondary-300">{comment.testo}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 bg-secondary-800 rounded-lg">
+                      <p className="text-secondary-300">
+                        Non ci sono ancora commenti. Sii il primo a commentare!
+                      </p>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="text-center py-8 bg-secondary-800 rounded-lg">
                   <p className="text-secondary-300">
-                    Non ci sono ancora commenti. Sii il primo a commentare!
+                    I commenti sono disabilitati per questo post.
                   </p>
                 </div>
               )}

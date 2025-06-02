@@ -54,7 +54,7 @@ const blogService = {
   // Aggiungi un commento a un post
   addComment: async (postId, commentData) => {
     try {
-      const response = await api.post(`/blog/${postId}/commenti`, commentData);
+      const response = await api.post(`/blog/${postId}/comments`, commentData);
       return response.data;
     } catch (error) {
       throw error;
