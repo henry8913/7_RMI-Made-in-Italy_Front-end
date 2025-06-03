@@ -132,7 +132,7 @@ const JobsSection = () => {
                   </div>
                 </div>
                 <div className="p-6 mt-auto">
-                  <Link to={`/jobs/${job._id}`}>
+                  <Link to={`/jobs`}>
                     <Button variant="primary" className="w-full">
                       Candidati ora
                     </Button>

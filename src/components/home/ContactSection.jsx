@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import Button from '../ui/Button';
+import { contactService } from '../../services';
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -26,18 +27,37 @@ const ContactSection = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Simuliamo l'invio del form
+    // Aggiorniamo lo stato per mostrare il caricamento
     setFormStatus({
       submitted: true,
-      success: true,
-      message: 'Grazie per averci contattato! Ti risponderemo al più presto.'
+      success: false,
+      message: 'Invio in corso...'
     });
 
-    // Reset del form dopo l'invio
-    setTimeout(() => {
+    try {
+      // Prepariamo i dati per l'API
+      const contactData = {
+        nome: formData.name,
+        email: formData.email,
+        telefono: formData.phone,
+        oggetto: formData.subject,
+        messaggio: formData.message
+      };
+
+      // Inviamo i dati al backend
+      const response = await contactService.sendMessage(contactData);
+      
+      // Aggiorniamo lo stato con il successo
+      setFormStatus({
+        submitted: true,
+        success: true,
+        message: 'Grazie per averci contattato! Ti risponderemo al più presto.'
+      });
+
+      // Reset del form dopo l'invio
       setFormData({
         name: '',
         email: '',
@@ -54,7 +74,16 @@ const ContactSection = () => {
           message: ''
         });
       }, 5000);
-    }, 500);
+    } catch (error) {
+      console.error('Errore durante l\'invio del messaggio:', error);
+      
+      // Aggiorniamo lo stato con l'errore
+      setFormStatus({
+        submitted: true,
+        success: false,
+        message: error.response?.data?.message || 'Si è verificato un errore durante l\'invio del messaggio. Riprova più tardi.'
+      });
+    }
   };
 
   return (

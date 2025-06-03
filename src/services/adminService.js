@@ -350,7 +350,7 @@ export const adminService = {
 
   async getMessage(messageId) {
     try {
-      const response = await api.get(`/contact/${messageId}`);
+      const response = await api.get(`/contacts/${messageId}`);
       return response.data;
     } catch (error) {
       console.error('Errore durante il recupero del messaggio:', error);
@@ -360,7 +360,7 @@ export const adminService = {
 
   async deleteMessage(messageId) {
     try {
-      const response = await api.delete(`/contact/${messageId}`);
+      const response = await api.delete(`/contacts/${messageId}`);
       return response.data;
     } catch (error) {
       console.error('Errore durante l\'eliminazione del messaggio:', error);

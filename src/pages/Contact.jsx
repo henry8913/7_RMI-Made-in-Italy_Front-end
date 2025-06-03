@@ -121,8 +121,17 @@ const Contact = () => {
     setFormStatus({ ...formStatus, submitted: true, loading: true, message: 'Invio in corso...' });
     
     try {
+      // Prepariamo i dati per l'API con i nomi dei campi in italiano
+      const contactData = {
+        nome: formData.name,
+        email: formData.email,
+        telefono: formData.phone,
+        oggetto: formData.subject,
+        messaggio: formData.message
+      };
+      
       // Utilizzo del servizio per inviare il messaggio
-      await contactService.sendMessage(formData);
+      await contactService.sendMessage(contactData);
       
       // Gestione del successo
       setFormStatus({
@@ -131,6 +140,7 @@ const Contact = () => {
         success: true,
         message: 'Grazie per averci contattato! Ti risponderemo al più presto.'
       });
+      
       
       // Reset del form
       setFormData({

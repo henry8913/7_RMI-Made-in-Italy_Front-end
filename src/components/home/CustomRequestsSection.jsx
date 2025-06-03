@@ -106,7 +106,7 @@ const CustomRequestsSection = () => {
             </p>
           </div>
           <div className="flex justify-center">
-            <Link to="/custom-request">
+            <Link to="/custom-requests">
               <Button variant="primary" size="lg">
                 Richiedi Preventivo
               </Button>

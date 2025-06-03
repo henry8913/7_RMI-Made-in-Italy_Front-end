@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import restomodService from '../services/restomodService';
+import { contactService } from '../services';
 import { formatPrice } from '../utils/formatters';
 import { useCart } from '../contexts/CartContext';
 import { toast } from 'react-toastify';
@@ -48,17 +49,30 @@ const RestomodDetail = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Qui andrebbe implementata la logica per inviare il form
-    console.log('Form inviato:', formData);
-    toast.success('Grazie per il tuo interesse! Ti contatteremo presto.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: ''
-    });
+    try {
+      // Formatta i dati nel formato atteso dal backend (nomi in italiano)
+      const contactData = {
+        nome: formData.name,
+        email: formData.email,
+        telefono: formData.phone,
+        messaggio: `Richiesta informazioni per ${restomod.nome}: ${formData.message}`
+      };
+      
+      // Invia la richiesta di informazioni utilizzando contactService
+      await contactService.requestInfo(restomod._id, contactData);
+      toast.success('Grazie per il tuo interesse! Ti contatteremo presto.');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Errore durante l\'invio della richiesta:', error);
+      toast.error('Si è verificato un errore durante l\'invio della richiesta. Riprova più tardi.');
+    }
   };
   
   const handleAddToCart = () => {
