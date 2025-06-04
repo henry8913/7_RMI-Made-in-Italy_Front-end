@@ -26,7 +26,11 @@ const CustomRequest = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("");
+  const [timeframe, setTimeframe] = useState("");
   const [files, setFiles] = useState([]);
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
 
   useEffect(() => {
     const fetchModels = async () => {
@@ -60,22 +64,46 @@ const CustomRequest = () => {
       return;
     }
 
+    // Validazione dei campi obbligatori
+    if (!title || !description || !budget || !contactName || !contactEmail || !contactPhone) {
+      setError("Compila tutti i campi obbligatori");
+      return;
+    }
+
     try {
       setSubmitting(true);
 
-      // Create form data for file upload
-      const formData = new FormData();
-      formData.append("modelloBase", baseModel);
-      formData.append("titolo", title);
-      formData.append("descrizione", description);
-      formData.append("budget", budget);
+      // Preparazione dei dati per l'invio
+      const requestData = {
+        modelloBase: baseModel || undefined,
+        titolo: title,
+        descrizione: description,
+        budget: Number(budget),
+        tempistiche: timeframe,
+        contatto: {
+          nome: contactName,
+          email: contactEmail,
+          telefono: contactPhone
+        }
+      };
 
-      // Append files if any
-      files.forEach((file) => {
-        formData.append("allegati", file);
-      });
-
-      await customRequestService.create(formData);
+      // Se ci sono file, li gestiamo con FormData
+      if (files.length > 0) {
+        const formData = new FormData();
+        
+        // Aggiungiamo i dati JSON come stringa
+        formData.append('data', JSON.stringify(requestData));
+        
+        // Aggiungiamo i file
+        files.forEach((file) => {
+          formData.append("allegati", file);
+        });
+        
+        await customRequestService.create(formData);
+      } else {
+        // Se non ci sono file, inviamo direttamente i dati JSON
+        await customRequestService.create(requestData);
+      }
 
       setSuccess(true);
       // Reset form
@@ -83,6 +111,10 @@ const CustomRequest = () => {
       setTitle("");
       setDescription("");
       setBudget("");
+      setTimeframe("");
+      setContactName("");
+      setContactEmail("");
+      setContactPhone("");
       setFiles([]);
 
       // Scroll to top to show success message
@@ -289,6 +321,75 @@ const CustomRequest = () => {
                 </p>
               </div>
 
+              <div className="mb-6">
+                <label htmlFor="timeframe" className="block text-secondary-300 mb-2">
+                  Tempistiche desiderate*
+                </label>
+                <input
+                  type="text"
+                  id="timeframe"
+                  value={timeframe}
+                  onChange={(e) => setTimeframe(e.target.value)}
+                  className="w-full p-3 rounded-lg bg-secondary-700 text-white border border-secondary-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  placeholder="Es. entro 6 mesi, entro fine anno"
+                  required
+                />
+                <p className="text-sm text-secondary-400 mt-1">
+                  Indica quando vorresti che il progetto fosse completato
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-4 text-secondary-300">Informazioni di contatto*</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label htmlFor="contactName" className="block text-secondary-300 mb-2">
+                      Nome completo*
+                    </label>
+                    <input
+                      type="text"
+                      id="contactName"
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      className="w-full p-3 rounded-lg bg-secondary-700 text-white border border-secondary-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="Es. Mario Rossi"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="contactEmail" className="block text-secondary-300 mb-2">
+                      Email*
+                    </label>
+                    <input
+                      type="email"
+                      id="contactEmail"
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      className="w-full p-3 rounded-lg bg-secondary-700 text-white border border-secondary-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="Es. mario.rossi@email.com"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="contactPhone" className="block text-secondary-300 mb-2">
+                    Telefono*
+                  </label>
+                  <input
+                    type="tel"
+                    id="contactPhone"
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    className="w-full p-3 rounded-lg bg-secondary-700 text-white border border-secondary-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    placeholder="Es. +39 123 456 7890"
+                    required
+                  />
+                </div>
+              </div>
+
               <div className="mb-8">
                 <label htmlFor="files" className="block text-secondary-300 mb-2">
                   Allegati (opzionale)
@@ -398,30 +499,14 @@ const CustomRequest = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="bg-secondary-900 p-6 rounded-lg shadow-lg relative"
             >
-              <div className="w-12 h-12 bg-amber-500 text-secondary-900 rounded-full flex items-center justify-center mb-4 font-bold text-xl">
+              <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-secondary-900 font-bold text-xl">
                 1
               </div>
-              <h3 className="text-xl font-bold mb-2">Richiesta</h3>
+              <h3 className="text-xl font-semibold mb-3 mt-2">Richiesta</h3>
               <p className="text-secondary-300">
-                Invia la tua richiesta dettagliata con tutte le specifiche
-                desiderate per il tuo restomod personalizzato.
+                Inviaci la tua idea compilando il modulo. Descrivi il tuo
+                progetto ideale con tutti i dettagli che desideri.
               </p>
-              <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 hidden md:block">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-amber-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </div>
             </motion.div>
 
             <motion.div
@@ -430,30 +515,14 @@ const CustomRequest = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="bg-secondary-900 p-6 rounded-lg shadow-lg relative"
             >
-              <div className="w-12 h-12 bg-amber-500 text-secondary-900 rounded-full flex items-center justify-center mb-4 font-bold text-xl">
+              <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-secondary-900 font-bold text-xl">
                 2
               </div>
-              <h3 className="text-xl font-bold mb-2">Consulenza</h3>
+              <h3 className="text-xl font-semibold mb-3 mt-2">Consulenza</h3>
               <p className="text-secondary-300">
                 I nostri esperti ti contatteranno per discutere i dettagli,
-                fornire consigli e definire il progetto finale.
+                consigliarti sulle opzioni e definire le specifiche tecniche.
               </p>
-              <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 hidden md:block">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-amber-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </div>
             </motion.div>
 
             <motion.div
@@ -462,203 +531,33 @@ const CustomRequest = () => {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="bg-secondary-900 p-6 rounded-lg shadow-lg relative"
             >
-              <div className="w-12 h-12 bg-amber-500 text-secondary-900 rounded-full flex items-center justify-center mb-4 font-bold text-xl">
+              <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-secondary-900 font-bold text-xl">
                 3
               </div>
-              <h3 className="text-xl font-bold mb-2">Realizzazione</h3>
+              <h3 className="text-xl font-semibold mb-3 mt-2">Progettazione</h3>
               <p className="text-secondary-300">
-                Una volta approvato il progetto, i nostri artigiani inizieranno
-                a lavorare sulla tua auto personalizzata.
+                Creiamo un progetto dettagliato con rendering 3D, specifiche
+                tecniche e un preventivo preciso per la tua approvazione.
               </p>
-              <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 hidden md:block">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-amber-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </div>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-secondary-900 p-6 rounded-lg shadow-lg"
+              className="bg-secondary-900 p-6 rounded-lg shadow-lg relative"
             >
-              <div className="w-12 h-12 bg-amber-500 text-secondary-900 rounded-full flex items-center justify-center mb-4 font-bold text-xl">
+              <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-secondary-900 font-bold text-xl">
                 4
               </div>
-              <h3 className="text-xl font-bold mb-2">Consegna</h3>
+              <h3 className="text-xl font-semibold mb-3 mt-2">Realizzazione</h3>
               <p className="text-secondary-300">
-                Ricevi la tua auto personalizzata, pronta per essere guidata e
-                ammirata, con garanzia e assistenza post-vendita.
+                Una volta approvato il progetto, i nostri artigiani iniziano la
+                costruzione del tuo restomod personalizzato, tenendoti aggiornato
+                durante tutto il processo.
               </p>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Gallery Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">
-            Progetti personalizzati realizzati
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* These would be actual custom projects, using placeholders for now */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative group overflow-hidden rounded-lg"
-            >
-              <img
-                src="/images/custom-project-1.jpg"
-                alt="Progetto personalizzato"
-                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <div>
-                  <h3 className="text-xl font-bold">
-                    Alfa Romeo Giulia GT Elettrica
-                  </h3>
-                  <p className="text-secondary-300">
-                    Restomod elettrico con 400 CV e interni in pelle artigianale
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="relative group overflow-hidden rounded-lg"
-            >
-              <img
-                src="/images/custom-project-2.jpg"
-                alt="Progetto personalizzato"
-                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <div>
-                  <h3 className="text-xl font-bold">
-                    Lancia Delta Integrale Evoluzione
-                  </h3>
-                  <p className="text-secondary-300">
-                    Motore potenziato a 350 CV con sospensioni regolabili e
-                    interni racing
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="relative group overflow-hidden rounded-lg"
-            >
-              <img
-                src="/images/custom-project-3.jpg"
-                alt="Progetto personalizzato"
-                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <div>
-                  <h3 className="text-xl font-bold">Fiat 124 Spider Moderna</h3>
-                  <p className="text-secondary-300">
-                    Restomod con motore turbo da 280 CV e tecnologia di
-                    infotainment avanzata
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-16 bg-secondary-900">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">
-            Domande frequenti
-          </h2>
-
-          <div className="max-w-3xl mx-auto space-y-6">
-            <div className="bg-secondary-800 rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-2">
-                Quanto tempo richiede la realizzazione di un progetto
-                personalizzato?
-              </h3>
-              <p className="text-secondary-300">
-                I tempi di realizzazione variano in base alla complessità del
-                progetto, ma generalmente un restomod personalizzato richiede da
-                8 a 18 mesi per essere completato.
-              </p>
-            </div>
-
-            <div className="bg-secondary-800 rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-2">
-                Posso richiedere modifiche durante il processo di realizzazione?
-              </h3>
-              <p className="text-secondary-300">
-                Sì, è possibile richiedere modifiche durante le fasi iniziali
-                del progetto. Una volta che la produzione è avanzata, le
-                modifiche potrebbero comportare costi aggiuntivi e ritardi nella
-                consegna.
-              </p>
-            </div>
-
-            <div className="bg-secondary-800 rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-2">
-                Quali garanzie offrite sui progetti personalizzati?
-              </h3>
-              <p className="text-secondary-300">
-                Tutti i nostri progetti personalizzati sono coperti da una
-                garanzia di 2 anni su componenti meccanici e elettrici, e 5 anni
-                sulla carrozzeria. Offriamo inoltre assistenza post-vendita
-                dedicata.
-              </p>
-            </div>
-
-            <div className="bg-secondary-800 rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-2">
-                Posso utilizzare la mia auto come base per il progetto?
-              </h3>
-              <p className="text-secondary-300">
-                Certamente! Puoi fornire la tua auto come base per il progetto.
-                I nostri esperti valuteranno le condizioni del veicolo e ti
-                consiglieranno sulle migliori opzioni di personalizzazione.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Hai altre domande?</h2>
-          <p className="text-xl text-secondary-300 mb-8 max-w-2xl mx-auto">
-            Il nostro team è a tua disposizione per fornirti tutte le
-            informazioni di cui hai bisogno.
-          </p>
-          <Link to="/contact">
-            <Button variant="primary" className="px-8 py-3 text-lg">
-              Contattaci
-            </Button>
-          </Link>
         </div>
       </section>
     </div>

@@ -19,10 +19,22 @@ const Jobs = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [showApplications, setShowApplications] = useState(false);
+  const [userApplications, setUserApplications] = useState([]);
+  const [loadingApplications, setLoadingApplications] = useState(false);
+  const [applicationEmail, setApplicationEmail] = useState("");
+  const [applicationError, setApplicationError] = useState(null);
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    // Recupera l'email dal localStorage se disponibile
+    const savedEmail = localStorage.getItem('jobApplicationEmail');
+    if (savedEmail) {
+      setApplicationEmail(savedEmail);
+      setApplicationForm(prev => ({ ...prev, email: savedEmail }));
+    }
   }, []);
 
   useEffect(() => {
@@ -50,6 +62,35 @@ const Jobs = () => {
       ...prev,
       [name]: value,
     }));
+    
+    // Aggiorna anche l'email per il controllo delle candidature se necessario
+    if (name === 'email') {
+      setApplicationEmail(value);
+    }
+  };
+  
+  // Funzione per recuperare le candidature dell'utente
+  const fetchUserApplications = async () => {
+    if (!applicationEmail) {
+      setApplicationError('Inserisci un indirizzo email per verificare le tue candidature');
+      return;
+    }
+    
+    try {
+      setLoadingApplications(true);
+      setApplicationError(null);
+      
+      const applications = await jobService.getUserApplications(applicationEmail);
+      setUserApplications(applications);
+      setShowApplications(true);
+    } catch (err) {
+      console.error('Errore nel recupero delle candidature:', err);
+      setApplicationError(
+        err.response?.data?.message || 'Errore nel recupero delle candidature. Riprova più tardi.'
+      );
+    } finally {
+      setLoadingApplications(false);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -67,18 +108,20 @@ const Jobs = () => {
       return;
     }
 
+    if (!applicationForm.nome || !applicationForm.email) {
+      setSubmitError("Nome ed email sono campi obbligatori");
+      return;
+    }
+
     try {
       setSubmitting(true);
       setSubmitError(null);
 
-      const formData = new FormData();
-      formData.append("nome", applicationForm.nome);
-      formData.append("email", applicationForm.email);
-      formData.append("telefono", applicationForm.telefono);
-      formData.append("messaggio", applicationForm.messaggio);
-      formData.append("cv", applicationForm.cv);
+      // Invia la candidatura
+      await jobService.apply(selectedJob._id, applicationForm);
 
-      await jobService.apply(selectedJob._id, formData);
+      // Salva l'email nel localStorage per future consultazioni
+      localStorage.setItem('jobApplicationEmail', applicationForm.email);
 
       setSubmitSuccess(true);
       setApplicationForm({
@@ -100,7 +143,7 @@ const Jobs = () => {
     } catch (err) {
       console.error("Errore nell'invio della candidatura:", err);
       setSubmitError(
-        "Si è verificato un errore nell'invio della candidatura. Riprova più tardi."
+        err.response?.data?.message || "Si è verificato un errore nell'invio della candidatura. Riprova più tardi."
       );
     } finally {
       setSubmitting(false);
@@ -327,6 +370,9 @@ const Jobs = () => {
                         <h3 className="text-2xl font-bold mb-2">
                           {job.titolo}
                         </h3>
+                        <p className="text-secondary-400 mb-2">
+                          {job.azienda}
+                        </p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           <span className="bg-secondary-700 text-primary px-3 py-1 rounded-full text-sm">
                             {job.tipo}
@@ -337,6 +383,11 @@ const Jobs = () => {
                           {job.dipartimento && (
                             <span className="bg-secondary-700 text-white px-3 py-1 rounded-full text-sm">
                               {job.dipartimento}
+                            </span>
+                          )}
+                          {job.salario && (
+                            <span className="bg-secondary-700 text-green-400 px-3 py-1 rounded-full text-sm">
+                              {job.salario.min.toLocaleString()} - {job.salario.max.toLocaleString()} {job.salario.valuta}/anno
                             </span>
                           )}
                         </div>
@@ -582,6 +633,125 @@ const Jobs = () => {
         </div>
       </section>
 
+      {/* Check Applications Section */}
+      <section className="py-16 bg-secondary-900">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8 text-center">
+            Verifica lo stato delle tue candidature
+          </h2>
+          
+          <div className="max-w-xl mx-auto bg-secondary-800 p-6 rounded-lg shadow-lg">
+            {!showApplications ? (
+              <div>
+                <p className="text-secondary-300 mb-6 text-center">
+                  Inserisci l'email che hai utilizzato per candidarti per verificare lo stato delle tue candidature.
+                </p>
+                
+                {applicationError && (
+                  <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded mb-4">
+                    {applicationError}
+                  </div>
+                )}
+                
+                <div className="flex flex-col md:flex-row gap-4">
+                  <input
+                    type="email"
+                    value={applicationEmail}
+                    onChange={(e) => setApplicationEmail(e.target.value)}
+                    placeholder="La tua email"
+                    className="flex-grow bg-secondary-700 border border-secondary-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  />
+                  <button
+                    onClick={fetchUserApplications}
+                    disabled={loadingApplications}
+                    className="bg-amber-500 hover:bg-amber-600 text-secondary-900 font-bold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loadingApplications ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin h-4 w-4 border-2 border-t-transparent border-secondary-900 rounded-full mr-2"></div>
+                        Caricamento...
+                      </div>
+                    ) : (
+                      "Verifica candidature"
+                    )}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xl font-bold">Le tue candidature</h3>
+                  <button
+                    onClick={() => setShowApplications(false)}
+                    className="text-secondary-400 hover:text-white"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                
+                {userApplications.length === 0 ? (
+                  <p className="text-secondary-300 text-center py-4">
+                    Non hai ancora inviato candidature con questa email.
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {userApplications.map((application) => (
+                      <div key={application.candidatura._id} className="bg-secondary-700 p-4 rounded-lg">
+                        <h4 className="font-bold text-lg mb-1">{application.job.titolo}</h4>
+                        <p className="text-sm text-secondary-400 mb-1">{application.job.azienda}</p>
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          <span className="text-sm text-secondary-400">{application.job.tipo} - {application.job.luogo}</span>
+                          {application.job.salario && (
+                            <span className="text-sm text-green-400">
+                              {application.job.salario.min.toLocaleString()} - {application.job.salario.max.toLocaleString()} {application.job.salario.valuta}/anno
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="flex justify-between items-center mt-3">
+                          <div>
+                            <span className="text-sm text-secondary-400">Stato: </span>
+                            <span className={`text-sm font-medium ${
+                              application.candidatura.stato === 'ricevuta' ? 'text-blue-400' :
+                              application.candidatura.stato === 'in_revisione' ? 'text-yellow-400' :
+                              application.candidatura.stato === 'colloquio' ? 'text-purple-400' :
+                              application.candidatura.stato === 'accettata' ? 'text-green-400' :
+                              'text-red-400'
+                            }`}>
+                              {application.candidatura.stato === 'ricevuta' ? 'Ricevuta' :
+                               application.candidatura.stato === 'in_revisione' ? 'In revisione' :
+                               application.candidatura.stato === 'colloquio' ? 'Colloquio' :
+                               application.candidatura.stato === 'accettata' ? 'Accettata' :
+                               'Rifiutata'}
+                            </span>
+                          </div>
+                          <span className="text-xs text-secondary-400">
+                            {new Date(application.candidatura.dataInvio).toLocaleDateString('it-IT')}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+      
       {/* Application Process Section */}
       <section className="py-16 bg-secondary-800">
         <div className="container mx-auto px-4">

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { FaUsers, FaCar, FaBuilding, FaBlog, FaBox, FaEnvelope, FaBriefcase, FaClipboardList } from 'react-icons/fa';
+import { FaUsers, FaCar, FaBuilding, FaBlog, FaBox, FaEnvelope, FaBriefcase, FaClipboardList, FaTrash, FaReply, FaFile } from 'react-icons/fa';
 import adminService from '../services/adminService';
 
 const Admin = () => {
@@ -66,7 +66,8 @@ const Admin = () => {
     { id: 'blogs', name: 'Blog', icon: <FaBlog /> },
     { id: 'packages', name: 'Pacchetti', icon: <FaBox /> },
     { id: 'jobs', name: 'Lavori', icon: <FaBriefcase /> },
-    { id: 'customRequests', name: 'Richieste Personalizzate', icon: <FaEnvelope /> },
+    { id: 'messages', name: 'Contatti', icon: <FaEnvelope /> },
+    
   ];
 
   // Componente per la dashboard
@@ -80,8 +81,7 @@ const Admin = () => {
         blogs: 'Articoli Blog',
         packages: 'Pacchetti',
         messages: 'Messaggi',
-        jobs: 'Lavori',
-        customRequests: 'Richieste Personalizzate'
+        jobs: 'Lavori'
       };
       return displayNames[key] || key;
     };
@@ -2692,16 +2692,69 @@ const Admin = () => {
     );
   };
 
-  // Componente per la gestione delle richieste personalizzate
-  const CustomRequestsManagement = () => {
-    const [customRequests, setCustomRequests] = useState([]);
+
+  // Componente per la gestione dei messaggi di contatto
+  const MessagesManagement = () => {
+    const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [selectedRequest, setSelectedRequest] = useState(null);
-    const [responseData, setResponseData] = useState({
-      testo: '',
-      preventivo: ''
-    });
+    const [selectedMessage, setSelectedMessage] = useState(null);
+
+    // Carica i messaggi
+    useEffect(() => {
+      const fetchMessages = async () => {
+        setLoading(true);
+        setError('');
+        try {
+          const data = await adminService.getMessages();
+          setMessages(data);
+        } catch (err) {
+          console.error('Errore durante il recupero dei messaggi:', err);
+          setError('Impossibile caricare i messaggi. Riprova più tardi.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchMessages();
+    }, []);
+
+    // Gestisce il click su un messaggio
+    const handleMessageClick = async (messageId) => {
+      setLoading(true);
+      setError('');
+      try {
+        const message = await adminService.getMessage(messageId);
+        setSelectedMessage(message);
+      } catch (err) {
+        console.error('Errore durante il recupero del messaggio:', err);
+        setError('Impossibile caricare il messaggio. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Gestisce l'eliminazione di un messaggio
+    const handleDeleteMessage = async (messageId) => {
+      if (!window.confirm('Sei sicuro di voler eliminare questo messaggio? Questa azione non può essere annullata.')) {
+        return;
+      }
+
+      setLoading(true);
+      setError('');
+      try {
+        await adminService.deleteMessage(messageId);
+        setMessages(messages.filter(message => message._id !== messageId));
+        if (selectedMessage && selectedMessage._id === messageId) {
+          setSelectedMessage(null);
+        }
+      } catch (err) {
+        console.error('Errore durante l\'eliminazione del messaggio:', err);
+        setError('Impossibile eliminare il messaggio. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
     // Formatta la data
     const formatDate = (dateString) => {
@@ -2709,347 +2762,128 @@ const Admin = () => {
       return new Date(dateString).toLocaleDateString('it-IT', options);
     };
 
-    // Carica le richieste personalizzate
-    useEffect(() => {
-      const fetchCustomRequests = async () => {
-        setLoading(true);
-        setError('');
-        try {
-          const data = await adminService.getCustomRequests();
-          setCustomRequests(data);
-        } catch (err) {
-          console.error('Errore durante il recupero delle richieste personalizzate:', err);
-          setError('Impossibile caricare le richieste personalizzate. Riprova più tardi.');
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchCustomRequests();
-    }, []);
-
-    // Gestisce il click sul pulsante di visualizzazione/risposta
-    const handleViewRequest = (request) => {
-      setSelectedRequest(request);
-      setResponseData({
-        testo: request.rispostaAdmin?.testo || '',
-        preventivo: request.rispostaAdmin?.preventivo || ''
-      });
-    };
-
-    // Gestisce i cambiamenti nei campi del form di risposta
-    const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setResponseData({
-        ...responseData,
-        [name]: value
-      });
-    };
-
-    // Gestisce l'invio della risposta
-    const handleSendResponse = async () => {
-      if (!responseData.testo) {
-        setError('Il testo della risposta è obbligatorio');
-        return;
-      }
-
-      setLoading(true);
-      setError('');
-      try {
-        await adminService.respondToCustomRequest(selectedRequest._id, responseData);
-        
-        // Aggiorna la lista delle richieste
-        const updatedRequests = await adminService.getCustomRequests();
-        setCustomRequests(updatedRequests);
-        
-        // Aggiorna la richiesta selezionata
-        const updatedRequest = updatedRequests.find(req => req._id === selectedRequest._id);
-        setSelectedRequest(updatedRequest);
-        
-        // Resetta il form
-        setResponseData({
-          testo: updatedRequest.rispostaAdmin?.testo || '',
-          preventivo: updatedRequest.rispostaAdmin?.preventivo || ''
-        });
-      } catch (err) {
-        console.error('Errore durante l\'invio della risposta:', err);
-        setError('Impossibile inviare la risposta. Riprova più tardi.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Gestisce l'eliminazione di una richiesta
-    const handleDeleteRequest = async (requestId) => {
-      if (!window.confirm('Sei sicuro di voler eliminare questa richiesta? Questa azione non può essere annullata.')) {
-        return;
-      }
-
-      setLoading(true);
-      setError('');
-      try {
-        await adminService.deleteCustomRequest(requestId);
-        
-        // Aggiorna la lista delle richieste
-        const updatedRequests = await adminService.getCustomRequests();
-        setCustomRequests(updatedRequests);
-        
-        // Se la richiesta eliminata era quella selezionata, deselezionala
-        if (selectedRequest && selectedRequest._id === requestId) {
-          setSelectedRequest(null);
-          setResponseData({
-            testo: '',
-            preventivo: ''
-          });
-        }
-      } catch (err) {
-        console.error('Errore durante l\'eliminazione della richiesta:', err);
-        setError('Impossibile eliminare la richiesta. Riprova più tardi.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Ottieni il colore del badge in base allo stato
-    const getStatusBadgeColor = (status) => {
-      switch (status) {
-        case 'inviata':
-          return 'bg-blue-500';
-        case 'in_revisione':
-          return 'bg-yellow-500';
-        case 'preventivo_inviato':
-          return 'bg-purple-500';
-        case 'accettata':
-          return 'bg-green-500';
-        case 'rifiutata':
-          return 'bg-red-500';
-        case 'completata':
-          return 'bg-green-700';
-        default:
-          return 'bg-gray-500';
-      }
-    };
-
-    // Ottieni il testo dello stato
-    const getStatusText = (status) => {
-      switch (status) {
-        case 'inviata':
-          return 'Inviata';
-        case 'in_revisione':
-          return 'In Revisione';
-        case 'preventivo_inviato':
-          return 'Preventivo Inviato';
-        case 'accettata':
-          return 'Accettata';
-        case 'rifiutata':
-          return 'Rifiutata';
-        case 'completata':
-          return 'Completata';
-        default:
-          return status;
-      }
-    };
-
     return (
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="bg-secondary-900 p-6 rounded-sm border border-secondary-800"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-secondary-900 rounded-sm border border-secondary-800 overflow-hidden"
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-light text-white">Gestione Richieste Personalizzate</h2>
-          <div className="text-primary text-2xl">
-            <FaEnvelope />
-          </div>
-        </div>
-        
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm"
-          >
-            {error}
-          </motion.div>
-        )}
-
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Lista delle richieste */}
-          <div className="lg:w-1/2">
-            <div className="bg-secondary-800 p-4 rounded-sm mb-4 shadow-md">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-white text-lg">Richieste Ricevute</h3>
-                <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs">
-                  {customRequests.length} richieste
-                </span>
+        <div className="p-6">
+          <h2 className="text-2xl font-light text-white mb-6">Gestione Contatti</h2>
+          
+          {error && (
+            <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+              {error}
+            </div>
+          )}
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Lista messaggi */}
+            <div className="lg:col-span-1 bg-secondary-800 rounded-sm overflow-hidden">
+              <div className="p-4 border-b border-secondary-700">
+                <h3 className="text-white font-medium">Messaggi ricevuti</h3>
               </div>
               
-              {loading && !customRequests.length ? (
-                <div className="flex justify-center items-center h-32">
+              {loading && messages.length === 0 ? (
+                <div className="flex justify-center items-center p-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
                 </div>
-              ) : customRequests.length === 0 ? (
-                <div className="bg-secondary-700/30 p-6 rounded-sm text-center">
-                  <FaEnvelope className="text-secondary-500 text-4xl mx-auto mb-2" />
-                  <p className="text-secondary-400">Nessuna richiesta personalizzata trovata.</p>
+              ) : messages.length === 0 ? (
+                <div className="p-6 text-center text-secondary-400">
+                  Nessun messaggio ricevuto
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-secondary-700">
-                    <thead>
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Titolo</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Utente</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Data</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Stato</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Azioni</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-secondary-700">
-                      {customRequests.map((request) => (
-                        <motion.tr 
-                          key={request._id} 
-                          className={`cursor-pointer hover:bg-secondary-700/50 transition-colors duration-150 ${selectedRequest && selectedRequest._id === request._id ? 'bg-secondary-700' : ''}`}
-                          onClick={() => handleViewRequest(request)}
-                          whileHover={{ scale: 1.01 }}
-                          transition={{ duration: 0.1 }}
-                        >
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{request.titolo}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{request.utente ? request.utente.nome : 'Utente sconosciuto'}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{formatDate(request.createdAt)}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeColor(request.stato)} text-white`}>
-                              {getStatusText(request.stato)}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleViewRequest(request);
-                              }}
-                              className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-sm text-xs mr-2 transition-colors duration-300"
-                            >
-                              {request.stato === 'inviata' ? 'Rispondi' : 'Visualizza'}
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteRequest(request._id);
-                              }}
-                              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-sm text-xs transition-colors duration-300"
-                            >
-                              Elimina
-                            </button>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="max-h-[600px] overflow-y-auto">
+                  {messages.map((message) => (
+                    <div 
+                      key={message._id}
+                      onClick={() => handleMessageClick(message._id)}
+                      className={`p-4 border-b border-secondary-700 cursor-pointer transition-colors duration-300 ${selectedMessage && selectedMessage._id === message._id ? 'bg-secondary-700' : 'hover:bg-secondary-750'} ${!message.letto ? 'border-l-4 border-l-primary' : ''}`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <h4 className="text-white font-medium">{message.nome}</h4>
+                        <span className="text-xs text-secondary-400">{formatDate(message.dataInvio)}</span>
+                      </div>
+                      <p className="text-secondary-300 text-sm mt-1">{message.email}</p>
+                      <p className="text-secondary-400 text-sm mt-2 line-clamp-2">{message.messaggio}</p>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Dettaglio richiesta e form di risposta */}
-          <div className="lg:w-1/2">
-            {selectedRequest ? (
-              <motion.div 
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                className="bg-secondary-800 p-6 rounded-sm shadow-md"
-              >
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-white text-lg">Dettaglio Richiesta</h3>
-                  <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeColor(selectedRequest.stato)} text-white`}>
-                    {getStatusText(selectedRequest.stato)}
-                  </span>
-                </div>
-                
-                <div className="mb-6 bg-secondary-700/30 p-4 rounded-sm">
-                  <h4 className="text-white text-md font-medium mb-2">{selectedRequest.titolo}</h4>
-                  <p className="text-secondary-300 text-sm mb-4">{selectedRequest.descrizione}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="bg-secondary-700/50 p-3 rounded-sm">
-                      <p className="text-secondary-400 text-xs uppercase">Budget</p>
-                      <p className="text-white font-medium">{selectedRequest.budget ? `€${selectedRequest.budget.toLocaleString('it-IT')}` : 'Non specificato'}</p>
-                    </div>
-                    <div className="bg-secondary-700/50 p-3 rounded-sm">
-                      <p className="text-secondary-400 text-xs uppercase">Tempistiche</p>
-                      <p className="text-white font-medium">{selectedRequest.tempistiche || 'Non specificate'}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-secondary-700/50 p-3 rounded-sm mb-4">
-                    <p className="text-secondary-400 text-xs uppercase">Modello Base</p>
-                    <p className="text-white font-medium">{selectedRequest.modelloBase ? selectedRequest.modelloBase.nome : 'Nessun modello selezionato'}</p>
-                  </div>
-                  
-                  <div className="bg-secondary-700/50 p-3 rounded-sm">
-                    <p className="text-secondary-400 text-xs uppercase">Contatto</p>
-                    <p className="text-white font-medium">
-                      {selectedRequest.contatto?.nome || (selectedRequest.utente ? selectedRequest.utente.nome : 'Utente sconosciuto')} - {selectedRequest.contatto?.email || (selectedRequest.utente ? selectedRequest.utente.email : 'Email sconosciuta')}
-                      {selectedRequest.contatto?.telefono && ` - ${selectedRequest.contatto.telefono}`}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="border-t border-secondary-700 pt-6">
-                  <h4 className="text-white text-md font-medium mb-4">Risposta</h4>
-                  
-                  <div className="mb-4">
-                    <label htmlFor="testo" className="block text-secondary-400 text-sm mb-1">Testo della risposta</label>
-                    <textarea
-                      id="testo"
-                      name="testo"
-                      value={responseData.testo}
-                      onChange={handleInputChange}
-                      rows="4"
-                      className="w-full bg-secondary-700 border border-secondary-600 rounded-sm px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
-                      placeholder="Inserisci la tua risposta..."
-                    ></textarea>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <label htmlFor="preventivo" className="block text-secondary-400 text-sm mb-1">Preventivo (€)</label>
-                    <input
-                      type="number"
-                      id="preventivo"
-                      name="preventivo"
-                      value={responseData.preventivo}
-                      onChange={handleInputChange}
-                      className="w-full bg-secondary-700 border border-secondary-600 rounded-sm px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-primary"
-                      placeholder="Inserisci l'importo del preventivo..."
-                    />
-                  </div>
-                  
-                  <div className="flex justify-end">
-                    <button
-                      onClick={handleSendResponse}
-                      disabled={loading}
-                      className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-sm transition-colors duration-300 flex items-center"
-                    >
-                      {loading ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                          Invio in corso...
-                        </>
-                      ) : (
-                        'Invia Risposta'
+            
+            {/* Dettaglio messaggio */}
+            <div className="lg:col-span-2">
+              {selectedMessage ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-secondary-800 p-6 rounded-sm"
+                >
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <h3 className="text-xl text-white font-medium">{selectedMessage.nome}</h3>
+                      <p className="text-secondary-300 mt-1">{selectedMessage.email}</p>
+                      {selectedMessage.telefono && (
+                        <p className="text-secondary-400 mt-1">{selectedMessage.telefono}</p>
                       )}
+                      <p className="text-secondary-400 text-sm mt-2">
+                        Ricevuto il {formatDate(selectedMessage.dataInvio)}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteMessage(selectedMessage._id)}
+                      className="text-red-500 hover:text-red-400 transition-colors duration-300"
+                      title="Elimina messaggio"
+                    >
+                      <FaTrash />
                     </button>
                   </div>
+                  
+                  <div className="bg-secondary-850 p-4 rounded-sm mb-6">
+                    <h4 className="text-white text-md font-medium mb-2">Messaggio</h4>
+                    <p className="text-secondary-300 whitespace-pre-line">{selectedMessage.messaggio}</p>
+                  </div>
+                  
+                  {selectedMessage.allegati && selectedMessage.allegati.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="text-white text-md font-medium mb-2">Allegati</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {selectedMessage.allegati.map((allegato, index) => (
+                          <a
+                            key={index}
+                            href={allegato.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center p-3 bg-secondary-750 rounded-sm hover:bg-secondary-700 transition-colors duration-300"
+                          >
+                            <FaFile className="text-primary mr-3" />
+                            <span className="text-white truncate">{allegato.filename}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-end">
+                    <a
+                      href={`mailto:${selectedMessage.email}`}
+                      className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-sm transition-colors duration-300 flex items-center"
+                    >
+                      <FaReply className="mr-2" />
+                      Rispondi via Email
+                    </a>
+                  </div>
+                </motion.div>
+              ) : (
+                <div className="bg-secondary-800 p-8 rounded-sm flex flex-col items-center justify-center h-64 shadow-md">
+                  <FaEnvelope className="text-secondary-600 text-5xl mb-4" />
+                  <p className="text-secondary-400 text-center">Seleziona un messaggio per visualizzarne i dettagli</p>
                 </div>
-              </motion.div>
-            ) : (
-              <div className="bg-secondary-800 p-8 rounded-sm flex flex-col items-center justify-center h-64 shadow-md">
-                <FaEnvelope className="text-secondary-600 text-5xl mb-4" />
-                <p className="text-secondary-400 text-center">Seleziona una richiesta per visualizzarne i dettagli</p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </motion.div>

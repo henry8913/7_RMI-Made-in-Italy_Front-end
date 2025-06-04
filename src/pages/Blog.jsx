@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { blogService } from '../services';
 import { Button } from '../components/ui';
+import Newsletter from '../components/common/Newsletter';
 
 const Blog = () => {
   const [posts, setPosts] = useState([]);
@@ -11,6 +12,9 @@ const Blog = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalPosts, setTotalPosts] = useState(0);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -21,13 +25,18 @@ const Blog = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const filters = {};
+        const filters = {
+          page: currentPage,
+          limit: 9
+        };
         if (activeCategory !== 'all') {
           filters.categoria = activeCategory;
         }
         const data = await blogService.getAll(filters);
         console.log('Blog data:', data); // Log per debug
         setPosts(data.posts || []);
+        setTotalPages(data.totalPages || 1);
+        setTotalPosts(data.totalPosts || 0);
 
         // Estrai le categorie uniche dai post
         if (data.posts && data.posts.length > 0) {
@@ -57,7 +66,7 @@ const Blog = () => {
 
     fetchPosts();
     fetchFeaturedPost();
-  }, [activeCategory]);
+  }, [activeCategory, currentPage]);
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -222,25 +231,55 @@ const Blog = () => {
               <Button onClick={() => setActiveCategory('all')} variant="secondary">Visualizza tutti i post</Button>
             </div>
           )}
+          
+          {/* Paginazione */}
+          {!loading && !error && totalPages > 1 && (
+            <div className="flex justify-center mt-12">
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-lg ${currentPage === 1 ? 'bg-secondary-800 text-secondary-500 cursor-not-allowed' : 'bg-secondary-800 text-white hover:bg-secondary-700'}`}
+                >
+                  Precedente
+                </button>
+                
+                <div className="flex space-x-2">
+                  {[...Array(totalPages).keys()].map(number => (
+                    <button
+                      key={number + 1}
+                      onClick={() => setCurrentPage(number + 1)}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${currentPage === number + 1 ? 'bg-primary text-white' : 'bg-secondary-800 text-white hover:bg-secondary-700'}`}
+                    >
+                      {number + 1}
+                    </button>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? 'bg-secondary-800 text-secondary-500 cursor-not-allowed' : 'bg-secondary-800 text-white hover:bg-secondary-700'}`}
+                >
+                  Successiva
+                </button>
+              </div>
+            </div>
+          )}
+          
+          {/* Informazioni sulla paginazione */}
+          {!loading && !error && posts.length > 0 && (
+            <div className="text-center mt-4 text-secondary-400">
+              Visualizzazione {posts.length} di {totalPosts} articoli
+            </div>
+          )}
         </div>
       </section>
 
       {/* Newsletter Section */}
       <section className="py-16 bg-secondary-800">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Iscriviti alla nostra Newsletter</h2>
-            <p className="text-secondary-300 mb-8">Ricevi gli ultimi articoli e aggiornamenti direttamente nella tua casella di posta.</p>
-            <form className="flex flex-col sm:flex-row gap-4 justify-center">
-              <input 
-                type="email" 
-                placeholder="Il tuo indirizzo email" 
-                className="px-4 py-3 rounded-lg bg-secondary-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 flex-grow max-w-md"
-                required
-              />
-              <Button type="submit" variant="primary">Iscriviti</Button>
-            </form>
-          </div>
+          <Newsletter />
         </div>
       </section>
     </div>

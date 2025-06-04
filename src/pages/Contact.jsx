@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 import { contactService } from '../services';
+import Newsletter from '../components/common/Newsletter';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaClock, FaTwitter, FaInstagram, FaFacebookF, FaYoutube, FaLinkedinIn } from 'react-icons/fa';
 
 const Contact = () => {
@@ -525,37 +526,7 @@ const Contact = () => {
       {/* Newsletter Section */}
       <section className="section-padding bg-secondary-900">
         <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="luxury-card p-8 rounded-lg text-center"
-          >
-            <h2 className="text-3xl font-heading font-bold mb-4">Iscriviti alla nostra newsletter</h2>
-            <p className="text-secondary-300 mb-8 max-w-2xl mx-auto">
-              Resta aggiornato sulle ultime novità, eventi esclusivi e offerte speciali di RMI Restomode Made in Italy.
-            </p>
-            
-            <form className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
-              <input
-                type="email"
-                placeholder="Il tuo indirizzo email"
-                className="flex-grow bg-secondary-800 border border-secondary-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
-                required
-              />
-              <Button 
-                type="submit" 
-                variant="primary" 
-                size="lg"
-              >
-                Iscriviti
-              </Button>
-            </form>
-            
-            <p className="text-sm text-secondary-400 mt-4">
-              Iscrivendoti accetti la nostra <a href="/privacy" className="text-primary hover:text-primary-400 transition-colors">Privacy Policy</a>.
-            </p>
-          </motion.div>
+          <Newsletter />
         </div>
       </section>
     </div>

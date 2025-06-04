@@ -4,8 +4,20 @@ const customRequestService = {
   // Invia una nuova richiesta personalizzata
   create: async (requestData) => {
     try {
-      const response = await api.post('/api/custom-requests', requestData);
-      return response.data;
+      // Verifica se requestData è un'istanza di FormData
+      if (requestData instanceof FormData) {
+        // Se è FormData, imposta l'header corretto per multipart/form-data
+        const response = await api.post('/custom-requests', requestData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        return response.data;
+      } else {
+        // Se è un oggetto JSON normale
+        const response = await api.post('/custom-requests', requestData);
+        return response.data;
+      }
     } catch (error) {
       throw error;
     }
@@ -14,7 +26,7 @@ const customRequestService = {
   // Ottieni tutte le richieste dell'utente corrente
   getUserRequests: async () => {
     try {
-      const response = await api.get('/api/custom-requests/me');
+      const response = await api.get('/custom-requests/me');
       return response.data;
     } catch (error) {
       throw error;
@@ -24,7 +36,7 @@ const customRequestService = {
   // Ottieni una singola richiesta per ID
   getById: async (id) => {
     try {
-      const response = await api.get(`/api/custom-requests/${id}`);
+      const response = await api.get(`/custom-requests/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -34,7 +46,7 @@ const customRequestService = {
   // Aggiorna una richiesta esistente
   update: async (id, requestData) => {
     try {
-      const response = await api.put(`/api/custom-requests/${id}`, requestData);
+      const response = await api.put(`/custom-requests/${id}`, requestData);
       return response.data;
     } catch (error) {
       throw error;
@@ -44,7 +56,7 @@ const customRequestService = {
   // Annulla una richiesta
   cancel: async (id) => {
     try {
-      const response = await api.put(`/api/custom-requests/${id}/annulla`);
+      const response = await api.put(`/custom-requests/${id}/annulla`);
       return response.data;
     } catch (error) {
       throw error;
@@ -54,7 +66,7 @@ const customRequestService = {
   // Accetta un preventivo
   acceptQuote: async (id) => {
     try {
-      const response = await api.put(`/api/custom-requests/${id}/accetta`);
+      const response = await api.put(`/custom-requests/${id}/accetta`);
       return response.data;
     } catch (error) {
       throw error;
@@ -67,7 +79,7 @@ const customRequestService = {
       const formData = new FormData();
       formData.append('allegato', file);
       
-      const response = await api.post(`/api/custom-requests/${id}/allegati`, formData, {
+      const response = await api.post(`/custom-requests/${id}/allegati`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

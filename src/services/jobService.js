@@ -45,6 +45,18 @@ const jobService = {
       });
       return response.data;
     } catch (error) {
+      console.error('Errore nell\'invio della candidatura:', error);
+      throw error;
+    }
+  },
+  
+  // Ottieni le candidature di un utente tramite email
+  getUserApplications: async (email) => {
+    try {
+      const response = await api.get(`/jobs/user/candidature?email=${encodeURIComponent(email)}`);
+      return response.data;
+    } catch (error) {
+      console.error('Errore nel recupero delle candidature:', error);
       throw error;
     }
   },

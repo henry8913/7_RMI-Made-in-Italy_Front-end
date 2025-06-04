@@ -17,6 +17,10 @@ const TestDrive = () => {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [location, setLocation] = useState('');
+  const [notes, setNotes] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
   const [availableTimes, setAvailableTimes] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -93,18 +97,24 @@ const TestDrive = () => {
       return;
     }
 
-    if (!selectedModel || !date || !time || !location) {
+    if (!selectedModel || !date || !time || !location || !contactName || !contactEmail || !contactPhone) {
       alert('Per favore, compila tutti i campi richiesti.');
       return;
     }
 
     try {
       setSubmitting(true);
-      await testDriveService.bookTestDrive({
+      await testDriveService.book({
         modello: selectedModel,
         data: date,
         ora: time,
-        luogo: location
+        luogo: location,
+        note: notes,
+        contatto: {
+          nome: contactName,
+          email: contactEmail,
+          telefono: contactPhone
+        }
       });
       
       setSuccess(true);
@@ -113,6 +123,10 @@ const TestDrive = () => {
       setDate('');
       setTime('');
       setLocation('');
+      setNotes('');
+      setContactName('');
+      setContactEmail('');
+      setContactPhone('');
       
       // Scroll to top to show success message
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -256,7 +270,7 @@ const TestDrive = () => {
                 )}
               </div>
 
-              <div className="mb-8">
+              <div className="mb-6">
                 <label htmlFor="location" className="block text-secondary-300 mb-2">Seleziona una sede*</label>
                 <select
                   id="location"
@@ -272,6 +286,60 @@ const TestDrive = () => {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div className="mb-6">
+                <label htmlFor="notes" className="block text-secondary-300 mb-2">Note (opzionale)</label>
+                <textarea
+                  id="notes"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Inserisci eventuali richieste o preferenze"
+                  className="w-full p-3 rounded-lg bg-secondary-800 text-white border border-secondary-600 focus:outline-none focus:ring-2 focus:ring-primary h-24"
+                ></textarea>
+              </div>
+
+              <div className="mb-6 border-t border-secondary-700 pt-6">
+                <h3 className="text-xl font-semibold mb-4">Informazioni di contatto*</h3>
+                
+                <div className="mb-4">
+                  <label htmlFor="contactName" className="block text-secondary-300 mb-2">Nome completo*</label>
+                  <input
+                    type="text"
+                    id="contactName"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    placeholder="Inserisci il tuo nome completo"
+                    className="w-full p-3 rounded-lg bg-secondary-800 text-white border border-secondary-600 focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                  />
+                </div>
+                
+                <div className="mb-4">
+                  <label htmlFor="contactEmail" className="block text-secondary-300 mb-2">Email*</label>
+                  <input
+                    type="email"
+                    id="contactEmail"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    placeholder="Inserisci la tua email"
+                    className="w-full p-3 rounded-lg bg-secondary-800 text-white border border-secondary-600 focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                  />
+                </div>
+                
+                <div className="mb-4">
+                  <label htmlFor="contactPhone" className="block text-secondary-300 mb-2">Telefono*</label>
+                  <input
+                    type="tel"
+                    id="contactPhone"
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    placeholder="Inserisci il tuo numero di telefono"
+                    className="w-full p-3 rounded-lg bg-secondary-800 text-white border border-secondary-600 focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="flex justify-center">

@@ -4,7 +4,7 @@ const newsletterService = {
   // Iscrizione alla newsletter
   subscribe: async (userData) => {
     try {
-      const response = await api.post('/api/newsletter/iscriviti', userData);
+      const response = await api.post('/newsletter/iscriviti', userData);
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ const newsletterService = {
   // Disiscrizione dalla newsletter
   unsubscribe: async (token) => {
     try {
-      const response = await api.post(`/api/newsletter/disiscrivi/${token}`);
+      const response = await api.post(`/newsletter/disiscrivi/${token}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -24,7 +24,7 @@ const newsletterService = {
   // Aggiorna preferenze newsletter
   updatePreferences: async (token, preferences) => {
     try {
-      const response = await api.put(`/api/newsletter/preferenze/${token}`, preferences);
+      const response = await api.put(`/newsletter/preferenze/${token}`, preferences);
       return response.data;
     } catch (error) {
       throw error;
@@ -34,7 +34,7 @@ const newsletterService = {
   // Verifica stato iscrizione (per utenti autenticati)
   checkSubscription: async (email) => {
     try {
-      const response = await api.get(`/api/newsletter/verifica`, { params: { email } });
+      const response = await api.get(`/newsletter/verifica`, { params: { email } });
       return response.data;
     } catch (error) {
       throw error;

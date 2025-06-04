@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import brandService from '../services/brandService';
+import Newsletter from '../components/common/Newsletter';
 
 const About = () => {
   // State per i brand
@@ -340,6 +341,13 @@ const About = () => {
               ))}
             </motion.div>
           )}
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-16 bg-secondary-800">
+        <div className="container mx-auto px-4">
+          <Newsletter />
         </div>
       </section>
     </div>

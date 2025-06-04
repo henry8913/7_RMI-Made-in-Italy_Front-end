@@ -8,6 +8,7 @@ import JobsSection from '../components/home/JobsSection';
 import CustomRequestsSection from '../components/home/CustomRequestsSection';
 import TestimonialSection from '../components/home/TestimonialSection';
 import ContactSection from '../components/home/ContactSection';
+import Newsletter from '../components/common/Newsletter';
 import { motion } from 'framer-motion';
 
 const Home = () => {
@@ -101,6 +102,12 @@ const Home = () => {
       
       <motion.section variants={sectionVariants}>
         <ContactSection />
+      </motion.section>
+      
+      <motion.section variants={sectionVariants}>
+        <div className="container-custom py-20">
+          <Newsletter />
+        </div>
       </motion.section>
     </motion.div>
   );

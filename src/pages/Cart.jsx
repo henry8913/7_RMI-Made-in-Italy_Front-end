@@ -327,6 +327,23 @@ const Cart = () => {
               <div className="lg:col-span-2">
                 <div className="bg-secondary-900/30 border border-secondary-800/50 rounded-lg overflow-hidden mb-8">
                   <div className="p-6">
+                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-md p-4 mb-6">
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="ml-3">
+                          <h3 className="text-sm font-medium text-amber-400">Modalità Demo</h3>
+                          <div className="mt-2 text-sm text-secondary-300">
+                            <p>Questo è un form di checkout dimostrativo. Nessun pagamento reale verrà processato e nessun prodotto verrà spedito.</p>
+                            <p className="mt-1">Puoi inserire dati fittizi in tutti i campi per testare il processo di checkout.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
                     <h2 className="text-xl font-heading mb-6">Informazioni di spedizione e pagamento</h2>
                     
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -445,7 +462,7 @@ const Cart = () => {
                       </div>
                       
                       <div>
-                        <h3 className="text-lg font-medium mb-4">Metodo di pagamento</h3>
+                        <h3 className="text-lg font-medium mb-4">Metodo di pagamento <span className="text-amber-400 text-sm">(Demo)</span></h3>
                         <div className="space-y-4">
                           <div className="flex items-center">
                             <input
@@ -462,6 +479,55 @@ const Cart = () => {
                             </label>
                           </div>
                           
+                          {customerInfo.paymentMethod === 'card' && (
+                            <div className="ml-7 mt-3 space-y-4 p-4 bg-secondary-800/30 rounded-md border border-secondary-700/50">
+                              <div className="text-amber-400 text-sm mb-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Modalità demo: inserisci dati fittizi
+                              </div>
+                              
+                              <div>
+                                <label htmlFor="cardNumber" className="block text-sm font-medium text-secondary-300 mb-2">
+                                  Numero carta
+                                </label>
+                                <input
+                                  type="text"
+                                  id="cardNumber"
+                                  placeholder="1234 5678 9012 3456"
+                                  className="w-full bg-secondary-800/50 border border-secondary-700 rounded-md px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                />
+                              </div>
+                              
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <label htmlFor="expDate" className="block text-sm font-medium text-secondary-300 mb-2">
+                                    Data scadenza
+                                  </label>
+                                  <input
+                                    type="text"
+                                    id="expDate"
+                                    placeholder="MM/AA"
+                                    className="w-full bg-secondary-800/50 border border-secondary-700 rounded-md px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                  />
+                                </div>
+                                
+                                <div>
+                                  <label htmlFor="cvv" className="block text-sm font-medium text-secondary-300 mb-2">
+                                    CVV
+                                  </label>
+                                  <input
+                                    type="text"
+                                    id="cvv"
+                                    placeholder="123"
+                                    className="w-full bg-secondary-800/50 border border-secondary-700 rounded-md px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
                           <div className="flex items-center">
                             <input
                               type="radio"
@@ -477,6 +543,17 @@ const Cart = () => {
                             </label>
                           </div>
                           
+                          {customerInfo.paymentMethod === 'paypal' && (
+                            <div className="ml-7 mt-3 p-4 bg-secondary-800/30 rounded-md border border-secondary-700/50">
+                              <div className="text-amber-400 text-sm mb-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Modalità demo: non verrai reindirizzato a PayPal
+                              </div>
+                            </div>
+                          )}
+                          
                           <div className="flex items-center">
                             <input
                               type="radio"
@@ -491,6 +568,20 @@ const Cart = () => {
                               Bonifico bancario
                             </label>
                           </div>
+                          
+                          {customerInfo.paymentMethod === 'bank' && (
+                            <div className="ml-7 mt-3 p-4 bg-secondary-800/30 rounded-md border border-secondary-700/50">
+                              <div className="text-amber-400 text-sm mb-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Modalità demo: nessun bonifico da effettuare
+                              </div>
+                              <p className="text-secondary-300 text-sm">IBAN: IT12A0123456789000000123456</p>
+                              <p className="text-secondary-300 text-sm">Intestatario: RMI Made in Italy S.r.l.</p>
+                              <p className="text-secondary-300 text-sm">Causale: Ordine Demo</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                       

@@ -158,7 +158,8 @@ export const adminService = {
   // BLOG
   async getBlogPosts() {
     try {
-      const response = await api.get('/blog');
+      // Richiedi tutti i post del blog con un limite alto per visualizzarli tutti
+      const response = await api.get('/blog?limit=1000');
       console.log('Risposta completa API blog:', response);
       
       // Verifica se la risposta è valida e contiene dati
@@ -358,6 +359,16 @@ export const adminService = {
     }
   },
 
+  async getMessages() {
+    try {
+      const response = await api.get('/contacts');
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante il recupero dei messaggi:', error);
+      throw error;
+    }
+  },
+
   async deleteMessage(messageId) {
     try {
       const response = await api.delete(`/contacts/${messageId}`);
@@ -464,13 +475,14 @@ export const adminService = {
   async getDashboardStats() {
     try {
       // Ottieni i conteggi da varie API
-      const [users, restomods, brands, packages, jobs, customRequests] = await Promise.all([
+      const [users, restomods, brands, packages, jobs, customRequests, messages] = await Promise.all([
         this.getUsers(),
         this.getRestomods(),
         this.getBrands(),
         this.getPackages(),
         this.getJobs(),
-        this.getCustomRequests()
+        this.getCustomRequests(),
+        this.getMessages()
       ]);
 
       // Ottieni i blog posts
@@ -482,8 +494,8 @@ export const adminService = {
         brands: brands.length,
         blogs: blogs.length,
         packages: packages.length,
-        jobs: jobs.length,
-        customRequests: customRequests.length
+        messages: messages.length,
+        jobs: jobs.length
       };
     } catch (error) {
       console.error('Errore durante il recupero delle statistiche della dashboard:', error);
@@ -494,8 +506,8 @@ export const adminService = {
         brands: 0,
         blogs: 0,
         packages: 0,
-        jobs: 0,
-        customRequests: 0
+        messages: 0,
+        jobs: 0
       };
     }
   },
