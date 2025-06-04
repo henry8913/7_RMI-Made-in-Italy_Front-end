@@ -1,8 +1,17 @@
 import axios from 'axios';
 
-// Utilizziamo il proxy di Vite invece dell'URL completo
+// Determina il baseURL in base all'ambiente
+const getBaseUrl = () => {
+  // In produzione, usa l'URL completo dal .env
+  if (import.meta.env.PROD && import.meta.env.VITE_BACKEND_URL) {
+    return `${import.meta.env.VITE_BACKEND_URL}/api`;
+  }
+  // In sviluppo, usa il proxy di Vite
+  return '/api';
+};
+
 const api = axios.create({
-  baseURL: '/api',  // Questo verrà gestito dal proxy di Vite
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
