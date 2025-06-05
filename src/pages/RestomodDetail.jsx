@@ -122,29 +122,30 @@ const RestomodDetail = () => {
   }
 
   return (
-    <div className="bg-secondary-950 min-h-screen pt-20">
+    <div className="bg-secondary-950 min-h-screen pt-16 sm:pt-18 md:pt-20">
       {/* Breadcrumb */}
-      <div className="container-custom pt-6"> {/* Ridotto da pt-8 a pt-6 */}
-        <div className="flex items-center text-sm text-secondary-400">
+      <div className="container-custom pt-3 sm:pt-4 md:pt-5 lg:pt-6 px-4 sm:px-6 md:px-8"> 
+        <div className="flex items-center text-xs sm:text-sm text-secondary-400 overflow-x-auto whitespace-nowrap pb-2">
           <Link to="/" className="hover:text-white transition-colors">Home</Link>
-          <span className="mx-2">/</span>
+          <span className="mx-1 sm:mx-2">/</span>
           <Link to="/restomods" className="hover:text-white transition-colors">Restomods</Link>
-          <span className="mx-2">/</span>
+          <span className="mx-1 sm:mx-2">/</span>
           <span className="text-white">{restomod.nome}</span>
         </div>
       </div>
 
       {/* Dettagli Restomod */}
-      <section className="section-padding pt-6"> {/* Ridotto da pt-8 a pt-6 */}
-        <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <section className="section-padding pt-3 sm:pt-4 md:pt-5 lg:pt-6"> 
+        <div className="container-custom px-4 sm:px-6 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 md:gap-8 lg:gap-12">
             {/* Galleria Immagini */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
+              className="order-1 lg:order-none"
             >
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg mb-4">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-md sm:rounded-lg mb-2 sm:mb-3 md:mb-4">
                 {restomod.immagini && restomod.immagini.length > 0 ? (
                   <img 
                     src={restomod.immagini[activeImage].url} 
@@ -153,13 +154,13 @@ const RestomodDetail = () => {
                   />
                 ) : (
                   <div className="w-full h-full bg-secondary-800 flex items-center justify-center">
-                    <p className="text-secondary-400">Nessuna immagine disponibile</p>
+                    <p className="text-xs sm:text-sm md:text-base text-secondary-400">Nessuna immagine disponibile</p>
                   </div>
                 )}
                 
                 {/* Badge stato */}
                 {restomod.stato !== 'available' && (
-                  <div className="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full font-medium">
+                  <div className="absolute top-2 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 bg-primary text-white px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-sm font-medium">
                     {restomod.stato === 'sold' ? 'Venduto' : 'Riservato'}
                   </div>
                 )}
@@ -167,12 +168,12 @@ const RestomodDetail = () => {
               
               {/* Thumbnails */}
               {restomod.immagini && restomod.immagini.length > 1 && (
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-5 gap-1 sm:gap-2 overflow-x-auto">
                   {restomod.immagini.map((img, index) => (
                     <button
                       key={index}
                       onClick={() => setActiveImage(index)}
-                      className={`aspect-square rounded-md overflow-hidden border-2 ${activeImage === index ? 'border-primary' : 'border-transparent'}`}
+                      className={`aspect-square rounded-sm sm:rounded-md overflow-hidden border sm:border-2 ${activeImage === index ? 'border-primary' : 'border-transparent'}`}
                     >
                       <img 
                         src={img.url} 
@@ -190,41 +191,35 @@ const RestomodDetail = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
+              className="flex flex-col order-2 lg:order-none"
             >
-              <div className="flex items-center mb-2">
+              <div className="flex items-center mb-1 sm:mb-2">
                 <Link 
                   to={`/brands/${restomod.costruttore._id}`}
-                  className="text-primary hover:text-primary-400 transition-colors"
+                  className="text-primary hover:text-primary-400 transition-colors text-sm sm:text-base"
                 >
                   {restomod.costruttore.nome}
                 </Link>
-                <span className="mx-2 text-secondary-500">•</span>
-                <span className="text-secondary-400">{restomod.anno}</span>
+                <span className="mx-1 sm:mx-2 text-secondary-500">•</span>
+                <span className="text-secondary-400 text-sm sm:text-base">{restomod.anno}</span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">{restomod.nome}</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-3 sm:mb-4">{restomod.nome}</h1>
               
-              <div className="mb-8">
-                <div className="flex flex-wrap items-center justify-between mb-6">
-                  <div className="text-3xl font-bold text-white">
+              <div className="mb-6 sm:mb-8">
+                <div className="flex flex-col mb-4 sm:mb-6 gap-4 sm:gap-5">
+                  <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white">
                     {formatPrice(restomod.prezzo)}
                   </div>
                   {restomod.stato === 'available' && (
-                    <div className="flex flex-wrap gap-3 mt-2 sm:mt-0 pt-5">
-                      <Button onClick={handleAddToCart} variant="primary">
-                        <span className="flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                          </svg>
+                    <div className="flex gap-2 sm:gap-3 lg:gap-4 xl:gap-5">
+                      <Button onClick={handleAddToCart} variant="primary" className="text-sm sm:text-base lg:text-lg py-2 px-3 sm:px-4 lg:px-5 xl:px-6">
+                        <span className="flex items-start">
                           Aggiungi al carrello
                         </span>
                       </Button>
-                      <Button to={`/test-drive?modelId=${restomod._id}`} variant="outline">
-                        <span className="flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h3.5a1 1 0 00.8-.4l3-4a1 1 0 00.2-.6V8a1 1 0 00-1-1h-3.8L11.35 3.3a1 1 0 00-.8-.3H3z" />
-                          </svg>
+                      <Button to={`/test-drive?modelId=${restomod._id}`} variant="outline" className="text-sm sm:text-base lg:text-lg py-2 px-3 sm:px-4 lg:px-5 xl:px-6">
+                        <span className="flex items-start">
                           Prenota Test Drive
                         </span>
                       </Button>
@@ -232,66 +227,66 @@ const RestomodDetail = () => {
                   )}
                 </div>
                 
-                <div className="prose prose-lg prose-invert max-w-none mb-8">
+                <div className="prose prose-sm sm:prose-base md:prose-lg prose-invert max-w-none mb-6 sm:mb-8">
                   {restomod.descrizione ? (
                     <div dangerouslySetInnerHTML={{ __html: restomod.descrizione }} />
                   ) : (
-                    <p>Nessuna descrizione disponibile per questo restomod.</p>
+                    <p className="text-sm sm:text-base">Nessuna descrizione disponibile per questo restomod.</p>
                   )}
                 </div>
               </div>
               
               {/* Specifiche Tecniche */}
-              <div className="bg-secondary-900/50 p-6 rounded-lg mb-8">
-                <h3 className="text-xl font-heading font-bold mb-4">Specifiche Tecniche</h3>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-secondary-900/50 p-3 sm:p-4 md:p-5 lg:p-6 rounded-sm sm:rounded-md md:rounded-lg mb-4 sm:mb-5 md:mb-6 lg:mb-8">
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold mb-2 sm:mb-3 md:mb-4">Specifiche Tecniche</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                   {restomod.specifiche && restomod.specifiche.motore && (
-                    <div>
-                      <span className="block text-sm text-secondary-400">Motore</span>
-                      <span className="font-medium">{restomod.specifiche.motore}</span>
+                    <div className="p-1.5 sm:p-2 bg-secondary-800/30 rounded">
+                      <span className="block text-xs sm:text-sm text-secondary-400">Motore</span>
+                      <span className="font-medium text-xs sm:text-sm md:text-base">{restomod.specifiche.motore}</span>
                     </div>
                   )}
                   {restomod.specifiche && restomod.specifiche.potenza && (
-                    <div>
-                      <span className="block text-sm text-secondary-400">Potenza</span>
-                      <span className="font-medium">{restomod.specifiche.potenza}</span>
+                    <div className="p-1.5 sm:p-2 bg-secondary-800/30 rounded">
+                      <span className="block text-xs sm:text-sm text-secondary-400">Potenza</span>
+                      <span className="font-medium text-xs sm:text-sm md:text-base">{restomod.specifiche.potenza}</span>
                     </div>
                   )}
                   {restomod.specifiche && restomod.specifiche.accelerazione && (
-                    <div>
-                      <span className="block text-sm text-secondary-400">0-100 km/h</span>
-                      <span className="font-medium">{restomod.specifiche.accelerazione}</span>
+                    <div className="p-1.5 sm:p-2 bg-secondary-800/30 rounded">
+                      <span className="block text-xs sm:text-sm text-secondary-400">0-100 km/h</span>
+                      <span className="font-medium text-xs sm:text-sm md:text-base">{restomod.specifiche.accelerazione}</span>
                     </div>
                   )}
                   {restomod.specifiche && restomod.specifiche.velocitaMax && (
-                    <div>
-                      <span className="block text-sm text-secondary-400">Velocità Max</span>
-                      <span className="font-medium">{restomod.specifiche.velocitaMax}</span>
+                    <div className="p-1.5 sm:p-2 bg-secondary-800/30 rounded">
+                      <span className="block text-xs sm:text-sm text-secondary-400">Velocità Max</span>
+                      <span className="font-medium text-xs sm:text-sm md:text-base">{restomod.specifiche.velocitaMax}</span>
                     </div>
                   )}
                   {restomod.specifiche && restomod.specifiche.trasmissione && (
-                    <div>
-                      <span className="block text-sm text-secondary-400">Trasmissione</span>
-                      <span className="font-medium">{restomod.specifiche.trasmissione}</span>
+                    <div className="p-1.5 sm:p-2 bg-secondary-800/30 rounded">
+                      <span className="block text-xs sm:text-sm text-secondary-400">Trasmissione</span>
+                      <span className="font-medium text-xs sm:text-sm md:text-base">{restomod.specifiche.trasmissione}</span>
                     </div>
                   )}
                   {restomod.specifiche && restomod.specifiche.peso && (
-                    <div>
-                      <span className="block text-sm text-secondary-400">Peso</span>
-                      <span className="font-medium">{restomod.specifiche.peso}</span>
+                    <div className="p-1.5 sm:p-2 bg-secondary-800/30 rounded">
+                      <span className="block text-xs sm:text-sm text-secondary-400">Peso</span>
+                      <span className="font-medium text-xs sm:text-sm md:text-base">{restomod.specifiche.peso}</span>
                     </div>
                   )}
                 </div>
               </div>
               
-              {/* Form di Contatto */}
+              {/* Modulo di contatto */}
               {restomod.stato === 'available' && (
-                <div className="bg-secondary-900/50 p-6 rounded-lg">
-                  <h3 className="text-xl font-heading font-bold mb-4">Interessato a questo restomod?</h3>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-secondary-900/50 p-3 sm:p-4 md:p-5 lg:p-6 rounded-sm sm:rounded-md md:rounded-lg">
+                  <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold mb-2 sm:mb-3 md:mb-4">Interessato a questo restomod?</h3>
+                  <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3 md:space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-secondary-400 mb-1">Nome</label>
+                        <label htmlFor="name" className="block text-xs sm:text-sm font-medium text-secondary-400 mb-0.5 sm:mb-1">Nome</label>
                         <input
                           type="text"
                           id="name"
@@ -299,11 +294,11 @@ const RestomodDetail = () => {
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          className="w-full bg-secondary-800 border border-secondary-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-2 sm:px-3 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm bg-secondary-800 border border-secondary-700 rounded sm:rounded-md focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-primary-500"
                         />
                       </div>
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-secondary-400 mb-1">Email</label>
+                        <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-secondary-400 mb-0.5 sm:mb-1">Email</label>
                         <input
                           type="email"
                           id="email"
@@ -311,34 +306,34 @@ const RestomodDetail = () => {
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          className="w-full bg-secondary-800 border border-secondary-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-2 sm:px-3 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm bg-secondary-800 border border-secondary-700 rounded sm:rounded-md focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-primary-500"
                         />
                       </div>
                     </div>
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-secondary-400 mb-1">Telefono</label>
+                      <label htmlFor="phone" className="block text-xs sm:text-sm font-medium text-secondary-400 mb-0.5 sm:mb-1">Telefono</label>
                       <input
                         type="tel"
                         id="phone"
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full bg-secondary-800 border border-secondary-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-2 sm:px-3 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm bg-secondary-800 border border-secondary-700 rounded sm:rounded-md focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
                     <div>
-                      <label htmlFor="message" className="block text-sm font-medium text-secondary-400 mb-1">Messaggio</label>
+                      <label htmlFor="message" className="block text-xs sm:text-sm font-medium text-secondary-400 mb-0.5 sm:mb-1">Messaggio</label>
                       <textarea
                         id="message"
                         name="message"
                         value={formData.message}
                         onChange={handleInputChange}
-                        rows="4"
-                        className="w-full bg-secondary-800 border border-secondary-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        rows="3"
+                        className="w-full px-2 sm:px-3 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm bg-secondary-800 border border-secondary-700 rounded sm:rounded-md focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-primary-500"
                         placeholder={`Sono interessato a ${restomod.nome}. Vorrei ricevere maggiori informazioni.`}
                       ></textarea>
                     </div>
-                    <Button type="submit" variant="primary" className="w-full">
+                    <Button type="submit" variant="primary" className="w-full text-xs sm:text-sm md:text-base py-1.5 sm:py-2 md:py-2.5 mt-1 sm:mt-2">
                       Invia Richiesta
                     </Button>
                   </form>
@@ -351,24 +346,30 @@ const RestomodDetail = () => {
       
       {/* Pulsanti di navigazione */}
       <section className="section-padding pt-0">
-        <div className="container-custom">
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button to="/restomods" variant="outline">
+        <div className="container-custom px-4 sm:px-6 md:px-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-3 sm:gap-4 md:gap-0 mt-4 sm:mt-6 md:mt-8">
+            <Button
+              as={Link}
+              to="/restomods"
+              variant="outline"
+              className="flex items-center text-xs sm:text-sm w-full sm:w-auto justify-center sm:justify-start px-2 sm:px-3 py-1 sm:py-1.5 md:py-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1 sm:mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
               Torna ai Restomods
             </Button>
-            <Button to={`/brands/${restomod.costruttore._id}`} variant="outline">
-              Esplora {restomod.costruttore.nome}
-            </Button>
-            {restomod.stato === 'available' && (
-              <>
-                <Button onClick={handleAddToCart} variant="primary">
-                  Aggiungi al carrello
-                </Button>
-                <Button to={`/test-drive?modelId=${restomod._id}`} variant="outline">
-                  Prenota Test Drive
-                </Button>
-              </>
-            )}
+            <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full sm:w-auto justify-center sm:justify-end mt-3 sm:mt-0">
+              <Button
+                as={Link}
+                to={`/brands/${restomod.costruttore._id}`}
+                variant="outline"
+                className="flex items-center text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 md:py-2 whitespace-nowrap"
+              >
+                Esplora {restomod.costruttore.nome}
+              </Button>
+
+            </div>
           </div>
         </div>
       </section>

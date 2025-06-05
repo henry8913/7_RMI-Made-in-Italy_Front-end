@@ -66,7 +66,7 @@ const Navbar = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-secondary-950/90 backdrop-blur-sm border-b border-secondary-900/30 py-3' : 'bg-transparent py-6'}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-secondary-950/90 backdrop-blur-sm border-b border-secondary-900/30 py-2 sm:py-3' : 'bg-transparent py-4 sm:py-6'}`}
     >
       <div className="container-custom">
         <nav className="flex items-center justify-between">
@@ -75,17 +75,17 @@ const Navbar = () => {
             <img 
               src={Logo} 
               alt="RMI Made in Italy" 
-              className="h-12 md:h-14 object-contain" 
+              className="h-10 sm:h-12 md:h-14 object-contain" 
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">  {/* Ridotto da space-x-10 a space-x-8 per ottimizzare lo spazio */}
+          <div className="hidden lg:flex items-center space-x-4 xl:space-x-8">  {/* Responsive spacing */}
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative px-2 py-2 text-xs uppercase tracking-[0.3em] font-extralight transition-all duration-500 hover:text-primary ${isActive(link.path) ? 'text-primary' : 'text-white'}`}
+                className={`relative px-2 py-2 text-xs uppercase tracking-[0.2em] xl:tracking-[0.3em] font-extralight transition-all duration-500 hover:text-primary ${isActive(link.path) ? 'text-primary' : 'text-white'}`}
               >
                 {link.name}
                 <span 
@@ -96,7 +96,7 @@ const Navbar = () => {
           </div>
 
           {/* User Menu, Cart & Mobile Menu Button */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
             {/* Cart Icon */}
             <CartIcon />
             
@@ -181,39 +181,49 @@ const Navbar = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="lg:hidden bg-secondary-950/95 backdrop-blur-sm border-b border-secondary-900/30 overflow-hidden"
+            className="lg:hidden bg-secondary-950/95 backdrop-blur-sm border-b border-secondary-900/30 overflow-hidden fixed top-[60px] sm:top-[72px] left-0 right-0 z-40"
           >
-            <div className="container-custom py-6 space-y-7">
-              {navLinks.map((link) => (
+            <div className="container-custom py-4 sm:py-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`block px-4 py-3 text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] font-extralight transition-all duration-300 ${isActive(link.path) ? 'text-primary border-l-2 border-primary pl-3' : 'text-white hover:text-primary'}`}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
                 <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`block px-4 py-2 text-xs uppercase tracking-[0.3em] font-extralight transition-all duration-300 ${isActive(link.path) ? 'text-primary' : 'text-white hover:text-primary'}`}
+                  to="/cart"
+                  className={`block px-4 py-3 text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] font-extralight transition-all duration-300 ${isActive('/cart') ? 'text-primary border-l-2 border-primary pl-3' : 'text-white hover:text-primary'}`}
                 >
-                  {link.name}
+                  Carrello
                 </Link>
-              ))}
-              <Link
-                to="/cart"
-                className={`block px-4 py-2 text-xs uppercase tracking-[0.3em] font-extralight transition-all duration-300 ${isActive('/cart') ? 'text-primary' : 'text-white hover:text-primary'}`}
-              >
-                Carrello
-              </Link>
-              {currentUser && currentUser.ruolo === 'admin' && (
-                <Link
-                  to="/admin"
-                  className={`block px-4 py-2 text-xs uppercase tracking-[0.3em] font-extralight transition-all duration-300 ${isActive('/admin') ? 'text-primary' : 'text-white hover:text-primary'}`}
-                >
-                  Amministrazione
-                </Link>
-              )}
-              {!currentUser && (
-                <Link
-                  to="/login"
-                  className="block w-full px-6 py-3 text-xs font-extralight tracking-[0.3em] uppercase bg-transparent border border-primary/70 text-primary hover:bg-primary/5 transition-all duration-500 text-center mt-8"
-                >
-                  Accedi
-                </Link>
+                {!currentUser && (
+                  <Link
+                    to="/login"
+                    className={`block px-4 py-3 text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] font-extralight transition-all duration-300 ${isActive('/login') ? 'text-primary border-l-2 border-primary pl-3' : 'text-white hover:text-primary'}`}
+                  >
+                    Accedi
+                  </Link>
+                )}
+              </div>
+              {currentUser && (
+                <div className="mt-4 pt-4 border-t border-secondary-800/30">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-3 text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] font-extralight text-white hover:text-primary transition-all duration-300"
+                  >
+                    Profilo
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-3 text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] font-extralight text-white hover:text-primary transition-all duration-300"
+                  >
+                    Logout
+                  </button>
+                </div>
               )}
             </div>
           </motion.div>

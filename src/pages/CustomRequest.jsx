@@ -60,7 +60,7 @@ const CustomRequest = () => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      navigate("/auth", { state: { from: "/custom-request" } });
+      navigate("/login", { state: { from: "/custom-request" } });
       return;
     }
 
@@ -475,7 +475,7 @@ const CustomRequest = () => {
                 <p className="text-center mt-4 text-amber-400">
                   Devi essere registrato per inviare una richiesta
                   personalizzata.
-                  <Link to="/auth" className="underline ml-1">
+                  <Link to="/login" className="underline ml-1">
                     Accedi o registrati
                   </Link>
                 </p>

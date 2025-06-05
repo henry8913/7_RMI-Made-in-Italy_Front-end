@@ -51,97 +51,83 @@ const BrandsSection = () => {
   };
 
   return (
-    <section id="brands-section" className="section-padding bg-gradient-to-b from-primary-950 to-secondary-950">
-      <div className="container-custom">
-        {/* Intestazione della sezione */}
-        <div className="text-center mb-16">
+    <section className="py-16 sm:py-20 md:py-24 bg-secondary-900">
+      <div className="container-custom px-4 sm:px-6">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <motion.h2 
-            className="text-3xl md:text-4xl font-heading font-bold mb-4"
+            className="text-2xl sm:text-3xl md:text-4xl font-light text-white mb-4 sm:mb-5 md:mb-6 tracking-wide sm:tracking-wider"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
           >
-            Marchi <span className="text-gradient">Iconici</span> Italiani
+            I Migliori Costruttori Italiani
           </motion.h2>
           <motion.p 
-            className="text-secondary-400 max-w-2xl mx-auto"
+            className="text-sm sm:text-base text-secondary-300 max-w-full sm:max-w-xl md:max-w-2xl mx-auto font-light"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Esplora i leggendari marchi italiani che hanno fatto la storia dell'automobilismo mondiale e che continuano a ispirare le nostre creazioni.
+            Collaboriamo con i più prestigiosi marchi automobilistici italiani per creare restomods che rispettano l'eredità di ogni costruttore.
           </motion.p>
         </div>
 
-        {/* Contenuto principale */}
         {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="flex justify-center items-center h-40 sm:h-52 md:h-64">
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : error ? (
-          <div className="text-center py-16">
-            <p className="text-red-500 mb-4">{error}</p>
-            <Button 
-              onClick={() => window.location.reload()} 
-              variant="primary"
-            >
-              Riprova
-            </Button>
-          </div>
+          <div className="text-center text-red-500 text-sm sm:text-base">{error}</div>
         ) : (
-          <motion.div 
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {brands.map((brand) => (
-              <motion.div 
-                key={brand._id} 
-                variants={itemVariants}
-                className="group"
-              >
-                <Link 
-                  to={`/brands/${brand._id}`} 
-                  className="block p-6 bg-secondary-800/50 rounded-lg luxury-card hover:shadow-accent transition-all duration-300 text-center h-full flex flex-col items-center justify-center"
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 mb-10 sm:mb-12 md:mb-16">
+              {brands.slice(0, 6).map((brand) => (
+                <motion.div 
+                  key={brand._id}
+                  className="bg-secondary-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  whileHover={{ y: -5 }}
                 >
-                  <div className="w-24 h-24 mx-auto mb-4 flex items-center justify-center">
-                    <img 
-                      src={brand.logo} 
-                      alt={`${brand.nome} logo`} 
-                      className="max-w-full max-h-full object-contain transition-all duration-300 group-hover:scale-110"
-                    />
-                  </div>
-                  <h3 className="text-xl font-heading font-medium text-white group-hover:text-primary-400 transition-colors duration-300">
-                    {brand.nome}
-                  </h3>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
+                  <Link to={`/brands/${brand._id}`} className="block h-full flex flex-col group">
+                    <div className="h-36 sm:h-40 md:h-48 overflow-hidden flex items-center justify-center bg-secondary-900/50 p-3 sm:p-4 md:p-6 transition-all duration-300 rounded-t-lg">
+                      <div className="p-2 sm:p-3 flex items-center justify-center w-full h-full">
+                        <img 
+                          src={brand.logo} 
+                          alt={brand.nome} 
+                          className="max-w-[80%] sm:max-w-[85%] max-h-[80%] sm:max-h-[85%] object-contain w-auto h-auto transition-transform duration-300 group-hover:scale-105 drop-shadow-sm"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                    <div className="p-4 sm:p-5 md:p-6 flex-grow flex flex-col">
+                      <h3 className="text-lg sm:text-xl text-white mb-1 sm:mb-2 line-clamp-1">{brand.nome}</h3>
+                      <p className="text-xs sm:text-sm text-secondary-400 mb-3 sm:mb-4 line-clamp-2 flex-grow">{brand.descrizione}</p>
+                      <div className="flex justify-between items-center mt-auto">
+                        <span className="text-[10px] sm:text-xs text-secondary-500">{brand.annoFondazione}</span>
+                        <span className="text-primary text-xs sm:text-sm">Scopri di più</span>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
 
-        {/* Pulsante per vedere tutti i marchi */}
-        {!loading && !error && brands.length > 0 && (
-          <motion.div 
-            className="text-center mt-12"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <Button 
-              to="/brands" 
-              variant="outline" 
-              size="lg"
-              className="btn-hover-effect"
-            >
-              Scopri tutti i Marchi
-            </Button>
-          </motion.div>
+            <div className="text-center">
+              <Button 
+                to="/brands"
+                variant="outline-primary"
+                size="md"
+                className="w-full sm:w-auto"
+              >
+                Vedi tutti i costruttori
+              </Button>
+            </div>
+          </>
         )}
       </div>
     </section>

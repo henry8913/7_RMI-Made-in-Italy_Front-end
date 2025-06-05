@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import Button from '../ui/Button';
-import heroBg from '../../assets/images/hero-bg.jpg';
+import heroBg from '../../assets/images/about-image.jpg';
 
 const AboutSection = () => {
   return (
@@ -87,7 +87,7 @@ const AboutSection = () => {
               </Button>
               <Button 
                 to="/contact" 
-                variant="ghost" 
+                variant="outline" 
                 size="lg"
               >
                 Contattaci

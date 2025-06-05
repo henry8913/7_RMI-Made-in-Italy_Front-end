@@ -93,7 +93,7 @@ const TestDrive = () => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      navigate('/auth', { state: { from: '/test-drive' } });
+      navigate('/login', { state: { from: '/test-drive' } });
       return;
     }
 
@@ -356,7 +356,7 @@ const TestDrive = () => {
               {!isAuthenticated && (
                 <p className="text-center mt-4 text-primary">
                   Devi essere registrato per prenotare un test drive. 
-                  <Link to="/auth" className="underline ml-1">Accedi o registrati</Link>
+                  <Link to="/login" className="underline ml-1">Accedi o registrati</Link>
                 </p>
               )}
             </form>

@@ -79,22 +79,22 @@ const Newsletter = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="luxury-card p-8 rounded-lg text-center"
+      className="luxury-card p-6 sm:p-7 md:p-8 lg:p-10 rounded-lg text-center w-full overflow-hidden"
     >
-      <h2 className="text-3xl font-heading font-bold mb-4">Iscriviti alla nostra newsletter</h2>
-      <p className="text-secondary-300 mb-8 max-w-2xl mx-auto">
+      <h2 className="text-2xl sm:text-2xl md:text-3xl font-heading font-bold mb-3 sm:mb-4">Iscriviti alla nostra newsletter</h2>
+      <p className="text-sm sm:text-base text-secondary-300 mb-6 sm:mb-8 max-w-xl sm:max-w-2xl mx-auto">
         Resta aggiornato sulle ultime novità, eventi esclusivi e offerte speciali di RMI Restomode Made in Italy.
       </p>
       
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-xl mx-auto">
-        <div className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4 max-w-full sm:max-w-xl mx-auto">
+        <div className="flex flex-col gap-3 sm:gap-4">
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="Il tuo indirizzo email"
-            className="w-full bg-secondary-800 border border-secondary-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
+            className="w-full bg-secondary-800 border border-secondary-700 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
             required
           />
           
@@ -104,47 +104,47 @@ const Newsletter = () => {
             value={formData.nome}
             onChange={handleChange}
             placeholder="Il tuo nome"
-            className="w-full bg-secondary-800 border border-secondary-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
+            className="w-full bg-secondary-800 border border-secondary-700 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
             required
           />
         </div>
 
         
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
             
-            <div className="bg-secondary-800 border border-secondary-700 rounded-lg p-4 text-left">
-              <p className="text-white mb-3 font-medium">Preferenze newsletter:</p>
+            <div className="bg-secondary-800 border border-secondary-700 rounded-lg p-3 sm:p-4 text-left">
+              <p className="text-white mb-2 sm:mb-3 font-medium text-sm sm:text-base">Preferenze newsletter:</p>
               
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center text-secondary-300 cursor-pointer hover:text-white transition-colors">
+              <div className="flex flex-col gap-1.5 sm:gap-2">
+                <label className="flex items-center text-secondary-300 text-xs sm:text-sm cursor-pointer hover:text-white transition-colors">
                   <input
                     type="checkbox"
                     name="modelli"
                     checked={formData.preferenze.modelli}
                     onChange={handlePreferenceChange}
-                    className="mr-2 h-4 w-4 accent-primary"
+                    className="mr-2 h-3.5 sm:h-4 w-3.5 sm:w-4 accent-primary"
                   />
                   Nuovi modelli e restomods
                 </label>
                 
-                <label className="flex items-center text-secondary-300 cursor-pointer hover:text-white transition-colors">
+                <label className="flex items-center text-secondary-300 text-xs sm:text-sm cursor-pointer hover:text-white transition-colors">
                   <input
                     type="checkbox"
                     name="eventi"
                     checked={formData.preferenze.eventi}
                     onChange={handlePreferenceChange}
-                    className="mr-2 h-4 w-4 accent-primary"
+                    className="mr-2 h-3.5 sm:h-4 w-3.5 sm:w-4 accent-primary"
                   />
                   Eventi e fiere
                 </label>
                 
-                <label className="flex items-center text-secondary-300 cursor-pointer hover:text-white transition-colors">
+                <label className="flex items-center text-secondary-300 text-xs sm:text-sm cursor-pointer hover:text-white transition-colors">
                   <input
                     type="checkbox"
                     name="offerte"
                     checked={formData.preferenze.offerte}
                     onChange={handlePreferenceChange}
-                    className="mr-2 h-4 w-4 accent-primary"
+                    className="mr-2 h-3.5 sm:h-4 w-3.5 sm:w-4 accent-primary"
                   />
                   Offerte speciali e promozioni
                 </label>
@@ -162,7 +162,7 @@ const Newsletter = () => {
           </Button>
       </form>
       
-      <p className="text-sm text-secondary-400 mt-4">
+      <p className="text-xs sm:text-sm text-secondary-400 mt-3 sm:mt-4">
         Iscrivendoti accetti la nostra <a href="/privacy" className="text-primary hover:text-primary-400 transition-colors">Privacy Policy</a>.
       </p>
     </motion.div>
