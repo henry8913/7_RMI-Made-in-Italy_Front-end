@@ -753,46 +753,46 @@ const Jobs = () => {
       </section>
       
       {/* Application Process Section */}
-      <section className="py-16 bg-secondary-800">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">
+      <section className="py-10 sm:py-12 md:py-16 bg-secondary-800">
+        <div className="container mx-auto px-4 sm:px-6">
+          <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold mb-8 sm:mb-10 md:mb-12 text-center">
             Il nostro processo di selezione
           </h2>
 
           <div className="max-w-4xl mx-auto">
             <div className="relative">
               {/* Timeline Line */}
-              <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-primary"></div>
+              <div className="absolute left-0 sm:left-8 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-primary"></div>
 
               {/* Timeline Items */}
-              <div className="space-y-12">
+              <div className="space-y-8 sm:space-y-10 md:space-y-12">
                 {/* Step 1 */}
                 <div className="relative">
-                  <div className="flex flex-col md:flex-row items-center">
-                    <div className="flex-1 md:text-right md:pr-8 mb-4 md:mb-0">
-                      <h3 className="text-xl font-bold">Candidatura</h3>
-                      <p className="text-secondary-300 mt-2">
+                  <div className="flex flex-col sm:flex-row md:flex-row items-start sm:items-center md:items-center">
+                    <div className="flex-1 md:text-right sm:pr-6 md:pr-8 mb-4 sm:mb-0 md:mb-0 pl-12 sm:pl-0">
+                      <h3 className="text-lg sm:text-xl font-bold">Candidatura</h3>
+                      <p className="text-secondary-300 mt-1 sm:mt-2 text-sm sm:text-base">
                         Invia il tuo CV e lettera di presentazione attraverso il
                         nostro portale carriere o via email.
                       </p>
                     </div>
-                    <div className="z-10 w-10 h-10 bg-primary text-secondary-900 rounded-full flex items-center justify-center font-bold mx-4">
+                    <div className="z-10 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-primary text-secondary-900 rounded-full flex items-center justify-center font-bold absolute left-0 sm:relative sm:mx-3 md:mx-4 top-0 sm:top-auto">
                       1
                     </div>
-                    <div className="flex-1 md:pl-8 md:block hidden"></div>
+                    <div className="flex-1 md:pl-8 sm:pl-6 md:block sm:block hidden"></div>
                   </div>
                 </div>
 
                 {/* Step 2 */}
                 <div className="relative">
-                  <div className="flex flex-col md:flex-row items-center">
-                    <div className="flex-1 md:text-right md:pr-8 mb-4 md:mb-0 md:block hidden"></div>
-                    <div className="z-10 w-10 h-10 bg-primary text-secondary-900 rounded-full flex items-center justify-center font-bold mx-4">
+                  <div className="flex flex-col sm:flex-row md:flex-row items-start sm:items-center md:items-center">
+                    <div className="flex-1 md:text-right sm:text-right sm:pr-6 md:pr-8 mb-4 sm:mb-0 md:mb-0 md:block sm:block hidden"></div>
+                    <div className="z-10 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-primary text-secondary-900 rounded-full flex items-center justify-center font-bold absolute left-0 sm:relative sm:mx-3 md:mx-4 top-0 sm:top-auto">
                       2
                     </div>
-                    <div className="flex-1 md:pl-8">
-                      <h3 className="text-xl font-bold">Screening Iniziale</h3>
-                      <p className="text-secondary-300 mt-2">
+                    <div className="flex-1 md:pl-8 sm:pl-6 pl-12 sm:pl-6">
+                      <h3 className="text-lg sm:text-xl font-bold">Screening Iniziale</h3>
+                      <p className="text-secondary-300 mt-1 sm:mt-2 text-sm sm:text-base">
                         Il nostro team HR esaminerà la tua candidatura e ti
                         contatterà per un primo colloquio telefonico.
                       </p>
@@ -802,31 +802,31 @@ const Jobs = () => {
 
                 {/* Step 3 */}
                 <div className="relative">
-                  <div className="flex flex-col md:flex-row items-center">
-                    <div className="flex-1 md:text-right md:pr-8 mb-4 md:mb-0">
-                      <h3 className="text-xl font-bold">Colloquio Tecnico</h3>
-                      <p className="text-secondary-300 mt-2">
+                  <div className="flex flex-col sm:flex-row md:flex-row items-start sm:items-center md:items-center">
+                    <div className="flex-1 md:text-right sm:text-right sm:pr-6 md:pr-8 mb-4 sm:mb-0 md:mb-0 pl-12 sm:pl-0">
+                      <h3 className="text-lg sm:text-xl font-bold">Colloquio Tecnico</h3>
+                      <p className="text-secondary-300 mt-1 sm:mt-2 text-sm sm:text-base">
                         Se selezionato, parteciperai a un colloquio tecnico con
                         il team del dipartimento di riferimento.
                       </p>
                     </div>
-                    <div className="z-10 w-10 h-10 bg-primary text-secondary-900 rounded-full flex items-center justify-center font-bold mx-4">
+                    <div className="z-10 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-primary text-secondary-900 rounded-full flex items-center justify-center font-bold absolute left-0 sm:relative sm:mx-3 md:mx-4 top-0 sm:top-auto">
                       3
                     </div>
-                    <div className="flex-1 md:pl-8 md:block hidden"></div>
+                    <div className="flex-1 md:pl-8 sm:pl-6 md:block sm:block hidden"></div>
                   </div>
                 </div>
 
                 {/* Step 4 */}
                 <div className="relative">
-                  <div className="flex flex-col md:flex-row items-center">
-                    <div className="flex-1 md:text-right md:pr-8 mb-4 md:mb-0 md:block hidden"></div>
-                    <div className="z-10 w-10 h-10 bg-primary text-secondary-900 rounded-full flex items-center justify-center font-bold mx-4">
+                  <div className="flex flex-col sm:flex-row md:flex-row items-start sm:items-center md:items-center">
+                    <div className="flex-1 md:text-right sm:text-right sm:pr-6 md:pr-8 mb-4 sm:mb-0 md:mb-0 md:block sm:block hidden"></div>
+                    <div className="z-10 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-primary text-secondary-900 rounded-full flex items-center justify-center font-bold absolute left-0 sm:relative sm:mx-3 md:mx-4 top-0 sm:top-auto">
                       4
                     </div>
-                    <div className="flex-1 md:pl-8">
-                      <h3 className="text-xl font-bold">Offerta</h3>
-                      <p className="text-secondary-300 mt-2">
+                    <div className="flex-1 md:pl-8 sm:pl-6 pl-12 sm:pl-6">
+                      <h3 className="text-lg sm:text-xl font-bold">Offerta</h3>
+                      <p className="text-secondary-300 mt-1 sm:mt-2 text-sm sm:text-base">
                         Se il processo va a buon fine, riceverai un'offerta
                         dettagliata con tutti i benefici e le condizioni di
                         lavoro.

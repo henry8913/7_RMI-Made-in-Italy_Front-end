@@ -126,7 +126,7 @@ const Packages = () => {
                   className="bg-secondary-800 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col"
                 >
                   {pkg.immagine && (
-                    <div className="sm:h-48 overflow-hidden">
+                    <div className="h-40 sm:h-48 overflow-hidden">
                       <img 
                         src={pkg.immagine} 
                         alt={pkg.nome} 

@@ -73,9 +73,9 @@ const About = () => {
   };
 
   return (
-    <div className="min-h-screen bg-secondary-950 sm:pt-20 md:pt-24 lg:pt-0">
+    <div className="min-h-screen bg-secondary-950 sm:pt-20 md:pt-24">
       {/* Hero Section */}
-      <div className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] lg:h-[90vh]">
+      <div className="relative h-[50vh] sm:h-[55vh] md:h-[60vh] lg:h-[70vh]">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-secondary-950/80 z-10" />
           <video
@@ -214,7 +214,7 @@ const About = () => {
               className="luxury-card overflow-hidden group"
               variants={fadeInUp}
             >
-              <div className="overflow-hidden">
+              <div className="overflow-hidden h-48 sm:h-56 md:h-64">
                 <img 
                   src="https://raw.githubusercontent.com/henry8913/0_Welcome/refs/heads/main/IMG/IMG.jpg" 
                   alt="Henry Grecchi" 
@@ -234,7 +234,7 @@ const About = () => {
               className="luxury-card overflow-hidden group"
               variants={fadeInUp}
             >
-              <div className="overflow-hidden">
+              <div className="overflow-hidden h-48 sm:h-56 md:h-64">
                 <img 
                   src="https://hips.hearstapps.com/hmg-prod/images/italian-fashion-blogger-and-designer-chiara-ferragni-poses-news-photo-1745954548.pjpeg?crop=0.668xw:1.00xh;0.234xw,0&resize=640:*" 
                   alt="Chiara Ferraghi" 
@@ -254,7 +254,7 @@ const About = () => {
               className="luxury-card overflow-hidden group"
               variants={fadeInUp}
             >
-              <div className="overflow-hidden">
+              <div className="overflow-hidden h-48 sm:h-56 md:h-64">
                 <img 
                   src="https://i.pinimg.com/736x/4b/f4/72/4bf472c2963a556f62ddc31f2ae778f1.jpg" 
                   alt="Tony Stark" 
