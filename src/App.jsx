@@ -37,11 +37,13 @@ import {
 import { CartProvider } from "./contexts/CartContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 function App() {
   return (
     <CartProvider>
       <Router>
+        <ScrollToTop />
         <ToastContainer position="bottom-right" autoClose={3000} />
         <Routes>
           {/* Rotta per il callback di autenticazione Google */}
