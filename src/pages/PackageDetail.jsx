@@ -97,7 +97,7 @@ const PackageDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-900 text-white">
+    <div className="min-h-screen bg-secondary-900 text-white pt-16 sm:pt-20 md:pt-24">
       {/* Hero Section */}
       <section className="relative py-20 md:py-24 overflow-hidden"> 
         <div className="absolute inset-0 bg-black/60 z-10"></div>

@@ -126,7 +126,7 @@ const Packages = () => {
                   className="bg-secondary-800 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col"
                 >
                   {pkg.immagine && (
-                    <div className="h-40 sm:h-48 overflow-hidden">
+                    <div className="sm:h-48 overflow-hidden">
                       <img 
                         src={pkg.immagine} 
                         alt={pkg.nome} 
@@ -180,20 +180,13 @@ const Packages = () => {
                   </div>
 
                   <div className="p-4 sm:p-6 border-t border-secondary-700">
-                    <button
-                      onClick={() => handlePurchase(pkg._id)}
-                      disabled={purchasing === pkg._id}
-                      className="w-full bg-primary hover:bg-primary-600 text-secondary-900 font-bold py-2.5 sm:py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                    >
-                      {purchasing === pkg._id ? (
-                        <div className="flex items-center justify-center">
-                          <div className="animate-spin h-4 w-4 sm:h-5 sm:w-5 border-2 border-t-transparent border-secondary-900 rounded-full mr-2"></div>
-                          Elaborazione...
-                        </div>
-                      ) : (
-                        "Scopri di più"
-                      )}
-                    </button>
+                    <Link to={`/packages/${pkg._id}`}>
+                      <button
+                        className="w-full bg-primary hover:bg-primary-600 text-secondary-900 font-bold py-2.5 sm:py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                      >
+                        Scopri di più
+                      </button>
+                    </Link>
                   </div>
                 </motion.div>
               ))}
