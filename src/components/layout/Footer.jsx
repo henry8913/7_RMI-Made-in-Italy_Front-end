@@ -9,7 +9,7 @@ const Footer = () => {
     <footer className="bg-secondary-950 border-t border-secondary-900 pt-12 sm:pt-16 md:pt-20 pb-6 sm:pb-8 md:pb-10">
       <div className="container-custom px-4 sm:px-6">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 mb-10 sm:mb-12 md:mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-10 mb-10 sm:mb-12 md:mb-16">
           {/* Column 1: Logo and Description */}
           <div className="space-y-4 sm:space-y-6">
             <Link to="/" className="block mb-4 sm:mb-6">
@@ -32,28 +32,40 @@ const Footer = () => {
             </ul>
           </div>
           
-          {/* Column 3: Company */}
+          {/* Column 3: Services */}
+          <div>
+            <h4 className="text-white text-base sm:text-lg font-medium mb-4 sm:mb-6">Servizi</h4>
+            <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+              <li><Link to="/services/restoration" className="text-secondary-400 hover:text-primary transition-colors text-sm">Restauro</Link></li>
+              <li><Link to="/services/customization" className="text-secondary-400 hover:text-primary transition-colors text-sm">Personalizzazione</Link></li>
+              <li><Link to="/services/maintenance" className="text-secondary-400 hover:text-primary transition-colors text-sm">Manutenzione</Link></li>
+              <li><Link to="/services/consulting" className="text-secondary-400 hover:text-primary transition-colors text-sm">Consulenza</Link></li>
+              <li><Link to="/blog" className="text-secondary-400 hover:text-primary transition-colors text-sm">Blog</Link></li>
+            </ul>
+          </div>
+          
+          {/* Column 4: Company */}
           <div className="mt-8 sm:mt-0">
             <h4 className="text-white text-base sm:text-lg font-medium mb-4 sm:mb-6">Azienda</h4>
             <ul className="space-y-2 sm:space-y-3 md:space-y-4">
               <li><Link to="/about" className="text-secondary-400 hover:text-primary transition-colors text-sm">Chi Siamo</Link></li>
-              <li><Link to="/services" className="text-secondary-400 hover:text-primary transition-colors text-sm">Servizi</Link></li>
               <li><Link to="/jobs" className="text-secondary-400 hover:text-primary transition-colors text-sm">Lavora con noi</Link></li>
               <li><Link to="/contact" className="text-secondary-400 hover:text-primary transition-colors text-sm">Contatti</Link></li>
               <li><Link to="/faq" className="text-secondary-400 hover:text-primary transition-colors text-sm">FAQ</Link></li>
+              <li><Link to="/wishlist" className="text-secondary-400 hover:text-primary transition-colors text-sm">Lista desideri</Link></li>
             </ul>
           </div>
           
-          {/* Column 4: Contact */}
+          {/* Column 5: Contact */}
           <div className="mt-8 lg:mt-0">
             <h4 className="text-white text-base sm:text-lg font-medium mb-4 sm:mb-6">Contatti</h4>
             <address className="not-italic text-secondary-400 space-y-2 sm:space-y-3 md:space-y-4 text-sm">
-              <p>Via dell'Artigianato, 123<br />50019 Sesto Fiorentino (FI)</p>
+              <p>Via XX Settembre, 45<br />41053 Maranello, MO</p>
               <p>
-                <a href="tel:+390123456789" className="hover:text-primary transition-colors">+39 012 3456789</a>
+                <a href="tel:+390123456789" className="hover:text-primary transition-colors">+39 39 2693 6916</a>  
               </p>
               <p>
-                <a href="mailto:info@rmimadeinitaly.it" className="hover:text-primary transition-colors">info@rmimadeinitaly.it</a>
+                <a href="mailto:info@rmimadeinitaly.it" className="hover:text-primary transition-colors">info@rmimadeinitaly.com</a>
               </p>
               <div className="flex space-x-4 pt-2">
                 <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-secondary-400 hover:text-primary transition-colors">
