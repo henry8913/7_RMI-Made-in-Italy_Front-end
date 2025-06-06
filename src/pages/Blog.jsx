@@ -95,7 +95,7 @@ const Blog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-secondary-950 text-white pt-16 sm:pt-20 md:pt-24">
+    <div className="min-h-screen bg-secondary-950 text-white pt-0 sm:pt-20 md:pt-24">
       {/* Hero Section */}
       <section className="relative h-[40vh] sm:h-[45vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-black/60 z-10"></div>
