@@ -363,7 +363,7 @@ const RestomodDetail = () => {
               <Button
                 as={Link}
                 to={`/brands/${restomod.costruttore._id}`}
-                variant="outline"
+                variant="primary"
                 className="flex items-center text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 md:py-2 whitespace-nowrap"
               >
                 Esplora {restomod.costruttore.nome}
