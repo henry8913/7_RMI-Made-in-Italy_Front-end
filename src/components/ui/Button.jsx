@@ -28,9 +28,9 @@ const Button = ({
 
   // Dimensioni
   const sizes = {
-    sm: 'text-xs px-4 py-2',
-    md: 'text-sm px-6 py-2.5',
-    lg: 'text-base px-8 py-3',
+    sm: 'text-xs sm:text-xs md:text-sm px-3 sm:px-4 md:px-5 lg:px-6 py-1.5 sm:py-2 md:py-2.5',
+    md: 'text-xs sm:text-sm md:text-base px-4 sm:px-5 md:px-6 lg:px-8 py-2 sm:py-2.5 md:py-3',
+    lg: 'text-sm sm:text-base md:text-lg px-5 sm:px-6 md:px-8 lg:px-10 py-2.5 sm:py-3 md:py-3.5',
   };
 
   // Classe base comune a tutti i pulsanti

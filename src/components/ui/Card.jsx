@@ -28,22 +28,22 @@ const Card = ({
           loading="lazy"
         />
         {badge && (
-          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 bg-secondary-950 text-primary text-xs sm:text-sm font-extralight px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em]">
+          <div className="absolute top-1 right-1 sm:top-2 sm:right-2 md:top-3 md:right-3 lg:top-4 lg:right-4 bg-secondary-950 text-primary text-[10px] sm:text-xs md:text-sm font-extralight px-1.5 sm:px-2 md:px-3 lg:px-4 py-0.5 sm:py-1 md:py-1.5 lg:py-2 uppercase tracking-[0.05em] sm:tracking-[0.1em] md:tracking-[0.15em] lg:tracking-[0.2em]">
             {badge}
           </div>
         )}
       </div>
 
       {/* Contenuto */}
-      <div className={`p-3 sm:p-5 md:p-6 lg:p-8 space-y-2 sm:space-y-3 md:space-y-4 ${contentClassName}`}>
-        {title && <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-heading font-light mb-1 sm:mb-2 md:mb-3 text-white line-clamp-1">{title}</h3>}
-        {subtitle && <p className="text-[10px] sm:text-xs md:text-sm text-secondary-400 mb-1 sm:mb-2 md:mb-3 uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] font-extralight">{subtitle}</p>}
-        {description && <p className="text-secondary-300 mb-2 sm:mb-3 md:mb-4 line-clamp-2 sm:line-clamp-3 font-light text-[11px] sm:text-xs md:text-sm leading-relaxed">{description}</p>}
+      <div className={`p-2 sm:p-3 md:p-5 lg:p-6 xl:p-8 space-y-1 sm:space-y-2 md:space-y-3 lg:space-y-4 ${contentClassName}`}>
+        {title && <h3 className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-heading font-light mb-0.5 sm:mb-1 md:mb-2 lg:mb-3 text-white line-clamp-1">{title}</h3>}
+        {subtitle && <p className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm text-secondary-400 mb-0.5 sm:mb-1 md:mb-2 lg:mb-3 uppercase tracking-[0.05em] sm:tracking-[0.1em] md:tracking-[0.15em] lg:tracking-[0.2em] font-extralight">{subtitle}</p>}
+        {description && <p className="text-secondary-300 mb-1 sm:mb-2 md:mb-3 lg:mb-4 line-clamp-2 sm:line-clamp-2 md:line-clamp-3 font-light text-[9px] sm:text-[11px] md:text-xs lg:text-sm leading-relaxed">{description}</p>}
         {price && (
-          <div className="mt-auto pt-2 sm:pt-3 md:pt-4 border-t border-secondary-900">
-            <p className="text-sm sm:text-base md:text-lg font-light">
+          <div className="mt-auto pt-1 sm:pt-2 md:pt-3 lg:pt-4 border-t border-secondary-900">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg font-light">
               <span className="text-primary">{formatPrice(price)}</span>
-              {price > 0 && <span className="text-[8px] sm:text-[10px] md:text-xs text-secondary-400 ml-1 sm:ml-1.5 md:ml-2 font-extralight tracking-wide sm:tracking-wider">+ tasse</span>}
+              {price > 0 && <span className="text-[6px] sm:text-[8px] md:text-[10px] lg:text-xs text-secondary-400 ml-0.5 sm:ml-1 md:ml-1.5 lg:ml-2 font-extralight tracking-wide sm:tracking-wider">+ tasse</span>}
             </p>
           </div>
         )}

@@ -145,7 +145,7 @@ const Restomods = () => {
   };
 
   return (
-    <div className="bg-secondary-950 min-h-screen pt-16 sm:pt-18 md:pt-20">
+    <div className="bg-secondary-950 min-h-screen pt-16 sm:pt-20 md:pt-24 lg:pt-28">
       {/* Hero Section */}
       <section className="section-padding py-6 sm:py-8 md:py-10 lg:py-12">
         <div className="container-custom px-4 sm:px-6 md:px-8">
@@ -153,7 +153,7 @@ const Restomods = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-center max-w-3xl mx-auto"
+            className="text-center max-w-3xl mx-auto pt-4 sm:pt-6 md:pt-8 lg:pt-10"
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6"><span className="text-gradient">Restomods</span> Collection</h1>
             <p className="text-secondary-300 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8">Scopri la nostra collezione di auto classiche restaurate con tecnologia moderna. Ogni restomod è un pezzo unico che combina il fascino del design vintage con prestazioni all'avanguardia.</p>

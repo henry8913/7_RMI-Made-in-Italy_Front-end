@@ -93,7 +93,7 @@ const RestomodDetail = () => {
 
   if (loading) {
     return (
-      <div className="section-padding bg-secondary-950 min-h-screen flex justify-center items-center">
+      <div className="section-padding bg-secondary-950 min-h-screen flex justify-center items-center pt-20 sm:pt-24 md:pt-28 lg:pt-32">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
@@ -101,7 +101,7 @@ const RestomodDetail = () => {
 
   if (error) {
     return (
-      <div className="section-padding bg-secondary-950 min-h-screen flex flex-col justify-center items-center">
+      <div className="section-padding bg-secondary-950 min-h-screen flex flex-col justify-center items-center pt-20 sm:pt-24 md:pt-28 lg:pt-32">
         <p className="text-red-500 mb-6 text-xl">{error}</p>
         <Button to="/restomods" variant="primary">
           Torna ai Restomods
@@ -112,7 +112,7 @@ const RestomodDetail = () => {
 
   if (!restomod) {
     return (
-      <div className="section-padding bg-secondary-950 min-h-screen flex flex-col justify-center items-center">
+      <div className="section-padding bg-secondary-950 min-h-screen flex flex-col justify-center items-center pt-20 sm:pt-24 md:pt-28 lg:pt-32">
         <h2 className="text-2xl font-heading font-bold mb-6">Restomod non trovato</h2>
         <Button to="/restomods" variant="primary">
           Torna ai Restomods
@@ -122,7 +122,7 @@ const RestomodDetail = () => {
   }
 
   return (
-    <div className="bg-secondary-950 min-h-screen pt-16 sm:pt-18 md:pt-20">
+    <div className="bg-secondary-950 min-h-screen pt-16 sm:pt-20 md:pt-24 lg:pt-28">
       {/* Breadcrumb */}
       <div className="container-custom pt-3 sm:pt-4 md:pt-5 lg:pt-6 px-4 sm:px-6 md:px-8"> 
         <div className="flex items-center text-xs sm:text-sm text-secondary-400 overflow-x-auto whitespace-nowrap pb-2">
