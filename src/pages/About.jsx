@@ -73,7 +73,7 @@ const About = () => {
   };
 
   return (
-    <div className="min-h-screen bg-secondary-950 sm:pt-20 md:pt-24">
+    <div className="min-h-screen bg-secondary-950 sm:pt-20 md:pt-24 lg:pt-0">
       {/* Hero Section */}
       <div className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] lg:h-[90vh]">
         <div className="absolute inset-0 z-0">

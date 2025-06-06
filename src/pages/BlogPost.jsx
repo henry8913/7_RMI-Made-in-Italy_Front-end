@@ -169,9 +169,9 @@ const BlogPost = () => {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-900 text-white">
+    <div className="min-h-screen bg-secondary-950 text-white pt-0">
       {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-black/60 z-10"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-secondary-950 z-20"></div>
         <div
@@ -182,7 +182,7 @@ const BlogPost = () => {
             })`,
           }}
         ></div>
-        <div className="container mx-auto px-4 relative z-30">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 relative z-30">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -197,10 +197,10 @@ const BlogPost = () => {
                 {formatDate(post.dataPubblicazione)}
               </span>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-3 md:mb-4">
               {post.titolo}
             </h1>
-            <p className="text-lg text-secondary-300">
+            <p className="text-base sm:text-lg md:text-xl text-secondary-300">
               Di {post.autore} • {post.tempoLettura || "5 min"} di lettura
             </p>
           </motion.div>
@@ -208,25 +208,25 @@ const BlogPost = () => {
       </section>
 
       {/* Article Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
+      <section className="py-10 sm:py-12 md:py-16">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <div className="max-w-3xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="prose prose-lg prose-invert max-w-none"
+              className="prose prose-sm sm:prose-base md:prose-lg prose-invert max-w-none"
               dangerouslySetInnerHTML={{ __html: post.contenuto }}
             ></motion.div>
 
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
-              <div className="mt-12 flex flex-wrap gap-2">
+              <div className="mt-8 sm:mt-10 md:mt-12 flex flex-wrap gap-1.5 sm:gap-2">
                 {post.tags.map((tag) => (
                   <Link
                     key={tag}
                     to={`/blog?tag=${tag}`}
-                    className="bg-secondary-800 hover:bg-secondary-700 px-3 py-1 rounded-full text-sm transition-colors"
+                    className="bg-secondary-800 hover:bg-secondary-700 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm transition-colors"
                   >
                     #{tag}
                   </Link>
@@ -235,10 +235,10 @@ const BlogPost = () => {
             )}
 
             {/* Like and Share */}
-            <div className="mt-12 flex justify-between items-center border-t border-b border-secondary-700 py-4">
+            <div className="mt-8 sm:mt-10 md:mt-12 flex flex-col sm:flex-row justify-between items-center border-t border-b border-secondary-700 py-3 sm:py-4 gap-3 sm:gap-0">
               <button
                 onClick={handleLike}
-                className={`flex items-center gap-2 ${
+                className={`flex items-center gap-1.5 sm:gap-2 ${
                   liked
                     ? "text-amber-500"
                     : "text-secondary-300 hover:text-amber-500"
@@ -246,7 +246,7 @@ const BlogPost = () => {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-5 w-5 sm:h-6 sm:w-6"
                   fill={liked ? "currentColor" : "none"}
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -258,9 +258,9 @@ const BlogPost = () => {
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
-                <span>{post.miPiace?.length || 0} Mi piace</span>
+                <span className="text-sm sm:text-base">{post.miPiace?.length || 0} Mi piace</span>
               </button>
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3">
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
                     window.location.href
@@ -271,7 +271,7 @@ const BlogPost = () => {
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
+                    className="h-5 w-5 sm:h-6 sm:w-6"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -288,7 +288,7 @@ const BlogPost = () => {
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
+                    className="h-5 w-5 sm:h-6 sm:w-6"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -305,7 +305,7 @@ const BlogPost = () => {
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
+                    className="h-5 w-5 sm:h-6 sm:w-6"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -316,15 +316,15 @@ const BlogPost = () => {
             </div>
 
             {/* Comments Section */}
-            <div className="mt-12">
-              <h3 className="text-2xl font-bold mb-6">
+            <div className="mt-8 sm:mt-10 md:mt-12">
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
                 Commenti ({post.commenti?.length || 0})
               </h3>
 
               {post.commentiAbilitati ? (
                 <>
                   {/* Comment Form */}
-                  <form onSubmit={handleCommentSubmit} className="mb-8">
+                  <form onSubmit={handleCommentSubmit} className="mb-6 sm:mb-8">
                     <textarea
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
@@ -334,7 +334,7 @@ const BlogPost = () => {
                           : "Accedi per lasciare un commento"
                       }
                       disabled={!isAuthenticated || commentSubmitting}
-                      className="w-full p-4 rounded-lg bg-secondary-800 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none min-h-[120px]"
+                      className="w-full p-3 sm:p-4 rounded-lg bg-secondary-800 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none min-h-[100px] sm:min-h-[120px]"
                       required
                     ></textarea>
                     <div className="mt-2 flex justify-end">
@@ -342,6 +342,7 @@ const BlogPost = () => {
                         type="submit"
                         variant="primary"
                         disabled={!isAuthenticated || commentSubmitting}
+                        className="text-sm sm:text-base py-1.5 px-3 sm:py-2 sm:px-4"
                       >
                         {commentSubmitting
                           ? "Invio in corso..."
@@ -352,42 +353,42 @@ const BlogPost = () => {
 
                   {/* Comments List */}
                   {post.commenti && post.commenti.length > 0 ? (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                       {post.commenti.map((comment) => (
                         <div
                           key={comment._id}
-                          className="bg-secondary-800 rounded-lg p-4"
+                          className="bg-secondary-800 rounded-lg p-3 sm:p-4"
                         >
                           <div className="flex justify-between items-start mb-2">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-secondary-700 flex items-center justify-center font-bold">
+                            <div className="flex items-center gap-2 sm:gap-3">
+                              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-secondary-700 flex items-center justify-center font-bold text-sm sm:text-base">
                                 {comment.utente?.nome?.charAt(0) || "U"}
                               </div>
                               <div>
-                                <h4 className="font-semibold">
+                                <h4 className="font-semibold text-sm sm:text-base">
                                   {comment.utente?.nome || "Utente"}
                                 </h4>
-                                <p className="text-sm text-secondary-400">
+                                <p className="text-xs sm:text-sm text-secondary-400">
                                   {formatDate(comment.dataCreazione)}
                                 </p>
                               </div>
                             </div>
                           </div>
-                          <p className="text-secondary-300">{comment.testo}</p>
+                          <p className="text-sm sm:text-base text-secondary-300">{comment.testo}</p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-8 bg-secondary-800 rounded-lg">
-                      <p className="text-secondary-300">
+                    <div className="text-center py-6 sm:py-8 bg-secondary-800 rounded-lg">
+                      <p className="text-sm sm:text-base text-secondary-300">
                         Non ci sono ancora commenti. Sii il primo a commentare!
                       </p>
                     </div>
                   )}
                 </>
               ) : (
-                <div className="text-center py-8 bg-secondary-800 rounded-lg">
-                  <p className="text-secondary-300">
+                <div className="text-center py-6 sm:py-8 bg-secondary-800 rounded-lg">
+                  <p className="text-sm sm:text-base text-secondary-300">
                     I commenti sono disabilitati per questo post.
                   </p>
                 </div>
@@ -399,12 +400,12 @@ const BlogPost = () => {
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <section className="py-16 bg-secondary-800">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center">
+        <section className="py-10 sm:py-12 md:py-16 bg-secondary-800">
+          <div className="container mx-auto px-4 sm:px-6 md:px-8">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">
               Articoli correlati
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {relatedPosts.map((relatedPost) => (
                 <motion.div
                   key={relatedPost._id}
@@ -420,34 +421,34 @@ const BlogPost = () => {
                         "/images/blog-placeholder.jpg"
                       }
                       alt={relatedPost.titolo}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-40 sm:h-44 md:h-48 object-cover"
                     />
                   </Link>
-                  <div className="p-6">
+                  <div className="p-4 sm:p-5 md:p-6">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-secondary-400">
+                      <span className="text-xs sm:text-sm text-secondary-400">
                         {formatDate(relatedPost.dataPubblicazione)}
                       </span>
-                      <span className="bg-secondary-700 px-2 py-1 rounded-full text-xs">
+                      <span className="bg-secondary-700 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs">
                         {relatedPost.categoria}
                       </span>
                     </div>
                     <Link to={`/blog/${relatedPost.slug || relatedPost._id}`}>
-                      <h3 className="text-xl font-bold mb-2 hover:text-amber-400 transition-colors">
+                      <h3 className="text-lg sm:text-xl font-bold mb-1 sm:mb-2 hover:text-amber-400 transition-colors line-clamp-2">
                         {relatedPost.titolo}
                       </h3>
                     </Link>
-                    <p className="text-secondary-300 mb-4 line-clamp-2">
+                    <p className="text-xs sm:text-sm text-secondary-300 mb-3 sm:mb-4 line-clamp-2">
                       {relatedPost.contenuto.substring(0, 100)}...
                     </p>
                     <Link
                       to={`/blog/${relatedPost.slug || relatedPost._id}`}
-                      className="text-amber-400 hover:text-amber-300 font-medium inline-flex items-center"
+                      className="text-amber-400 hover:text-amber-300 font-medium inline-flex items-center text-sm sm:text-base"
                     >
                       Leggi di più
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 ml-1"
+                        className="h-4 w-4 sm:h-5 sm:w-5 ml-1"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -467,13 +468,13 @@ const BlogPost = () => {
       )}
 
       {/* Back to Blog */}
-      <section className="py-12 bg-secondary-900">
-        <div className="container mx-auto px-4 text-center">
+      <section className="py-8 sm:py-10 md:py-12 bg-secondary-900">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 text-center">
           <Link to="/blog">
-            <Button variant="secondary" className="inline-flex items-center">
+            <Button variant="secondary" className="inline-flex items-center text-sm sm:text-base py-1.5 px-3 sm:py-2 sm:px-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
+                className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
