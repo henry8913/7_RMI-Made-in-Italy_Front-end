@@ -214,7 +214,7 @@ const About = () => {
               className="luxury-card overflow-hidden group"
               variants={fadeInUp}
             >
-              <div className="overflow-hidden h-48 sm:h-56 md:h-64">
+              <div className="overflow-hidden">
                 <img 
                   src="https://raw.githubusercontent.com/henry8913/0_Welcome/refs/heads/main/IMG/IMG.jpg" 
                   alt="Henry Grecchi" 
@@ -234,7 +234,7 @@ const About = () => {
               className="luxury-card overflow-hidden group"
               variants={fadeInUp}
             >
-              <div className="overflow-hidden h-48 sm:h-56 md:h-64">
+              <div className="overflow-hidden">
                 <img 
                   src="https://hips.hearstapps.com/hmg-prod/images/italian-fashion-blogger-and-designer-chiara-ferragni-poses-news-photo-1745954548.pjpeg?crop=0.668xw:1.00xh;0.234xw,0&resize=640:*" 
                   alt="Chiara Ferraghi" 
@@ -254,7 +254,7 @@ const About = () => {
               className="luxury-card overflow-hidden group"
               variants={fadeInUp}
             >
-              <div className="overflow-hidden h-48 sm:h-56 md:h-64">
+              <div className="overflow-hidden">
                 <img 
                   src="https://i.pinimg.com/736x/4b/f4/72/4bf472c2963a556f62ddc31f2ae778f1.jpg" 
                   alt="Tony Stark" 

@@ -39,10 +39,12 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      const result = await logout();
       setShowUserMenu(false);
       // Reindirizza l'utente alla home page dopo il logout
-      navigate('/');
+      if (result && result.success) {
+        navigate('/');
+      }
     } catch (error) {
       console.error('Errore durante il logout', error);
     }

@@ -120,9 +120,11 @@ const Profile = () => {
   // Gestisce il logout
   const handleLogout = async () => {
     try {
-      await logout();
+      const result = await logout();
       // Reindirizza l'utente alla home page dopo il logout
-      navigate('/');
+      if (result && result.success) {
+        navigate('/');
+      }
     } catch (err) {
       console.error("Errore durante il logout:", err);
       setError(
@@ -132,7 +134,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-secondary-950 py-12">
+    <div className="min-h-screen bg-secondary-950 py-12 pt-28">
       <div className="container mx-auto px-4">
         <motion.h1
           className="text-3xl md:text-4xl font-bold text-white mb-8"

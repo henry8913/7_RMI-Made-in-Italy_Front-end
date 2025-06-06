@@ -119,6 +119,9 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
+    
+    // Assicurati che il reindirizzamento avvenga dopo che lo stato è stato aggiornato
+    return { success: true };
   };
 
   // Valore del contesto
