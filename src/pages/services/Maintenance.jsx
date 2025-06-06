@@ -27,7 +27,7 @@ const Maintenance = () => {
   return (
     <div className="min-h-screen bg-secondary-950">
       {/* Hero Section */}
-      <div className="relative h-[50vh] md:h-[60vh]"> 
+      <div className="relative h-[40vh] sm:h-[45vh] md:h-[55vh] lg:h-[60vh] xl:h-[65vh]">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80 z-10" />
           <img
@@ -39,7 +39,7 @@ const Maintenance = () => {
         <div className="relative z-20 h-full flex items-center">
           <div className="container-custom">
             <motion.h1 
-              className="text-5xl md:text-6xl lg:text-7xl font-heading text-gradient mb-4"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading text-gradient mb-2 sm:mb-4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -47,96 +47,95 @@ const Maintenance = () => {
               Servizio di Manutenzione
             </motion.h1>
             <motion.p 
-              className="text-xl md:text-2xl text-secondary-200 max-w-2xl"
+              className="text-lg sm:text-xl md:text-2xl text-secondary-200 max-w-xs sm:max-w-md md:max-w-2xl"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Mantieni la tua auto restomod in condizioni perfette con i nostri servizi di manutenzione specializzata.
+              Mantieni la tua auto d'epoca in condizioni ottimali con i nostri servizi di manutenzione specializzata.
             </motion.p>
           </div>
         </div>
       </div>
 
       {/* Service Description */}
-      <section className="py-16 md:py-20 bg-gradient-to-b from-secondary-950 to-secondary-900"> 
+      <section className="py-12 sm:py-14 md:py-16 lg:py-20 bg-gradient-to-b from-secondary-950 to-secondary-900">
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center mb-16"> 
+          <div className="max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
             <motion.h2 
-              className="text-4xl md:text-5xl font-heading text-gradient mb-8"
+              className="text-3xl sm:text-4xl md:text-5xl font-heading text-gradient mb-4 sm:mb-6 md:mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
               viewport={{ once: true }}
             >
-              Cura Esperta per la Tua Auto d'Epoca
+              Manutenzione Specializzata
             </motion.h2>
             <motion.p 
-              className="text-secondary-200 text-lg md:text-xl leading-relaxed"
+              className="text-secondary-200 text-base sm:text-lg md:text-xl leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              Il nostro team di tecnici specializzati offre un servizio di manutenzione completo per auto d'epoca e restomod, garantendo prestazioni ottimali e preservando il valore del tuo investimento nel tempo.
+              I nostri servizi di manutenzione sono progettati specificamente per auto d'epoca italiane, garantendo che ogni intervento rispetti l'autenticità e preservi il valore del tuo veicolo storico.
             </motion.p>
           </div>
 
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
             <motion.div 
-              className="luxury-card p-8 hover:translate-y-[-8px] transition-transform duration-500"
+              className="luxury-card p-6 sm:p-8 hover:translate-y-[-8px] transition-transform duration-500"
               variants={fadeInUp}
             >
-              <div className="text-primary mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <div className="text-primary mb-4 sm:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-heading text-white mb-4">Manutenzione Programmata</h3>
-              <p className="text-secondary-300">Piani di manutenzione personalizzati per mantenere la tua auto in condizioni ottimali, prevenendo problemi e preservando il suo valore nel tempo.</p>
+              <h3 className="text-xl sm:text-2xl font-heading text-white mb-2 sm:mb-4">Manutenzione Programmata</h3>
+              <p className="text-secondary-300 text-sm sm:text-base">Piani di manutenzione personalizzati per mantenere la tua auto d'epoca in condizioni ottimali, prevenendo problemi e preservando il suo valore nel tempo.</p>
             </motion.div>
 
             <motion.div 
-              className="luxury-card p-8 hover:translate-y-[-8px] transition-transform duration-500"
+              className="luxury-card p-6 sm:p-8 hover:translate-y-[-8px] transition-transform duration-500"
               variants={fadeInUp}
             >
-              <div className="text-primary mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+              <div className="text-primary mb-4 sm:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-heading text-white mb-4">Diagnostica Avanzata</h3>
-              <p className="text-secondary-300">Utilizziamo strumenti diagnostici avanzati specifici per auto d'epoca e moderne per identificare con precisione eventuali problemi.</p>
+              <h3 className="text-xl sm:text-2xl font-heading text-white mb-2 sm:mb-4">Diagnostica Avanzata</h3>
+              <p className="text-secondary-300 text-sm sm:text-base">Utilizziamo strumenti diagnostici specializzati per auto d'epoca, combinando tecnologia moderna con conoscenza approfondita dei veicoli classici.</p>
             </motion.div>
 
             <motion.div 
-              className="luxury-card p-8 hover:translate-y-[-8px] transition-transform duration-500"
+              className="luxury-card p-6 sm:p-8 hover:translate-y-[-8px] transition-transform duration-500"
               variants={fadeInUp}
             >
-              <div className="text-primary mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <div className="text-primary mb-4 sm:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-heading text-white mb-4">Assistenza Continua</h3>
-              <p className="text-secondary-300">Offriamo assistenza continua e servizio di emergenza per i nostri clienti, garantendo tranquillità e supporto in ogni momento.</p>
+              <h3 className="text-xl sm:text-2xl font-heading text-white mb-2 sm:mb-4">Assistenza Continua</h3>
+              <p className="text-secondary-300 text-sm sm:text-base">Offriamo supporto continuo e consulenza per qualsiasi necessità relativa alla manutenzione della tua auto d'epoca, con reperibilità anche per emergenze.</p>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Maintenance Services */}
-      <section className="py-24 bg-secondary-900">
+      <section className="py-16 sm:py-20 md:py-24 bg-secondary-900">
         <div className="container-custom">
           <motion.h2 
-            className="text-4xl md:text-5xl font-heading text-gradient mb-16 text-center"
+            className="text-3xl sm:text-4xl md:text-5xl font-heading text-gradient mb-10 sm:mb-12 md:mb-16 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
@@ -145,146 +144,134 @@ const Maintenance = () => {
             I Nostri Servizi di Manutenzione
           </motion.h2>
 
-          <div className="space-y-16">
+          <div className="space-y-12 sm:space-y-14 md:space-y-16">
             <motion.div 
-              className="flex flex-col md:flex-row items-center gap-8"
+              className="flex flex-col md:flex-row items-center gap-6 sm:gap-8"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
               viewport={{ once: true }}
             >
-              <div className="md:w-1/2">
+              <div className="w-full md:w-1/2">
                 <img 
                   src="https://images.pexels.com/photos/24286596/pexels-photo-24286596/free-photo-of-car-engine-and-parts-under-the-hood.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
                   alt="Manutenzione Meccanica" 
-                  className="rounded-lg shadow-xl w-full h-[300px] md:h-[400px] object-cover"
+                  className="rounded-lg shadow-xl w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] object-cover"
                 />
               </div>
-              <div className="md:w-1/2">
-                <h3 className="text-3xl font-heading text-white mb-4">Manutenzione Meccanica</h3>
-                <p className="text-secondary-300 text-lg leading-relaxed">
-                  Eseguiamo controlli approfonditi e manutenzione di tutti i componenti meccanici: motore, trasmissione, freni, sospensioni e sterzo. Utilizziamo ricambi originali o di qualità equivalente per garantire prestazioni ottimali e affidabilità.
+              <div className="w-full md:w-1/2 mt-4 md:mt-0">
+                <h3 className="text-2xl sm:text-2xl md:text-3xl font-heading text-white mb-2 sm:mb-4">Manutenzione Meccanica</h3>
+                <p className="text-secondary-300 text-base sm:text-lg leading-relaxed">
+                  Eseguiamo tutti gli interventi di manutenzione meccanica necessari per mantenere la tua auto d'epoca in perfetta efficienza, dai tagliandi programmati alle revisioni complete di motore, trasmissione e sistemi frenanti.
                 </p>
-                <ul className="text-secondary-300 mt-4 space-y-2">
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Tagliandi completi con sostituzione di oli e filtri
+                <ul className="mt-4 space-y-2 text-secondary-300 text-base sm:text-lg">
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Tagliandi programmati
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Revisione di motore e trasmissione
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Revisione motore e trasmissione
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Controllo e regolazione di freni e sospensioni
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Manutenzione impianto frenante
                   </li>
                 </ul>
               </div>
             </motion.div>
 
             <motion.div 
-              className="flex flex-col md:flex-row-reverse items-center gap-8"
+              className="flex flex-col md:flex-row-reverse items-center gap-6 sm:gap-8"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
               viewport={{ once: true }}
             >
-              <div className="md:w-1/2">
+              <div className="w-full md:w-1/2">
                 <img 
-                  src="https://cdn.mos.cms.futurecdn.net/waQriMiWSkK6opVXTiDbhB-1600-80.jpg.webp" 
-                  alt="Manutenzione Elettrica" 
-                  className="rounded-lg shadow-xl w-full h-[300px] md:h-[400px] object-cover"
+                  src="https://cdn.mos.cms.futurecdn.net/waQriMiWSkK6opVXTiDbhB-1600-80.jpg.webp"  
+                  alt="Manutenzione Elettrica/Elettronica" 
+                  className="rounded-lg shadow-xl w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] object-cover"
                 />
               </div>
-              <div className="md:w-1/2">
-                <h3 className="text-3xl font-heading text-white mb-4">Manutenzione Elettrica ed Elettronica</h3>
-                <p className="text-secondary-300 text-lg leading-relaxed">
-                  Ci occupiamo della manutenzione e riparazione di tutti i sistemi elettrici ed elettronici, sia originali che moderni aggiunti durante il processo di restomod. Garantiamo il corretto funzionamento di tutti i componenti elettronici.
+              <div className="w-full md:w-1/2 mt-4 md:mt-0">
+                <h3 className="text-2xl sm:text-2xl md:text-3xl font-heading text-white mb-2 sm:mb-4">Manutenzione Elettrica/Elettronica</h3>
+                <p className="text-secondary-300 text-base sm:text-lg leading-relaxed">
+                  Ci occupiamo della manutenzione e del ripristino dei sistemi elettrici originali, nonché dell'integrazione di componenti moderni quando necessario, sempre rispettando l'autenticità del veicolo.
                 </p>
-                <ul className="text-secondary-300 mt-4 space-y-2">
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Diagnosi e riparazione di problemi elettrici
+                <ul className="mt-4 space-y-2 text-secondary-300 text-base sm:text-lg">
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Revisione impianto elettrico
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Manutenzione di sistemi di infotainment moderni
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Riparazione strumentazione
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Aggiornamento software e calibrazione di sistemi elettronici
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Aggiornamento sistemi di illuminazione
                   </li>
                 </ul>
               </div>
             </motion.div>
 
             <motion.div 
-              className="flex flex-col md:flex-row items-center gap-8"
+              className="flex flex-col md:flex-row items-center gap-6 sm:gap-8"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
               viewport={{ once: true }}
             >
-              <div className="md:w-1/2">
+              <div className="w-full md:w-1/2">
                 <img 
                   src="https://cdn.mos.cms.futurecdn.net/ihCD57baD8NyG4ymckkxT8-1600-80.jpg.webp" 
                   alt="Manutenzione Estetica" 
-                  className="rounded-lg shadow-xl w-full h-[300px] md:h-[400px] object-cover"
+                  className="rounded-lg shadow-xl w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] object-cover"
                 />
               </div>
-              <div className="md:w-1/2">
-                <h3 className="text-3xl font-heading text-white mb-4">Manutenzione Estetica</h3>
-                <p className="text-secondary-300 text-lg leading-relaxed">
-                  Manteniamo l'aspetto estetico della tua auto in condizioni impeccabili con trattamenti specifici per carrozzeria, interni e dettagli. Utilizziamo prodotti di alta qualità specifici per materiali d'epoca e moderni.
+              <div className="w-full md:w-1/2 mt-4 md:mt-0">
+                <h3 className="text-2xl sm:text-2xl md:text-3xl font-heading text-white mb-2 sm:mb-4">Manutenzione Estetica</h3>
+                <p className="text-secondary-300 text-base sm:text-lg leading-relaxed">
+                  Manteniamo l'aspetto estetico della tua auto d'epoca con trattamenti specifici per carrozzeria, cromature, interni in pelle e legno, utilizzando prodotti di alta qualità adatti ai materiali d'epoca.
                 </p>
-                <ul className="text-secondary-300 mt-4 space-y-2">
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Lucidatura e protezione della carrozzeria
+                <ul className="mt-4 space-y-2 text-secondary-300 text-base sm:text-lg">
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Lucidatura e protezione carrozzeria
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Trattamento e protezione di interni in pelle e tessuto
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Trattamento cromature e finiture
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Pulizia e protezione di cromature e dettagli
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Manutenzione interni in pelle e legno
                   </li>
                 </ul>
               </div>
             </motion.div>
 
             <motion.div 
-              className="flex flex-col md:flex-row-reverse items-center gap-8"
+              className="flex flex-col md:flex-row-reverse items-center gap-6 sm:gap-8"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
               viewport={{ once: true }}
             >
-              <div className="md:w-1/2">
+              <div className="w-full md:w-1/2">
                 <img 
-                  src="https://images.unsplash.com/photo-1530046339915-78e93d3c6f10?q=80&w=2070&auto=format&fit=crop" 
+                  src="https://www.motortrend.com/uploads/sites/5/2020/04/1968-Honda-S800-Restomod-Danny-Wu-40.jpg" 
                   alt="Conservazione e Rimessaggio" 
-                  className="rounded-lg shadow-xl w-full h-[300px] md:h-[400px] object-cover"
+                  className="rounded-lg shadow-xl w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] object-cover"
                 />
               </div>
-              <div className="md:w-1/2">
-                <h3 className="text-3xl font-heading text-white mb-4">Conservazione e Rimessaggio</h3>
-                <p className="text-secondary-300 text-lg leading-relaxed">
-                  Offriamo servizi di conservazione e rimessaggio in ambienti controllati per proteggere la tua auto durante i periodi di inutilizzo. Il nostro servizio include manutenzione periodica anche durante il rimessaggio.
+              <div className="w-full md:w-1/2 mt-4 md:mt-0">
+                <h3 className="text-2xl sm:text-2xl md:text-3xl font-heading text-white mb-2 sm:mb-4">Conservazione e Rimessaggio</h3>
+                <p className="text-secondary-300 text-base sm:text-lg leading-relaxed">
+                  Offriamo servizi di conservazione e rimessaggio in ambienti controllati, ideali per preservare la tua auto d'epoca durante i periodi di inutilizzo, con controlli periodici e manutenzione preventiva.
                 </p>
-                <ul className="text-secondary-300 mt-4 space-y-2">
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Rimessaggio in ambiente a temperatura e umidità controllate
+                <ul className="mt-4 space-y-2 text-secondary-300 text-base sm:text-lg">
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Rimessaggio in ambiente climatizzato
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Manutenzione periodica durante il rimessaggio
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Controlli periodici dei fluidi e batteria
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">✓</span>
-                    Preparazione del veicolo per lunghi periodi di inattività
+                  <li className="flex items-center">
+                    <span className="text-primary mr-2">✓</span> Trattamenti anti-umidità e conservativi
                   </li>
                 </ul>
               </div>
@@ -294,10 +281,10 @@ const Maintenance = () => {
       </section>
 
       {/* Maintenance Plans */}
-      <section className="py-24 bg-secondary-900">
+      <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-secondary-900 to-secondary-950">
         <div className="container-custom">
           <motion.h2 
-            className="text-4xl md:text-5xl font-heading text-gradient mb-16 text-center"
+            className="text-3xl sm:text-4xl md:text-5xl font-heading text-gradient mb-10 sm:mb-12 md:mb-16 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
@@ -306,143 +293,143 @@ const Maintenance = () => {
             Piani di Manutenzione
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div 
-              className="luxury-card p-8 border border-secondary-800 rounded-lg"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-2xl font-heading text-white mb-4 text-center">Piano Base</h3>
-              <div className="text-primary text-center text-4xl font-bold mb-6">€ 1.200<span className="text-sm text-secondary-400">/anno</span></div>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Tagliando annuale completo</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Controllo fluidi ogni 6 mesi</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Assistenza telefonica prioritaria</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Sconto del 10% su ricambi</span>
-                </li>
-              </ul>
-              <div className="text-center">
-                <Link to="/contact" className="btn-outline px-6 py-2 inline-block">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 md:gap-10"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+          >
+            <div className="luxury-card p-6 sm:p-8 flex flex-col h-full">
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-2xl sm:text-3xl font-heading text-white mb-2 sm:mb-4">Piano Base</h3>
+                <p className="text-primary text-xl sm:text-2xl font-bold">€ 1.200<span className="text-sm text-secondary-300 font-normal">/anno</span></p>
+              </div>
+              <div className="text-secondary-300 text-sm sm:text-base flex-grow">
+                <ul className="space-y-2 sm:space-y-3">
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>2 tagliandi programmati all'anno</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Controllo fluidi e filtri</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Ispezione visiva completa</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Assistenza telefonica</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 sm:mt-8">
+                <Link to="/contact" className="btn-outline w-full py-2 sm:py-3 text-center">
                   Maggiori Informazioni
                 </Link>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div 
-              className="luxury-card p-8 border border-primary rounded-lg relative overflow-hidden"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <div className="absolute top-0 right-0 bg-primary text-black px-4 py-1 text-sm font-bold">
-                Popolare
+            <div className="luxury-card p-6 sm:p-8 flex flex-col h-full border border-primary">
+              <div className="absolute top-0 right-0 bg-primary text-secondary-950 py-1 px-3 text-xs sm:text-sm font-bold">
+                POPOLARE
               </div>
-              <h3 className="text-2xl font-heading text-white mb-4 text-center">Piano Premium</h3>
-              <div className="text-primary text-center text-4xl font-bold mb-6">€ 2.400<span className="text-sm text-secondary-400">/anno</span></div>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Tutto il piano Base</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Controlli trimestrali completi</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Servizio di ritiro e consegna</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Detailing completo 2 volte l'anno</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Sconto del 15% su ricambi e manodopera</span>
-                </li>
-              </ul>
-              <div className="text-center">
-                <Link to="/contact" className="btn-primary px-6 py-2 inline-block">
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-2xl sm:text-3xl font-heading text-white mb-2 sm:mb-4">Piano Premium</h3>
+                <p className="text-primary text-xl sm:text-2xl font-bold">€ 2.500<span className="text-sm text-secondary-300 font-normal">/anno</span></p>
+              </div>
+              <div className="text-secondary-300 text-sm sm:text-base flex-grow">
+                <ul className="space-y-2 sm:space-y-3">
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>4 tagliandi programmati all'anno</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Sostituzione completa fluidi e filtri</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Controllo e regolazione sospensioni</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Trattamento protettivo carrozzeria</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Assistenza telefonica prioritaria</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 sm:mt-8">
+                <Link to="/contact" className="btn-primary w-full py-2 sm:py-3 text-center">
                   Maggiori Informazioni
                 </Link>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div 
-              className="luxury-card p-8 border border-secondary-800 rounded-lg"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-2xl font-heading text-white mb-4 text-center">Piano Elite</h3>
-              <div className="text-primary text-center text-4xl font-bold mb-6">€ 4.800<span className="text-sm text-secondary-400">/anno</span></div>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Tutto il piano Premium</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Manutenzione illimitata</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Rimessaggio incluso</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Assistenza 24/7 con numero dedicato</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary mr-2">✓</span>
-                  <span className="text-secondary-300">Sconto del 25% su tutti i servizi aggiuntivi</span>
-                </li>
-              </ul>
-              <div className="text-center">
-                <Link to="/contact" className="btn-outline px-6 py-2 inline-block">
+            <div className="luxury-card p-6 sm:p-8 flex flex-col h-full">
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-2xl sm:text-3xl font-heading text-white mb-2 sm:mb-4">Piano Elite</h3>
+                <p className="text-primary text-xl sm:text-2xl font-bold">€ 4.800<span className="text-sm text-secondary-300 font-normal">/anno</span></p>
+              </div>
+              <div className="text-secondary-300 text-sm sm:text-base flex-grow">
+                <ul className="space-y-2 sm:space-y-3">
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Manutenzione completa illimitata</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Revisione annuale completa</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Rimessaggio in ambiente controllato</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Trattamento estetico completo</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary mr-2 mt-1">✓</span> 
+                    <span>Assistenza 24/7 e servizio di emergenza</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 sm:mt-8">
+                <Link to="/contact" className="btn-outline w-full py-2 sm:py-3 text-center">
                   Maggiori Informazioni
                 </Link>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-b from-secondary-900 to-secondary-950">
-        <div className="container-custom text-center">
+      <section className="py-16 sm:py-20 md:py-24 bg-secondary-950">
+        <div className="container-custom text-center px-4 sm:px-6">
           <motion.h2 
-            className="text-4xl md:text-5xl font-heading text-gradient mb-8"
+            className="text-3xl sm:text-4xl md:text-5xl font-heading text-gradient mb-4 sm:mb-6 md:mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
-            Affida la Tua Auto a Mani Esperte
+            Mantieni il Valore della Tua Auto d'Epoca
           </motion.h2>
           <motion.p 
-            className="text-secondary-200 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-12"
+            className="text-secondary-200 text-base sm:text-lg md:text-xl leading-relaxed max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto mb-8 sm:mb-10 md:mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Contattaci per una consulenza personalizzata e scopri il piano di manutenzione più adatto alle tue esigenze. I nostri esperti sono pronti ad aiutarti a mantenere la tua auto in condizioni perfette.
+            Contattaci per scoprire come i nostri servizi di manutenzione specializzata possono aiutarti a preservare la bellezza, le prestazioni e il valore della tua auto d'epoca italiana.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -451,10 +438,10 @@ const Maintenance = () => {
             viewport={{ once: true }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Link to="/contact" className="btn-primary px-8 py-3 text-lg">
+            <Link to="/contact" className="btn-primary px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg">
               Contattaci
             </Link>
-            <Link to="/custom-requests" className="btn-outline px-8 py-3 text-lg">
+            <Link to="/custom-requests" className="btn-outline px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg">
               Richiedi Preventivo
             </Link>
           </motion.div>
