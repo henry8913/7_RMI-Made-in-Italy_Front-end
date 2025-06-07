@@ -10,6 +10,7 @@ import customRequestService from './customRequestService';
 import packageService from './packageService';
 import contactService from './contactService';
 import jobService from './jobService';
+import henryAIService from './henryAIService';
 
 export {
   api,
@@ -24,4 +25,5 @@ export {
   packageService,
   contactService,
   jobService,
+  henryAIService
 };

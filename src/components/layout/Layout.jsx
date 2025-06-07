@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navbar, Footer } from './';
+import { ChatBot } from '../common';
 import { useLocation } from 'react-router-dom';
 
 const Layout = () => {
@@ -24,6 +25,9 @@ const Layout = () => {
       </AnimatePresence>
       
       <Footer />
+      
+      {/* Chatbot component */}
+      <ChatBot />
     </div>
   );
 };
