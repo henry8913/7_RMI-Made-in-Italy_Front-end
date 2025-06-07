@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaRobot, FaPaperPlane, FaTimes, FaSpinner } from 'react-icons/fa';
 import { henryAIService } from '../../services';
+import { useLocation } from 'react-router-dom';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,7 @@ const ChatBot = () => {
   const [conversationId, setConversationId] = useState(null);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
+  const location = useLocation();
 
   // Scroll to bottom of messages when new messages are added
   useEffect(() => {
@@ -32,6 +34,41 @@ const ChatBot = () => {
     
     checkStatus();
   }, []);
+  
+  // Auto-open chatbot when user scrolls on the homepage
+  useEffect(() => {
+    // Solo se siamo nella homepage
+    if (location.pathname === '/') {
+      let hasOpenedWithScroll = false;
+      
+      // Funzione per gestire l'evento di scroll
+      const handleScroll = () => {
+        if (hasOpenedWithScroll) return;
+        
+        // Calcola quanto l'utente ha scrollato (in vh)
+        const scrolledVh = (window.scrollY / window.innerHeight) * 100;
+        
+        // Se l'utente ha scrollato almeno XYvh, apri il chatbot
+        if (scrolledVh >= 75) {
+          setIsOpen(true);
+          if (messages.length === 0) {
+            setMessages([{
+              text: 'Ciao! Sono Henry, l\'assistente virtuale di RMI Made in Italy. Come posso aiutarti oggi?',
+              sender: 'ai'
+            }]);
+          }
+          hasOpenedWithScroll = true;
+          window.removeEventListener('scroll', handleScroll);
+        }
+      };
+      
+      window.addEventListener('scroll', handleScroll);
+      
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [location.pathname, messages.length]); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
