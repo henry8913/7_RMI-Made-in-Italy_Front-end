@@ -1,11 +1,28 @@
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navbar, Footer } from './';
 import { ChatBot } from '../common';
 import { useLocation } from 'react-router-dom';
+import { useLoading } from '../../contexts/LoadingContext';
 
 const Layout = () => {
   const location = useLocation();
+  const { isLoading, setIsLoading } = useLoading();
+  
+  // Quando cambia il pathname, impostiamo isLoading a true
+  // e poi lo impostiamo a false dopo un breve ritardo
+  useEffect(() => {
+    setIsLoading(true);
+    
+    // Impostiamo isLoading a false dopo un breve ritardo
+    // per simulare il caricamento della pagina
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    
+    return () => clearTimeout(timer);
+  }, [location.pathname, setIsLoading]);
   
   return (
     <div className="flex flex-col min-h-screen bg-secondary-950 w-full overflow-x-hidden">

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Layout } from "./components";
+import { LoadingScreen } from "./components/common";
 import {
   Home,
   About,
@@ -35,6 +36,7 @@ import {
 } from "./pages/services";
 
 import { CartProvider } from "./contexts/CartContext";
+import { LoadingProvider } from "./contexts/LoadingContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./components/common/ScrollToTop";
@@ -42,10 +44,12 @@ import ScrollToTop from "./components/common/ScrollToTop";
 function App() {
   return (
     <CartProvider>
-      <Router>
-        <ScrollToTop />
-        <ToastContainer position="bottom-right" autoClose={3000} />
-        <Routes>
+      <LoadingProvider>
+        <Router>
+          <ScrollToTop />
+          <LoadingScreen />
+          <ToastContainer position="bottom-right" autoClose={3000} />
+          <Routes>
           {/* Rotta per il callback di autenticazione Google */}
           <Route path="/auth/google/success" element={<GoogleAuthCallback />} />
           
@@ -83,7 +87,8 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
-      </Router>
+        </Router>
+      </LoadingProvider>
     </CartProvider>
   );
 }

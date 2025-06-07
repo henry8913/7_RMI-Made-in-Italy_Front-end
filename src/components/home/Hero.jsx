@@ -25,7 +25,7 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="container-custom relative z-10 mt-16 px-5 sm:px-6">
+      <div className="container-custom relative z-10 mt-0 px-5 sm:px-6">
         <div className="max-w-xl sm:max-w-2xl lg:max-w-3xl">
           <motion.span 
             className="block text-primary font-light tracking-[0.3em] sm:tracking-[0.4em] uppercase text-xs mb-4 sm:mb-6 md:mb-8"

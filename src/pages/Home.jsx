@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Hero from '../components/home/Hero';
 import FeaturedRestomods from '../components/home/FeaturedRestomods';
 import AboutSection from '../components/home/AboutSection';
@@ -9,20 +9,8 @@ import CustomRequestsSection from '../components/home/CustomRequestsSection';
 import TestimonialSection from '../components/home/TestimonialSection';
 import ContactSection from '../components/home/ContactSection';
 import Newsletter from '../components/common/Newsletter';
-import { motion } from 'framer-motion';
 
 const Home = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // Simuliamo un breve caricamento per mostrare l'animazione
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   // Varianti per le animazioni di sequenza
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -48,18 +36,6 @@ const Home = () => {
       }
     }
   };
-
-  if (!isLoaded) {
-    return (
-      <div className="fixed inset-0 bg-secondary-950 flex items-center justify-center z-50">
-        <div className="text-center">
-          <div className="h-16 w-16 border-t border-primary mx-auto mb-6 animate-spin"></div>
-          <h2 className="text-2xl font-heading font-bold text-white tracking-wide mb-2">RMI Made in Italy</h2>
-          <p className="text-primary uppercase tracking-[0.2em] text-xs font-light">Caricamento</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <motion.div
