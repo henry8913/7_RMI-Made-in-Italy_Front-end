@@ -54,7 +54,7 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'Auto', path: '/restomods' },    
     { name: 'Marchi', path: '/brands' },
-    { name: 'Servizi', path: '/services/restoration' },  
+    { name: 'Servizi', path: '/packages' },
     { name: 'Chi Siamo', path: '/about' },
     { name: 'Blog', path: '/blog' },
     { name: 'Contatti', path: '/contact' },

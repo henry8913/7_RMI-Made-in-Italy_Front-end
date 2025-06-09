@@ -27,7 +27,7 @@ const Customization = () => {
   return (
     <div className="min-h-screen bg-secondary-950">
       {/* Hero Section */}
-      <div className="relative h-[40vh] sm:h-[45vh] md:h-[55vh] lg:h-[60vh] xl:h-[65vh]">
+      <div className="relative h-[50vh] sm:h-[55vh] md:h-[65vh] lg:h-[70vh] xl:h-[75vh]">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80 z-10" />
           <img
@@ -39,7 +39,7 @@ const Customization = () => {
         <div className="relative z-20 h-full flex items-center pt-16">
           <div className="container-custom">
             <motion.h1 
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading text-gradient mb-2 sm:mb-4"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-heading text-gradient mb-2 sm:mb-4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
