@@ -6,7 +6,7 @@
 **RMI Made in Italy** è un'applicazione React moderna per la presentazione e la gestione di auto d'epoca italiane restaurate e modernizzate (restomod). Questo progetto front-end è stato sviluppato per offrire un'esperienza utente premium che riflette l'eccellenza e l'artigianalità del brand. 
 
 <p align="center"> 
-  <video src="../img/cover_a.mp4" alt="Cover" width="100%" autoplay loop muted /> 
+  <img src="./public/img/cover_a.gif" alt="Cover" width="100%" /> 
 </p> 
 
 Questo progetto implementa un'interfaccia utente moderna e reattiva utilizzando React e Tailwind CSS, integrando API personalizzate e gestione avanzata dello stato. L'applicazione è costruita seguendo le best practices di sviluppo web moderno, con componenti riutilizzabili e una struttura scalabile. 
