@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaRobot, FaPaperPlane, FaTimes, FaSpinner } from 'react-icons/fa';
+import { FaPaperPlane, FaTimes, FaSpinner } from 'react-icons/fa';
+const henryImageUrl = '/img/HenryAI.jpeg';
 import { henryAIService } from '../../services';
 import { useLocation } from 'react-router-dom';
 
@@ -116,12 +117,16 @@ const ChatBot = () => {
       {/* Chat toggle button */}
       <motion.button
         onClick={toggleChat}
-        className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg ${isOpen ? 'bg-red-600' : 'bg-primary-600'} text-white transition-colors duration-300`}
+        className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg overflow-hidden ${isOpen ? 'bg-red-600' : 'bg-primary-600'} text-white transition-colors duration-300`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label={isOpen ? 'Chiudi chat' : 'Apri chat'}
       >
-        {isOpen ? <FaTimes size={20} /> : <FaRobot size={20} />}
+        {isOpen ? (
+          <FaTimes size={20} />
+        ) : (
+          <img src={henryImageUrl} alt="Henry AI" className="w-full h-full object-cover" />
+        )}
       </motion.button>
 
       {/* Chat window */}
@@ -136,7 +141,7 @@ const ChatBot = () => {
           >
             {/* Chat header */}
             <div className="bg-primary-600 text-white p-4 flex items-center">
-              <FaRobot className="mr-2" />
+              <img src={henryImageUrl} alt="Henry AI" className="w-8 h-8 rounded-full mr-2 object-cover" />
               <h3 className="font-medium">Henry AI Assistant</h3>
             </div>
 
