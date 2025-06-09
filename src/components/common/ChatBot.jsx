@@ -14,12 +14,9 @@ const ChatBot = () => {
   const messagesEndRef = useRef(null);
   const location = useLocation();
 
-  // Scroll to bottom of messages when new messages are added
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
+  // Scroll automatico come richiesto dall'utente
+  const [autoScroll] = useState(false);
+  
 
   // Check if HenryAI service is available
   useEffect(() => {
@@ -144,7 +141,7 @@ const ChatBot = () => {
             </div>
 
             {/* Chat messages */}
-            <div className="flex-grow p-4 overflow-y-auto bg-secondary-950">
+            <div className="flex-grow p-4 overflow-y-auto bg-secondary-950 relative">
               {messages.map((msg, index) => (
                 <div
                   key={index}
