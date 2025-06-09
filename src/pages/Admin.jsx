@@ -87,27 +87,37 @@ const Admin = () => {
     };
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {Object.entries(stats).map(([key, value]) => (
-          <div key={key} className="bg-secondary-900 p-6 rounded-sm border border-secondary-800 hover:border-primary transition-colors duration-300">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-secondary-400 text-sm">{getDisplayName(key)}</p>
-                <h3 className="text-white text-2xl font-medium mt-1">{value}</h3>
-              </div>
-              <div className="text-primary text-2xl">
-                {key === 'users' && <FaUsers />}
-                {key === 'restomods' && <FaCar />}
-                {key === 'brands' && <FaBuilding />}
-                {key === 'blogs' && <FaBlog />}
-                {key === 'packages' && <FaBox />}
-                {key === 'messages' && <FaEnvelope />}
-                {key === 'jobs' && <FaBriefcase />}
-                {key === 'customRequests' && <FaEnvelope />}
+      <div className="bg-secondary-900 p-4 sm:p-6 rounded-sm border border-secondary-800">
+        <h2 className="text-xl sm:text-2xl font-light text-white mb-4 sm:mb-6">Dashboard</h2>
+        
+        {error && (
+          <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm">
+            {error}
+          </div>
+        )}
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {Object.entries(stats).map(([key, value]) => (
+            <div key={key} className="bg-secondary-800 p-4 sm:p-6 rounded-sm border border-secondary-700 hover:border-primary transition-colors duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-secondary-400 text-xs sm:text-sm">{getDisplayName(key)}</p>
+                  <h3 className="text-white text-xl sm:text-2xl font-medium mt-1">{value}</h3>
+                </div>
+                <div className="text-primary text-xl sm:text-2xl">
+                  {key === 'users' && <FaUsers />}
+                  {key === 'restomods' && <FaCar />}
+                  {key === 'brands' && <FaBuilding />}
+                  {key === 'blogs' && <FaBlog />}
+                  {key === 'packages' && <FaBox />}
+                  {key === 'messages' && <FaEnvelope />}
+                  {key === 'jobs' && <FaBriefcase />}
+                  {key === 'customRequests' && <FaEnvelope />}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     );
   };
@@ -231,9 +241,9 @@ const Admin = () => {
     };
 
     return (
-      <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-white text-xl font-medium">Gestione Utenti</h3>
+      <div className="bg-secondary-900 p-4 sm:p-6 rounded-sm border border-secondary-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 sm:gap-0">
+          <h3 className="text-white text-lg sm:text-xl font-medium">Gestione Utenti</h3>
           <button
             onClick={() => {
               setEditingUser({
@@ -247,66 +257,66 @@ const Admin = () => {
                 ruolo: 'user'
               });
             }}
-            className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors"
+            className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-primary text-white text-sm rounded-sm hover:bg-primary/90 transition-colors"
           >
             Crea Nuovo Utente
           </button>
         </div>
         
         {error && (
-          <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+          <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm text-sm">
             {error}
           </div>
         )}
 
         {editingUser ? (
-          <div className="mb-6 p-4 border border-secondary-800 rounded-sm">
-            <h4 className="text-white text-lg mb-4">Modifica Utente</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 border border-secondary-800 rounded-sm">
+            <h4 className="text-white text-base sm:text-lg mb-3 sm:mb-4">Modifica Utente</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
               <div>
-                <label className="block text-secondary-400 mb-2">Nome</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Nome</label>
                 <input
                   type="text"
                   name="nome"
                   value={formData.nome}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Email</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Email</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Ruolo</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Ruolo</label>
                 <select
                   name="ruolo"
                   value={formData.ruolo}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 >
                   <option value="user">Utente</option>
                   <option value="admin">Amministratore</option>
                 </select>
               </div>
             </div>
-            <div className="flex justify-end space-x-3">
+            <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 onClick={handleCancelEdit}
-                className="px-4 py-2 bg-secondary-800 text-white rounded-sm hover:bg-secondary-700 transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary-800 text-white text-sm rounded-sm hover:bg-secondary-700 transition-colors"
               >
                 Annulla
               </button>
               <button
                 onClick={handleSaveChanges}
                 disabled={loading}
-                className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+                className="px-3 sm:px-4 py-2 bg-primary text-white text-sm rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
                 {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
               </button>
@@ -315,44 +325,44 @@ const Admin = () => {
         ) : null}
 
         {loading && !editingUser ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="flex justify-center items-center h-48 sm:h-64">
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-white">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="w-full text-xs sm:text-sm text-left text-white">
               <thead className="text-xs uppercase bg-secondary-800">
                 <tr>
-                  <th className="px-6 py-3">Nome</th>
-                  <th className="px-6 py-3">Email</th>
-                  <th className="px-6 py-3">Ruolo</th>
-                  <th className="px-6 py-3">Provider</th>
-                  <th className="px-6 py-3">Azioni</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Nome</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Email</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Ruolo</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Provider</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Azioni</th>
                 </tr>
               </thead>
               <tbody>
                 {users.length > 0 ? (
                   users.map((user) => (
                     <tr key={user._id} className="border-b border-secondary-800">
-                      <td className="px-6 py-4">{user.nome}</td>
-                      <td className="px-6 py-4">{user.email}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">{user.nome}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 truncate max-w-[120px] sm:max-w-none">{user.email}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
                         <span className={`px-2 py-1 rounded-full text-xs ${user.ruolo === 'admin' ? 'bg-primary/20 text-primary' : 'bg-secondary-700 text-secondary-300'}`}>
                           {user.ruolo === 'admin' ? 'Amministratore' : 'Utente'}
                         </span>
                       </td>
-                      <td className="px-6 py-4">{user.authProvider}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex space-x-2">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">{user.authProvider}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0">
                           <button
                             onClick={() => handleEditClick(user)}
-                            className="text-blue-400 hover:text-blue-300"
+                            className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm"
                           >
                             Modifica
                           </button>
                           <button
                             onClick={() => handleDeleteUser(user._id)}
-                            className="text-red-400 hover:text-red-300"
+                            className="text-red-400 hover:text-red-300 text-xs sm:text-sm"
                           >
                             Elimina
                           </button>
@@ -362,7 +372,7 @@ const Admin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center">
+                    <td colSpan="5" className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm">
                       Nessun utente trovato
                     </td>
                   </tr>
@@ -530,9 +540,9 @@ const Admin = () => {
     };
 
     return (
-      <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-white text-xl font-medium">Gestione Restomods</h3>
+      <div className="bg-secondary-900 p-4 sm:p-6 rounded-sm border border-secondary-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 sm:gap-0">
+          <h3 className="text-white text-lg sm:text-xl font-medium">Gestione Restomods</h3>
           <button
             onClick={() => {
               setEditingRestomod({});
@@ -547,122 +557,122 @@ const Admin = () => {
                 immagini: []
               });
             }}
-            className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors"
+            className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-primary text-white text-sm rounded-sm hover:bg-primary/90 transition-colors"
           >
             Crea Nuovo Restomod
           </button>
         </div>
         
         {error && (
-          <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+          <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm text-sm">
             {error}
           </div>
         )}
 
         {editingRestomod ? (
-          <div className="mb-6 p-4 border border-secondary-800 rounded-sm">
-            <h4 className="text-white text-lg mb-4">Modifica Restomod</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 border border-secondary-800 rounded-sm">
+            <h4 className="text-white text-base sm:text-lg mb-3 sm:mb-4">Modifica Restomod</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
               <div>
-                <label className="block text-secondary-400 mb-2">Nome</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Nome</label>
                 <input
                   type="text"
                   name="nome"
                   value={formData.nome}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Marca</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Marca</label>
                 <input
                   type="text"
                   name="marca"
                   value={formData.marca}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Modello</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Modello</label>
                 <input
                   type="text"
                   name="modello"
                   value={formData.modello}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Anno</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Anno</label>
                 <input
                   type="number"
                   name="anno"
                   value={formData.anno}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Prezzo</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Prezzo</label>
                 <input
                   type="number"
                   name="prezzo"
                   value={formData.prezzo}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
-              <div className="md:col-span-2">
-                <label className="block text-secondary-400 mb-2">Descrizione</label>
+              <div className="sm:col-span-2">
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Descrizione</label>
                 <textarea
                   name="descrizione"
                   value={formData.descrizione}
                   onChange={handleInputChange}
                   rows="4"
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 ></textarea>
               </div>
               
               {/* Gestione immagini */}
-              <div className="md:col-span-2 mt-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h5 className="text-white text-md">Immagini</h5>
+              <div className="sm:col-span-2 mt-3 sm:mt-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 gap-2 sm:gap-0">
+                  <h5 className="text-white text-sm sm:text-md">Immagini</h5>
                   <button
                     type="button"
                     onClick={handleAddImage}
-                    className="px-3 py-1 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors text-sm"
+                    className="w-full sm:w-auto px-3 py-1 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors text-xs sm:text-sm"
                   >
                     Aggiungi Immagine
                   </button>
                 </div>
                 
                 {formData.immagini.length === 0 ? (
-                  <div className="text-secondary-400 text-center py-4 border border-dashed border-secondary-700 rounded-sm">
+                  <div className="text-secondary-400 text-center py-3 sm:py-4 border border-dashed border-secondary-700 rounded-sm text-xs sm:text-sm">
                     Nessuna immagine. Clicca "Aggiungi Immagine" per iniziare.
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {formData.immagini.map((img, index) => (
-                      <div key={index} className="p-4 border border-secondary-700 rounded-sm">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
-                          <div className="md:col-span-2">
-                            <label className="block text-secondary-400 mb-2">URL Immagine</label>
+                      <div key={index} className="p-3 sm:p-4 border border-secondary-700 rounded-sm">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-3">
+                          <div className="sm:col-span-2">
+                            <label className="block text-secondary-400 text-xs sm:text-sm mb-1 sm:mb-2">URL Immagine</label>
                             <input
                               type="text"
                               value={img.url}
                               onChange={(e) => handleImageChange(index, 'url', e.target.value)}
-                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-xs sm:text-sm"
                               placeholder="https://esempio.com/immagine.jpg"
                             />
                           </div>
                           <div>
-                            <label className="block text-secondary-400 mb-2">Testo Alternativo</label>
+                            <label className="block text-secondary-400 text-xs sm:text-sm mb-1 sm:mb-2">Testo Alternativo</label>
                             <input
                               type="text"
                               value={img.alt}
                               onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
-                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-xs sm:text-sm"
                               placeholder="Descrizione immagine"
                             />
                           </div>
@@ -673,12 +683,12 @@ const Admin = () => {
                             <img 
                               src={img.url} 
                               alt={img.alt || 'Anteprima'} 
-                              className="h-32 object-cover rounded-sm border border-secondary-700"
+                              className="h-24 sm:h-32 object-cover rounded-sm border border-secondary-700 w-full"
                             />
                           </div>
                         )}
                         
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
                           <div className="flex items-center">
                             <input
                               type="radio"
@@ -688,14 +698,14 @@ const Admin = () => {
                               onChange={() => handleSetPrimary(index)}
                               className="mr-2"
                             />
-                            <label htmlFor={`primary-${index}`} className="text-secondary-400 text-sm">
+                            <label htmlFor={`primary-${index}`} className="text-secondary-400 text-xs sm:text-sm">
                               Immagine principale
                             </label>
                           </div>
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(index)}
-                            className="text-red-400 hover:text-red-300 text-sm"
+                            className="text-red-400 hover:text-red-300 text-xs sm:text-sm w-full sm:w-auto text-center sm:text-left"
                           >
                             Rimuovi
                           </button>
@@ -706,17 +716,17 @@ const Admin = () => {
                 )}
               </div>
             </div>
-            <div className="flex justify-end space-x-3 mt-6">
+            <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3 mt-4 sm:mt-6">
               <button
                 onClick={handleCancelEdit}
-                className="px-4 py-2 bg-secondary-800 text-white rounded-sm hover:bg-secondary-700 transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary-800 text-white text-sm rounded-sm hover:bg-secondary-700 transition-colors"
               >
                 Annulla
               </button>
               <button
                 onClick={handleSaveChanges}
                 disabled={loading}
-                className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+                className="px-3 sm:px-4 py-2 bg-primary text-white text-sm rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
                 {loading ? 'Salvataggio...' : (isCreating ? 'Crea Restomod' : 'Salva Modifiche')}
               </button>
@@ -725,56 +735,56 @@ const Admin = () => {
         ) : null}
 
         {loading && !editingRestomod ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="flex justify-center items-center h-48 sm:h-64">
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-white">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="w-full text-xs sm:text-sm text-left text-white">
               <thead className="text-xs uppercase bg-secondary-800">
                 <tr>
-                  <th className="px-6 py-3">Immagine</th>
-                  <th className="px-6 py-3">Nome</th>
-                  <th className="px-6 py-3">Marca</th>
-                  <th className="px-6 py-3">Modello</th>
-                  <th className="px-6 py-3">Anno</th>
-                  <th className="px-6 py-3">Prezzo</th>
-                  <th className="px-6 py-3">Azioni</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Immagine</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Nome</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3 hidden sm:table-cell">Marca</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3 hidden md:table-cell">Modello</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3 hidden md:table-cell">Anno</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Prezzo</th>
+                  <th className="px-4 sm:px-6 py-2 sm:py-3">Azioni</th>
                 </tr>
               </thead>
               <tbody>
                 {restomods.length > 0 ? (
                   restomods.map((restomod) => (
                     <tr key={restomod._id} className="border-b border-secondary-800">
-                      <td className="px-6 py-4">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
                         {restomod.immagini && restomod.immagini.length > 0 ? (
                           <img 
                             src={getPrimaryImage(restomod.immagini)?.url} 
                             alt={getPrimaryImage(restomod.immagini)?.alt || restomod.nome} 
-                            className="h-16 w-24 object-cover rounded-sm"
+                            className="h-12 w-16 sm:h-16 sm:w-24 object-cover rounded-sm"
                           />
                         ) : (
-                          <div className="h-16 w-24 bg-secondary-800 flex items-center justify-center rounded-sm">
+                          <div className="h-12 w-16 sm:h-16 sm:w-24 bg-secondary-800 flex items-center justify-center rounded-sm">
                             <span className="text-secondary-500 text-xs">No img</span>
                           </div>
                         )}
                       </td>
-                      <td className="px-6 py-4">{restomod.nome}</td>
-                      <td className="px-6 py-4">{restomod.marca}</td>
-                      <td className="px-6 py-4">{restomod.modello}</td>
-                      <td className="px-6 py-4">{restomod.anno}</td>
-                      <td className="px-6 py-4">{formatPrice(restomod.prezzo)}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex space-x-2">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">{restomod.nome}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">{restomod.marca}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 hidden md:table-cell">{restomod.modello}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 hidden md:table-cell">{restomod.anno}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">{formatPrice(restomod.prezzo)}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0">
                           <button
                             onClick={() => handleEditClick(restomod)}
-                            className="text-blue-400 hover:text-blue-300"
+                            className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm"
                           >
                             Modifica
                           </button>
                           <button
                             onClick={() => handleDeleteRestomod(restomod._id)}
-                            className="text-red-400 hover:text-red-300"
+                            className="text-red-400 hover:text-red-300 text-xs sm:text-sm"
                           >
                             Elimina
                           </button>
@@ -784,7 +794,7 @@ const Admin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="px-6 py-4 text-center">
+                    <td colSpan="7" className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm">
                       Nessun restomod trovato
                     </td>
                   </tr>
@@ -979,132 +989,131 @@ const Admin = () => {
     };
 
     return (
-      <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-        <h3 className="text-white text-xl font-medium mb-4">Gestione Marchi</h3>
+      <div className="bg-secondary-900 p-4 sm:p-6 rounded-sm border border-secondary-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 sm:gap-0">
+          <h3 className="text-white text-lg sm:text-xl font-medium">Gestione Marchi</h3>
+          {!editingBrand && (
+            <button
+              onClick={handleCreateNew}
+              className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-primary text-white text-sm rounded-sm hover:bg-primary/90 transition-colors"
+            >
+              Crea Nuovo Marchio
+            </button>
+          )}
+        </div>
         
         {error && (
-          <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+          <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm text-sm">
             {error}
           </div>
         )}
 
-        {!editingBrand && (
-          <div className="mb-6">
-            <button
-              onClick={handleCreateNew}
-              className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors"
-            >
-              Crea Nuovo Marchio
-            </button>
-          </div>
-        )}
-
         {editingBrand ? (
-          <div className="mb-6 p-4 border border-secondary-800 rounded-sm">
-            <h4 className="text-white text-lg mb-4">Modifica Marchio</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 border border-secondary-800 rounded-sm">
+            <h4 className="text-white text-base sm:text-lg mb-3 sm:mb-4">Modifica Marchio</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
               <div>
-                <label className="block text-secondary-400 mb-2">Nome</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Nome</label>
                 <input
                   type="text"
                   name="nome"
                   value={formData.nome}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Logo URL</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Logo URL</label>
                 <input
                   type="text"
                   name="logo"
                   value={formData.logo}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Sede</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Sede</label>
                 <input
                   type="text"
                   name="sede"
                   value={formData.sede}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Anno Fondazione</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Anno Fondazione</label>
                 <input
                   type="number"
                   name="annoFondazione"
                   value={formData.annoFondazione}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Sito Web</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Sito Web</label>
                 <input
                   type="text"
                   name="sito"
                   value={formData.sito}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                   placeholder="https://esempio.com"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Email</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Email</label>
                 <input
                   type="email"
                   name="contatti.email"
                   value={formData.contatti.email}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                   placeholder="info@esempio.com"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Telefono</label>
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Telefono</label>
                 <input
                   type="text"
                   name="contatti.telefono"
                   value={formData.contatti.telefono}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                   placeholder="+39 123 456 7890"
                 />
               </div>
-              <div className="md:col-span-2">
-                <label className="block text-secondary-400 mb-2">Descrizione</label>
+              <div className="sm:col-span-2">
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Descrizione</label>
                 <textarea
                   name="descrizione"
                   value={formData.descrizione}
                   onChange={handleInputChange}
                   rows="3"
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 ></textarea>
               </div>
-              <div className="md:col-span-2">
-                <label className="block text-secondary-400 mb-2">Storia</label>
+              <div className="sm:col-span-2">
+                <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Storia</label>
                 <textarea
                   name="storia"
                   value={formData.storia}
                   onChange={handleInputChange}
                   rows="4"
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                 ></textarea>
               </div>
               
               {/* Gestione immagini */}
-              <div className="md:col-span-2 mt-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h5 className="text-white text-md">Immagini</h5>
+              <div className="sm:col-span-2 mt-3 sm:mt-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 gap-2 sm:gap-0">
+                  <h5 className="text-white text-sm sm:text-md">Immagini</h5>
                   <button
                     type="button"
                     onClick={handleAddImage}
-                    className="px-3 py-1 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors text-sm"
+                    className="w-full sm:w-auto px-3 py-1 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors text-xs sm:text-sm"
                   >
                     Aggiungi Immagine
                   </button>
@@ -1118,24 +1127,24 @@ const Admin = () => {
                   <div className="space-y-4">
                     {formData.immagini.map((img, index) => (
                       <div key={index} className="p-4 border border-secondary-700 rounded-sm">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3">
                           <div>
-                            <label className="block text-secondary-400 mb-2">URL Immagine</label>
+                            <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">URL Immagine</label>
                             <input
                               type="text"
                               value={img.url}
                               onChange={(e) => handleImageChange(index, 'url', e.target.value)}
-                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                               placeholder="https://esempio.com/immagine.jpg"
                             />
                           </div>
                           <div>
-                            <label className="block text-secondary-400 mb-2">Testo Alternativo</label>
+                            <label className="block text-secondary-400 text-sm mb-1 sm:mb-2">Testo Alternativo</label>
                             <input
                               type="text"
                               value={img.alt}
                               onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
-                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                              className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm text-sm"
                               placeholder="Descrizione immagine"
                             />
                           </div>
@@ -1146,7 +1155,7 @@ const Admin = () => {
                             <img 
                               src={img.url} 
                               alt={img.alt || 'Anteprima'} 
-                              className="h-32 object-cover rounded-sm border border-secondary-700"
+                              className="h-24 sm:h-32 w-full sm:w-auto object-cover rounded-sm border border-secondary-700"
                             />
                           </div>
                         )}
@@ -1166,17 +1175,17 @@ const Admin = () => {
                 )}
               </div>
             </div>
-            <div className="flex justify-end space-x-3 mt-6">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-4 sm:mt-6">
               <button
                 onClick={handleCancelEdit}
-                className="px-4 py-2 bg-secondary-800 text-white rounded-sm hover:bg-secondary-700 transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary-800 text-white text-sm rounded-sm hover:bg-secondary-700 transition-colors w-full sm:w-auto"
               >
                 Annulla
               </button>
               <button
                 onClick={handleSaveChanges}
                 disabled={loading}
-                className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+                className="px-3 sm:px-4 py-2 bg-primary text-white text-sm rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50 w-full sm:w-auto"
               >
                 {loading ? 'Salvataggio...' : (isCreating ? 'Crea Marchio' : 'Salva Modifiche')}
               </button>
@@ -1185,45 +1194,45 @@ const Admin = () => {
         ) : null}
 
         {loading && !editingBrand ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="flex justify-center items-center h-40 sm:h-64">
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-white">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="w-full text-xs sm:text-sm text-left text-white">
               <thead className="text-xs uppercase bg-secondary-800">
                 <tr>
-                  <th className="px-6 py-3">Logo</th>
-                  <th className="px-6 py-3">Nome</th>
-                  <th className="px-6 py-3">Sede</th>
-                  <th className="px-6 py-3">Anno</th>
-                  <th className="px-6 py-3">Immagini</th>
-                  <th className="px-6 py-3">Azioni</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Logo</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Nome</th>
+                  <th className="hidden sm:table-cell px-3 sm:px-6 py-2 sm:py-3">Sede</th>
+                  <th className="hidden sm:table-cell px-3 sm:px-6 py-2 sm:py-3">Anno</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Immagini</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Azioni</th>
                 </tr>
               </thead>
               <tbody>
                 {brands.length > 0 ? (
                   brands.map((brand) => (
                     <tr key={brand._id} className="border-b border-secondary-800">
-                      <td className="px-6 py-4">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
                         {brand.logo ? (
-                          <img src={brand.logo} alt={brand.nome} className="h-10 w-auto" />
+                          <img src={brand.logo} alt={brand.nome} className="h-8 sm:h-10 w-auto" />
                         ) : (
-                          <div className="h-10 w-10 bg-secondary-800 flex items-center justify-center rounded-sm">
+                          <div className="h-8 w-8 sm:h-10 sm:w-10 bg-secondary-800 flex items-center justify-center rounded-sm">
                             <span className="text-secondary-500 text-xs">No logo</span>
                           </div>
                         )}
                       </td>
-                      <td className="px-6 py-4">{brand.nome}</td>
-                      <td className="px-6 py-4">{brand.sede}</td>
-                      <td className="px-6 py-4">{brand.annoFondazione}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">{brand.nome}</td>
+                      <td className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4">{brand.sede}</td>
+                      <td className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4">{brand.annoFondazione}</td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
                         {brand.immagini && brand.immagini.length > 0 ? (
                           <div className="flex items-center">
                             <img 
                               src={getFirstImage(brand.immagini)?.url} 
                               alt={getFirstImage(brand.immagini)?.alt || brand.nome} 
-                              className="h-10 w-16 object-cover rounded-sm mr-2"
+                              className="h-8 sm:h-10 w-12 sm:w-16 object-cover rounded-sm mr-2"
                             />
                             {brand.immagini.length > 1 && (
                               <span className="text-xs text-secondary-400">+{brand.immagini.length - 1}</span>
@@ -1233,17 +1242,17 @@ const Admin = () => {
                           <span className="text-secondary-500 text-xs">Nessuna</span>
                         )}
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex space-x-2">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2">
                           <button
                             onClick={() => handleEditClick(brand)}
-                            className="text-blue-400 hover:text-blue-300"
+                            className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm"
                           >
                             Modifica
                           </button>
                           <button
                             onClick={() => handleDeleteBrand(brand._id)}
-                            className="text-red-400 hover:text-red-300"
+                            className="text-red-400 hover:text-red-300 text-xs sm:text-sm"
                           >
                             Elimina
                           </button>
@@ -1253,7 +1262,7 @@ const Admin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center">
+                    <td colSpan="6" className="px-3 sm:px-6 py-3 sm:py-4 text-center text-sm">
                       Nessun marchio trovato
                     </td>
                   </tr>
@@ -1526,13 +1535,13 @@ const Admin = () => {
     };
 
     return (
-      <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-white text-xl font-medium">Gestione Blog</h3>
+      <div className="bg-secondary-900 p-4 sm:p-6 rounded-sm border border-secondary-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
+          <h3 className="text-white text-lg sm:text-xl font-medium">Gestione Blog</h3>
           {!editingBlog && !isCreating && (
             <button
               onClick={handleCreateBlog}
-              className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-sm transition-all duration-300"
+              className="bg-primary hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-sm transition-all duration-300 w-full sm:w-auto"
             >
               Nuovo Articolo
             </button>
@@ -1540,72 +1549,72 @@ const Admin = () => {
         </div>
         
         {error && (
-          <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+          <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm text-sm sm:text-base">
             {error}
           </div>
         )}
 
         {(editingBlog || isCreating) ? (
-          <div className="mb-6 p-4 border border-secondary-800 rounded-sm">
-            <h4 className="text-white text-lg mb-4">{isCreating ? 'Nuovo Articolo' : 'Modifica Articolo'}</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 border border-secondary-800 rounded-sm">
+            <h4 className="text-white text-base sm:text-lg mb-3 sm:mb-4">{isCreating ? 'Nuovo Articolo' : 'Modifica Articolo'}</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
               <div>
-                <label className="block text-secondary-400 mb-2">Titolo</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Titolo</label>
                 <input
                   type="text"
                   name="titolo"
                   value={formData.titolo}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Autore</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Autore</label>
                 <input
                   type="text"
                   name="autore"
                   value={formData.autore}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Immagine Copertina URL</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Immagine Copertina URL</label>
                 <input
                   type="text"
                   name="immagineCopertina"
                   value={formData.immagineCopertina}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Categoria</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Categoria</label>
                 <input
                   type="text"
                   name="categoria"
                   value={formData.categoria}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Tags (separati da virgola)</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Tags (separati da virgola)</label>
                 <input
                   type="text"
                   name="tags"
                   value={formData.tags}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Stato</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Stato</label>
                 <select
                   name="stato"
                   value={formData.stato}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 >
                   <option value="bozza">Bozza</option>
                   <option value="pubblicato">Pubblicato</option>
@@ -1621,7 +1630,7 @@ const Admin = () => {
                   onChange={(e) => setFormData({...formData, inEvidenza: e.target.checked})}
                   className="bg-secondary-800 border border-secondary-700 text-primary rounded-sm focus:ring-primary"
                 />
-                <label htmlFor="inEvidenza" className="text-secondary-400">In Evidenza</label>
+                <label htmlFor="inEvidenza" className="text-secondary-400 text-sm sm:text-base">In Evidenza</label>
               </div>
               <div className="flex items-center space-x-2">
                 <input
@@ -1632,30 +1641,30 @@ const Admin = () => {
                   onChange={(e) => setFormData({...formData, commentiAbilitati: e.target.checked})}
                   className="bg-secondary-800 border border-secondary-700 text-primary rounded-sm focus:ring-primary"
                 />
-                <label htmlFor="commentiAbilitati" className="text-secondary-400">Commenti Abilitati</label>
+                <label htmlFor="commentiAbilitati" className="text-secondary-400 text-sm sm:text-base">Commenti Abilitati</label>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-secondary-400 mb-2">Contenuto</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Contenuto</label>
                 <textarea
                   name="contenuto"
                   value={formData.contenuto}
                   onChange={handleInputChange}
-                  rows="8"
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  rows="6"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 ></textarea>
               </div>
             </div>
-            <div className="flex justify-end space-x-3">
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 onClick={handleCancelEdit}
-                className="px-4 py-2 bg-secondary-800 text-white rounded-sm hover:bg-secondary-700 transition-colors"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-secondary-800 text-white text-sm sm:text-base rounded-sm hover:bg-secondary-700 transition-colors w-full sm:w-auto"
               >
                 Annulla
               </button>
               <button
                 onClick={handleSaveChanges}
                 disabled={loading}
-                className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-white text-sm sm:text-base rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50 w-full sm:w-auto"
               >
                 {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
               </button>
@@ -1664,23 +1673,23 @@ const Admin = () => {
         ) : null}
 
         {loading && !editingBlog ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="flex justify-center items-center h-40 sm:h-64">
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-white">
+            <table className="w-full text-xs sm:text-sm text-left text-white">
               <thead className="text-xs uppercase bg-secondary-800">
                 <tr>
-                  <th className="px-6 py-3">Titolo</th>
-                  <th className="px-6 py-3">Autore</th>
-                  <th className="px-6 py-3">Categoria</th>
-                  <th className="px-6 py-3">Data</th>
-                  <th className="px-6 py-3">Stato</th>
-                  <th className="px-6 py-3">Visualizzazioni</th>
-                  <th className="px-6 py-3">In Evidenza</th>
-                  <th className="px-6 py-3">Commenti</th>
-                  <th className="px-6 py-3">Azioni</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Titolo</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 hidden sm:table-cell">Autore</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 hidden md:table-cell">Categoria</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 hidden md:table-cell">Data</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Stato</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 hidden lg:table-cell">Visualizzazioni</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 hidden md:table-cell">In Evidenza</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 hidden md:table-cell">Commenti</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Azioni</th>
                 </tr>
               </thead>
               <tbody>
@@ -1691,14 +1700,14 @@ const Admin = () => {
                     
                     return (
                       <tr key={blog._id} className="border-b border-secondary-800">
-                        <td className="px-6 py-4">{blog.titolo || 'Titolo non disponibile'}</td>
-                        <td className="px-6 py-4">{blog.autore || 'Autore non disponibile'}</td>
-                        <td className="px-6 py-4">{blog.categoria || 'Non categorizzato'}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm">{blog.titolo || 'Titolo non disponibile'}</td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 hidden sm:table-cell text-xs sm:text-sm">{blog.autore || 'Autore non disponibile'}</td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 hidden md:table-cell text-xs sm:text-sm">{blog.categoria || 'Non categorizzato'}</td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 hidden md:table-cell text-xs sm:text-sm">
                           {blog.dataCreazione ? formatDate(blog.dataCreazione) : 'Data non disponibile'}
                         </td>
-                        <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded-full text-xs ${
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm">
+                          <span className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs ${
                             blog.stato === 'pubblicato' ? 'bg-green-900/20 text-green-500' : 
                             blog.stato === 'archiviato' ? 'bg-red-900/20 text-red-500' : 
                             'bg-yellow-900/20 text-yellow-500'
@@ -1707,39 +1716,39 @@ const Admin = () => {
                              blog.stato === 'archiviato' ? 'Archiviato' : 'Bozza'}
                           </span>
                         </td>
-                        <td className="px-6 py-4">{blog.visualizzazioni || 0}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 hidden lg:table-cell text-xs sm:text-sm">{blog.visualizzazioni || 0}</td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 hidden md:table-cell text-xs sm:text-sm">
                           {blog.inEvidenza ? (
-                            <span className="px-2 py-1 rounded-full text-xs bg-blue-900/20 text-blue-500">Sì</span>
+                            <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs bg-blue-900/20 text-blue-500">Sì</span>
                           ) : (
-                            <span className="px-2 py-1 rounded-full text-xs bg-gray-900/20 text-gray-500">No</span>
+                            <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs bg-gray-900/20 text-gray-500">No</span>
                           )}
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 hidden md:table-cell text-xs sm:text-sm">
                           {blog.commentiAbilitati ? (
-                            <span className="px-2 py-1 rounded-full text-xs bg-green-900/20 text-green-500">Abilitati</span>
+                            <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs bg-green-900/20 text-green-500">Abilitati</span>
                           ) : (
-                            <span className="px-2 py-1 rounded-full text-xs bg-red-900/20 text-red-500">Disabilitati</span>
+                            <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs bg-red-900/20 text-red-500">Disabilitati</span>
                           )}
                         </td>
-                        <td className="px-6 py-4">
-                          <div className="flex space-x-2">
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm">
+                          <div className="flex flex-col sm:flex-row gap-1.5 sm:space-x-2">
                             <button
                               onClick={() => handleEditClick(blog)}
-                              className="text-blue-400 hover:text-blue-300"
+                              className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm"
                             >
                               Modifica
                             </button>
                             <button
                               onClick={() => handleDeleteBlog(blog._id)}
-                              className="text-red-400 hover:text-red-300"
+                              className="text-red-400 hover:text-red-300 text-xs sm:text-sm"
                             >
                               Elimina
                             </button>
                             {blog.stato !== 'pubblicato' && (
                               <button
                                 onClick={() => handleStatusChange(blog._id, 'pubblicato')}
-                                className="text-green-400 hover:text-green-300"
+                                className="text-green-400 hover:text-green-300 text-xs sm:text-sm"
                               >
                                 Pubblica
                               </button>
@@ -1747,7 +1756,7 @@ const Admin = () => {
                             {blog.stato !== 'bozza' && (
                               <button
                                 onClick={() => handleStatusChange(blog._id, 'bozza')}
-                                className="text-yellow-400 hover:text-yellow-300"
+                                className="text-yellow-400 hover:text-yellow-300 text-xs sm:text-sm hidden sm:block"
                               >
                                 Bozza
                               </button>
@@ -1755,20 +1764,20 @@ const Admin = () => {
                             {blog.stato !== 'archiviato' && (
                               <button
                                 onClick={() => handleStatusChange(blog._id, 'archiviato')}
-                                className="text-gray-400 hover:text-gray-300"
+                                className="text-gray-400 hover:text-gray-300 text-xs sm:text-sm hidden sm:block"
                               >
                                 Archivia
                               </button>
                             )}
                             <button
                               onClick={() => handleFeaturedToggle(blog._id, blog.inEvidenza)}
-                              className={`${blog.inEvidenza ? 'text-blue-400 hover:text-blue-300' : 'text-gray-400 hover:text-gray-300'}`}
+                              className={`${blog.inEvidenza ? 'text-blue-400 hover:text-blue-300' : 'text-gray-400 hover:text-gray-300'} text-xs sm:text-sm hidden sm:block`}
                             >
                               {blog.inEvidenza ? 'Rimuovi Evidenza' : 'Metti in Evidenza'}
                             </button>
                             <button
                               onClick={() => handleCommentsToggle(blog._id, blog.commentiAbilitati)}
-                              className={`${blog.commentiAbilitati ? 'text-green-400 hover:text-green-300' : 'text-red-400 hover:text-red-300'}`}
+                              className={`${blog.commentiAbilitati ? 'text-green-400 hover:text-green-300' : 'text-red-400 hover:text-red-300'} text-xs sm:text-sm hidden sm:block`}
                             >
                               {blog.commentiAbilitati ? 'Disabilita Commenti' : 'Abilita Commenti'}
                             </button>
@@ -1779,7 +1788,7 @@ const Admin = () => {
                   }).filter(Boolean) // Filtra eventuali elementi null
                 ) : (
                   <tr>
-                    <td colSpan="9" className="px-6 py-4 text-center">
+                    <td colSpan="9" className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm">
                       Nessun post del blog trovato
                     </td>
                   </tr>
@@ -1991,44 +2000,44 @@ const Admin = () => {
     };
 
     return (
-      <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-        <h3 className="text-white text-xl font-medium mb-4">Gestione Pacchetti</h3>
+      <div className="bg-secondary-900 p-4 sm:p-6 rounded-sm border border-secondary-800">
+        <h3 className="text-white text-lg sm:text-xl font-medium mb-3 sm:mb-4">Gestione Pacchetti</h3>
         
         {error && (
-          <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+          <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm text-sm sm:text-base">
             {error}
           </div>
         )}
 
         {editingPackage ? (
-          <div className="mb-6 p-4 border border-secondary-800 rounded-sm">
-            <h4 className="text-white text-lg mb-4">Modifica Pacchetto</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 border border-secondary-800 rounded-sm">
+            <h4 className="text-white text-base sm:text-lg mb-3 sm:mb-4">Modifica Pacchetto</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
               <div>
-                <label className="block text-secondary-400 mb-2">Nome</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Nome</label>
                 <input
                   type="text"
                   name="nome"
                   value={formData.nome}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Prezzo</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Prezzo</label>
                 <div className="flex">
                   <input
                     type="number"
                     name="prezzo"
                     value={formData.prezzo}
                     onChange={handleInputChange}
-                    className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-l-sm"
+                    className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-l-sm text-sm sm:text-base"
                   />
                   <select
                     name="valuta"
                     value={formData.valuta}
                     onChange={handleInputChange}
-                    className="bg-secondary-800 border border-secondary-700 text-white p-2 rounded-r-sm"
+                    className="bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-r-sm text-sm sm:text-base"
                   >
                     <option value="EUR">EUR</option>
                     <option value="USD">USD</option>
@@ -2037,91 +2046,91 @@ const Admin = () => {
                 </div>
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Durata</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Durata</label>
                 <input
                   type="text"
                   name="durata"
                   value={formData.durata}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">URL Immagine</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">URL Immagine</label>
                 <input
                   type="text"
                   name="immagine"
                   value={formData.immagine}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Stato</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Stato</label>
                 <div className="flex items-center">
                   <input
                     type="checkbox"
                     name="attivo"
                     checked={formData.attivo}
                     onChange={(e) => setFormData({...formData, attivo: e.target.checked})}
-                    className="mr-2 h-4 w-4"
+                    className="mr-2 h-3 w-3 sm:h-4 sm:w-4"
                   />
-                  <span className="text-white">Pacchetto attivo</span>
+                  <span className="text-white text-sm sm:text-base">Pacchetto attivo</span>
                 </div>
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Stripe Product ID</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Stripe Product ID</label>
                 <input
                   type="text"
                   name="stripeProductId"
                   value={formData.stripeProductId}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Stripe Price ID</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Stripe Price ID</label>
                 <input
                   type="text"
                   name="stripePriceId"
                   value={formData.stripePriceId}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-secondary-400 mb-2">Descrizione</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Descrizione</label>
                 <textarea
                   name="descrizione"
                   value={formData.descrizione}
                   onChange={handleInputChange}
                   rows="4"
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                 ></textarea>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-secondary-400 mb-2">Caratteristiche (una per riga)</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Caratteristiche (una per riga)</label>
                 <textarea
                   name="caratteristiche"
                   value={formData.caratteristiche}
                   onChange={handleInputChange}
                   rows="6"
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base"
                   placeholder="Inserisci un elemento per riga"
                 ></textarea>
               </div>
             </div>
-            <div className="flex justify-end space-x-3">
+            <div className="flex flex-col sm:flex-row justify-end sm:space-x-3 space-y-2 sm:space-y-0">
               <button
                 onClick={handleCancelEdit}
-                className="px-4 py-2 bg-secondary-800 text-white rounded-sm hover:bg-secondary-700 transition-colors"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-secondary-800 text-white rounded-sm hover:bg-secondary-700 transition-colors text-sm sm:text-base w-full sm:w-auto"
               >
                 Annulla
               </button>
               <button
                 onClick={handleSaveChanges}
                 disabled={loading}
-                className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm sm:text-base w-full sm:w-auto"
               >
                 {loading ? 'Salvataggio...' : (isCreating ? 'Crea Articolo' : 'Salva Modifiche')}
               </button>
@@ -2130,10 +2139,10 @@ const Admin = () => {
         ) : null}
 
         {!editingPackage && (
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <button
               onClick={handleCreatePackage}
-              className="px-4 py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-white rounded-sm hover:bg-primary/90 transition-colors text-sm sm:text-base w-full sm:w-auto"
             >
               Nuovo Pacchetto
             </button>
@@ -2141,37 +2150,37 @@ const Admin = () => {
         )}
 
         {loading && !editingPackage ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="flex justify-center items-center h-48 sm:h-64">
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-white">
+            <table className="w-full text-xs sm:text-sm text-left text-white">
               <thead className="text-xs uppercase bg-secondary-800">
                 <tr>
-                  <th className="px-6 py-3">Nome</th>
-                  <th className="px-6 py-3">Prezzo</th>
-                  <th className="px-6 py-3">Valuta</th>
-                  <th className="px-6 py-3">Durata</th>
-                  <th className="px-6 py-3">Stato</th>
-                  <th className="px-6 py-3">Azioni</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Nome</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Prezzo</th>
+                  <th className="hidden sm:table-cell px-6 py-3">Valuta</th>
+                  <th className="hidden md:table-cell px-6 py-3">Durata</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Stato</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3">Azioni</th>
                 </tr>
               </thead>
               <tbody>
                 {packages.length > 0 ? (
                   packages.map((pkg) => (
                     <tr key={pkg._id} className="border-b border-secondary-800">
-                      <td className="px-6 py-4">{pkg.nome}</td>
-                      <td className="px-6 py-4">{formatPrice(pkg.prezzo, pkg.valuta)}</td>
-                      <td className="px-6 py-4">{pkg.valuta || 'EUR'}</td>
-                      <td className="px-6 py-4">{pkg.durata}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded-full text-xs ${pkg.attivo ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">{pkg.nome}</td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">{formatPrice(pkg.prezzo, pkg.valuta)}</td>
+                      <td className="hidden sm:table-cell px-6 py-4 text-xs sm:text-sm">{pkg.valuta || 'EUR'}</td>
+                      <td className="hidden md:table-cell px-6 py-4 text-xs sm:text-sm">{pkg.durata}</td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        <span className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs ${pkg.attivo ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'}`}>
                           {pkg.attivo ? 'Attivo' : 'Inattivo'}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex space-x-2">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        <div className="flex flex-col sm:flex-row space-y-1.5 sm:space-y-0 sm:space-x-2 text-xs sm:text-sm">
                           <button
                             onClick={() => handleEditClick(pkg)}
                             className="text-blue-400 hover:text-blue-300"
@@ -2196,7 +2205,7 @@ const Admin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="px-6 py-4 text-center">
+                    <td colSpan="6" className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm">
                       Nessun pacchetto trovato
                     </td>
                   </tr>
@@ -2432,13 +2441,13 @@ const Admin = () => {
     };
 
     return (
-      <div className="bg-secondary-900 p-6 rounded-sm border border-secondary-800">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-white text-xl font-medium">Gestione Lavori</h3>
+      <div className="bg-secondary-900 p-3 sm:p-6 rounded-sm border border-secondary-800">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
+          <h3 className="text-white text-lg sm:text-xl font-medium">Gestione Lavori</h3>
           {!editingJob && (
             <button
               onClick={handleCreateJob}
-              className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-sm transition-all duration-300"
+              className="bg-primary hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm transition-all duration-300 text-sm sm:text-base w-full sm:w-auto"
             >
               Nuovo Lavoro
             </button>
@@ -2446,44 +2455,44 @@ const Admin = () => {
         </div>
         
         {error && (
-          <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+          <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm text-sm sm:text-base">
             {error}
           </div>
         )}
 
         {(editingJob !== null || formData.titolo) ? (
-          <div className="mb-6 p-4 border border-secondary-800 rounded-sm">
-            <h4 className="text-white text-lg mb-4">{editingJob ? 'Modifica Lavoro' : 'Nuovo Lavoro'}</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 border border-secondary-800 rounded-sm">
+            <h4 className="text-white text-base sm:text-lg mb-3 sm:mb-4">{editingJob ? 'Modifica Lavoro' : 'Nuovo Lavoro'}</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
               <div>
-                <label className="block text-secondary-400 mb-2">Titolo</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Titolo</label>
                 <input
                   type="text"
                   name="titolo"
                   value={formData.titolo}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                   required
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Azienda</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Azienda</label>
                 <input
                   type="text"
                   name="azienda"
                   value={formData.azienda}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                   required
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Tipo</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Tipo</label>
                 <select
                   name="tipo"
                   value={formData.tipo}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                 >
                   <option value="full-time">Full-time</option>
                   <option value="part-time">Part-time</option>
@@ -2492,13 +2501,13 @@ const Admin = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Luogo</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Luogo</label>
                 <input
                   type="text"
                   name="luogo"
                   value={formData.luogo}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
               <div className="flex items-center">
@@ -2508,9 +2517,9 @@ const Admin = () => {
                   name="remoto"
                   checked={formData.remoto}
                   onChange={handleInputChange}
-                  className="mr-2 h-4 w-4"
+                  className="mr-2 h-3 w-3 sm:h-4 sm:w-4"
                 />
-                <label htmlFor="remoto" className="text-secondary-400">Lavoro Remoto</label>
+                <label htmlFor="remoto" className="text-secondary-400 text-sm sm:text-base">Lavoro Remoto</label>
               </div>
               <div className="flex items-center">
                 <input
@@ -2519,39 +2528,39 @@ const Admin = () => {
                   name="attivo"
                   checked={formData.attivo}
                   onChange={handleInputChange}
-                  className="mr-2 h-4 w-4"
+                  className="mr-2 h-3 w-3 sm:h-4 sm:w-4"
                 />
-                <label htmlFor="attivo" className="text-secondary-400">Annuncio Attivo</label>
+                <label htmlFor="attivo" className="text-secondary-400 text-sm sm:text-base">Annuncio Attivo</label>
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Salario Minimo</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Salario Minimo</label>
                 <input
                   type="number"
                   name="salarioMin"
                   value={formData.salarioMin}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                   placeholder="Es. 1500"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Salario Massimo</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Salario Massimo</label>
                 <input
                   type="number"
                   name="salarioMax"
                   value={formData.salarioMax}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                   placeholder="Es. 2000"
                 />
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Valuta</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Valuta</label>
                 <select
                   name="valuta"
                   value={formData.valuta}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                 >
                   <option value="EUR">EUR</option>
                   <option value="USD">USD</option>
@@ -2559,48 +2568,48 @@ const Admin = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-secondary-400 mb-2">Data di Scadenza</label>
+                <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Data di Scadenza</label>
                 <input
                   type="date"
                   name="dataScadenza"
                   value={formData.dataScadenza}
                   onChange={handleInputChange}
-                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                  className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                 />
               </div>
             </div>
-            <div className="mb-4">
-              <label className="block text-secondary-400 mb-2">Descrizione</label>
+            <div className="mb-3 sm:mb-4">
+              <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Descrizione</label>
               <textarea
                 name="descrizione"
                 value={formData.descrizione}
                 onChange={handleInputChange}
                 rows="4"
-                className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                 required
               ></textarea>
             </div>
-            <div className="mb-4">
-              <label className="block text-secondary-400 mb-2">Requisiti</label>
+            <div className="mb-3 sm:mb-4">
+              <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Requisiti</label>
               <textarea
                 name="requisiti"
                 value={formData.requisiti}
                 onChange={handleInputChange}
                 rows="4"
-                className="w-full bg-secondary-800 border border-secondary-700 text-white px-4 py-2 rounded-sm"
+                className="w-full bg-secondary-800 border border-secondary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-sm sm:text-base"
                 required
               ></textarea>
             </div>
-            <div className="flex justify-end space-x-3">
+            <div className="flex flex-col sm:flex-row justify-end sm:space-x-3 space-y-2 sm:space-y-0">
               <button
                 onClick={handleCancelEdit}
-                className="bg-secondary-700 hover:bg-secondary-600 text-white px-4 py-2 rounded-sm transition-all duration-300"
+                className="bg-secondary-700 hover:bg-secondary-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm transition-all duration-300 text-sm sm:text-base w-full sm:w-auto"
               >
                 Annulla
               </button>
               <button
                 onClick={handleSaveChanges}
-                className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-sm transition-all duration-300"
+                className="bg-primary hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm transition-all duration-300 text-sm sm:text-base w-full sm:w-auto"
                 disabled={loading}
               >
                 {loading ? 'Salvataggio...' : 'Salva'}
@@ -2609,67 +2618,67 @@ const Admin = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-800">
+            <table className="min-w-full divide-y divide-secondary-800 text-xs sm:text-sm">
               <thead className="bg-secondary-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Titolo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Azienda</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Tipo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Luogo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Remoto</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Stato</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Scadenza</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Azioni</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Titolo</th>
+                  <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Azienda</th>
+                  <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Tipo</th>
+                  <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Luogo</th>
+                  <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Remoto</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Stato</th>
+                  <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Scadenza</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-secondary-400 uppercase tracking-wider">Azioni</th>
                 </tr>
               </thead>
               <tbody className="bg-secondary-900 divide-y divide-secondary-800">
                 {jobs.length > 0 ? (
                   jobs.map((job) => (
                     <tr key={job._id} className="border-b border-secondary-800">
-                      <td className="px-6 py-4">{job.titolo}</td>
-                      <td className="px-6 py-4">{job.azienda || 'Non specificata'}</td>
-                      <td className="px-6 py-4">{job.tipo}</td>
-                      <td className="px-6 py-4">{job.luogo || 'Non specificato'}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">{job.titolo}</td>
+                      <td className="hidden sm:table-cell px-6 py-4 text-xs sm:text-sm">{job.azienda || 'Non specificata'}</td>
+                      <td className="hidden md:table-cell px-6 py-4 text-xs sm:text-sm">{job.tipo}</td>
+                      <td className="hidden md:table-cell px-6 py-4 text-xs sm:text-sm">{job.luogo || 'Non specificato'}</td>
+                      <td className="hidden sm:table-cell px-6 py-4 text-xs sm:text-sm">
                         {job.remoto ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                             Sì
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                             No
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">
                         {job.attivo ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                             Attivo
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                             Inattivo
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4">{job.dataScadenza ? formatDate(job.dataScadenza) : 'Non specificata'}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex space-x-2">
+                      <td className="hidden md:table-cell px-6 py-4 text-xs sm:text-sm">{job.dataScadenza ? formatDate(job.dataScadenza) : 'Non specificata'}</td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
                           <button
                             onClick={() => handleEditClick(job)}
-                            className="text-blue-400 hover:text-blue-300"
+                            className="text-xs sm:text-sm text-blue-400 hover:text-blue-300"
                           >
                             Modifica
                           </button>
                           <button
                             onClick={() => handleToggleActive(job)}
-                            className={job.attivo ? "text-yellow-400 hover:text-yellow-300" : "text-green-400 hover:text-green-300"}
+                            className={`text-xs sm:text-sm ${job.attivo ? "text-yellow-400 hover:text-yellow-300" : "text-green-400 hover:text-green-300"}`}
                           >
                             {job.attivo ? 'Disattiva' : 'Attiva'}
                           </button>
                           <button
                             onClick={() => handleDeleteJob(job._id)}
-                            className="text-red-400 hover:text-red-300"
+                            className="text-xs sm:text-sm text-red-400 hover:text-red-300"
                           >
                             Elimina
                           </button>
@@ -2679,7 +2688,7 @@ const Admin = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="px-6 py-4 text-center">
+                    <td colSpan="8" className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm">
                       Nessun lavoro trovato
                     </td>
                   </tr>
@@ -2769,44 +2778,44 @@ const Admin = () => {
         transition={{ duration: 0.5 }}
         className="bg-secondary-900 rounded-sm border border-secondary-800 overflow-hidden"
       >
-        <div className="p-6">
-          <h2 className="text-2xl font-light text-white mb-6">Gestione Contatti</h2>
+        <div className="p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-light text-white mb-4 sm:mb-6">Gestione Contatti</h2>
           
           {error && (
-            <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+            <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm text-sm sm:text-base">
               {error}
             </div>
           )}
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Lista messaggi */}
             <div className="lg:col-span-1 bg-secondary-800 rounded-sm overflow-hidden">
-              <div className="p-4 border-b border-secondary-700">
-                <h3 className="text-white font-medium">Messaggi ricevuti</h3>
+              <div className="p-3 sm:p-4 border-b border-secondary-700">
+                <h3 className="text-white text-sm sm:text-base font-medium">Messaggi ricevuti</h3>
               </div>
               
               {loading && messages.length === 0 ? (
-                <div className="flex justify-center items-center p-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+                <div className="flex justify-center items-center p-6 sm:p-8">
+                  <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-t-2 border-b-2 border-primary"></div>
                 </div>
               ) : messages.length === 0 ? (
-                <div className="p-6 text-center text-secondary-400">
+                <div className="p-4 sm:p-6 text-center text-secondary-400 text-sm sm:text-base">
                   Nessun messaggio ricevuto
                 </div>
               ) : (
-                <div className="max-h-[600px] overflow-y-auto">
+                <div className="max-h-[400px] sm:max-h-[600px] overflow-y-auto">
                   {messages.map((message) => (
                     <div 
                       key={message._id}
                       onClick={() => handleMessageClick(message._id)}
-                      className={`p-4 border-b border-secondary-700 cursor-pointer transition-colors duration-300 ${selectedMessage && selectedMessage._id === message._id ? 'bg-secondary-700' : 'hover:bg-secondary-750'} ${!message.letto ? 'border-l-4 border-l-primary' : ''}`}
+                      className={`p-3 sm:p-4 border-b border-secondary-700 cursor-pointer transition-colors duration-300 ${selectedMessage && selectedMessage._id === message._id ? 'bg-secondary-700' : 'hover:bg-secondary-750'} ${!message.letto ? 'border-l-4 border-l-primary' : ''}`}
                     >
                       <div className="flex justify-between items-start">
-                        <h4 className="text-white font-medium">{message.nome}</h4>
+                        <h4 className="text-white text-sm sm:text-base font-medium">{message.nome}</h4>
                         <span className="text-xs text-secondary-400">{formatDate(message.dataInvio)}</span>
                       </div>
-                      <p className="text-secondary-300 text-sm mt-1">{message.email}</p>
-                      <p className="text-secondary-400 text-sm mt-2 line-clamp-2">{message.messaggio}</p>
+                      <p className="text-secondary-300 text-xs sm:text-sm mt-1">{message.email}</p>
+                      <p className="text-secondary-400 text-xs sm:text-sm mt-2 line-clamp-2">{message.messaggio}</p>
                     </div>
                   ))}
                 </div>
@@ -2820,47 +2829,47 @@ const Admin = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-secondary-800 p-6 rounded-sm"
+                  className="bg-secondary-800 p-4 sm:p-6 rounded-sm"
                 >
-                  <div className="flex justify-between items-start mb-6">
+                  <div className="flex justify-between items-start mb-4 sm:mb-6">
                     <div>
-                      <h3 className="text-xl text-white font-medium">{selectedMessage.nome}</h3>
-                      <p className="text-secondary-300 mt-1">{selectedMessage.email}</p>
+                      <h3 className="text-lg sm:text-xl text-white font-medium">{selectedMessage.nome}</h3>
+                      <p className="text-secondary-300 text-xs sm:text-sm mt-1">{selectedMessage.email}</p>
                       {selectedMessage.telefono && (
-                        <p className="text-secondary-400 mt-1">{selectedMessage.telefono}</p>
+                        <p className="text-secondary-400 text-xs sm:text-sm mt-1">{selectedMessage.telefono}</p>
                       )}
-                      <p className="text-secondary-400 text-sm mt-2">
+                      <p className="text-secondary-400 text-xs sm:text-sm mt-2">
                         Ricevuto il {formatDate(selectedMessage.dataInvio)}
                       </p>
                     </div>
                     <button
                       onClick={() => handleDeleteMessage(selectedMessage._id)}
-                      className="text-red-500 hover:text-red-400 transition-colors duration-300"
+                      className="text-red-500 hover:text-red-400 transition-colors duration-300 text-sm sm:text-base"
                       title="Elimina messaggio"
                     >
                       <FaTrash />
                     </button>
                   </div>
                   
-                  <div className="bg-secondary-850 p-4 rounded-sm mb-6">
-                    <h4 className="text-white text-md font-medium mb-2">Messaggio</h4>
-                    <p className="text-secondary-300 whitespace-pre-line">{selectedMessage.messaggio}</p>
+                  <div className="bg-secondary-850 p-3 sm:p-4 rounded-sm mb-4 sm:mb-6">
+                    <h4 className="text-white text-sm sm:text-md font-medium mb-2">Messaggio</h4>
+                    <p className="text-secondary-300 text-xs sm:text-sm whitespace-pre-line">{selectedMessage.messaggio}</p>
                   </div>
                   
                   {selectedMessage.allegati && selectedMessage.allegati.length > 0 && (
-                    <div className="mb-6">
-                      <h4 className="text-white text-md font-medium mb-2">Allegati</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="mb-4 sm:mb-6">
+                      <h4 className="text-white text-sm sm:text-md font-medium mb-2">Allegati</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         {selectedMessage.allegati.map((allegato, index) => (
                           <a
                             key={index}
                             href={allegato.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center p-3 bg-secondary-750 rounded-sm hover:bg-secondary-700 transition-colors duration-300"
+                            className="flex items-center p-2 sm:p-3 bg-secondary-750 rounded-sm hover:bg-secondary-700 transition-colors duration-300"
                           >
-                            <FaFile className="text-primary mr-3" />
-                            <span className="text-white truncate">{allegato.filename}</span>
+                            <FaFile className="text-primary mr-2 sm:mr-3 text-sm sm:text-base" />
+                            <span className="text-white text-xs sm:text-sm truncate">{allegato.filename}</span>
                           </a>
                         ))}
                       </div>
@@ -2870,17 +2879,17 @@ const Admin = () => {
                   <div className="flex justify-end">
                     <a
                       href={`mailto:${selectedMessage.email}`}
-                      className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-sm transition-colors duration-300 flex items-center"
+                      className="bg-primary hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm transition-colors duration-300 flex items-center text-xs sm:text-sm"
                     >
-                      <FaReply className="mr-2" />
+                      <FaReply className="mr-1.5 sm:mr-2" />
                       Rispondi via Email
                     </a>
                   </div>
                 </motion.div>
               ) : (
-                <div className="bg-secondary-800 p-8 rounded-sm flex flex-col items-center justify-center h-64 shadow-md">
-                  <FaEnvelope className="text-secondary-600 text-5xl mb-4" />
-                  <p className="text-secondary-400 text-center">Seleziona un messaggio per visualizzarne i dettagli</p>
+                <div className="bg-secondary-800 p-6 sm:p-8 rounded-sm flex flex-col items-center justify-center h-48 sm:h-64 shadow-md">
+                  <FaEnvelope className="text-secondary-600 text-3xl sm:text-5xl mb-3 sm:mb-4" />
+                  <p className="text-secondary-400 text-xs sm:text-sm text-center">Seleziona un messaggio per visualizzarne i dettagli</p>
                 </div>
               )}
             </div>
@@ -2917,37 +2926,37 @@ const Admin = () => {
   };
 
   return (
-    <div className="pt-32 pb-20 bg-secondary-950 min-h-screen">
-      <div className="container-custom">
+    <div className="pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16 md:pb-20 bg-secondary-950 min-h-screen">
+      <div className="container-custom px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-4xl font-light text-white mb-8">Pannello di Amministrazione</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-light text-white mb-4 sm:mb-6 md:mb-8">Pannello di Amministrazione</h1>
           
           {error && (
-            <div className="bg-red-900/30 border border-red-800 text-white p-4 mb-6 rounded-sm">
+            <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm">
               {error}
             </div>
           )}
 
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
             {/* Sidebar di navigazione */}
-            <div className="lg:w-1/4">
+            <div className="w-full lg:w-1/4 mb-3 sm:mb-4 lg:mb-0">
               <div className="bg-secondary-900 rounded-sm border border-secondary-800 overflow-hidden">
-                <div className="p-4 border-b border-secondary-800">
-                  <h2 className="text-white font-medium">Menu Amministrazione</h2>
+                <div className="p-2 sm:p-3 md:p-4 border-b border-secondary-800">
+                  <h2 className="text-white text-sm sm:text-base font-medium">Menu Amministrazione</h2>
                 </div>
-                <nav className="p-2">
+                <nav className="p-1.5 sm:p-2 flex flex-row flex-wrap lg:flex-col">
                   {adminSections.map((section) => (
                     <button
                       key={section.id}
                       onClick={() => setActiveSection(section.id)}
-                      className={`flex items-center w-full px-4 py-3 rounded-sm text-sm transition-all duration-300 ${activeSection === section.id ? 'bg-primary/10 text-primary' : 'text-white hover:bg-secondary-800'}`}
+                      className={`flex items-center w-auto lg:w-full px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 rounded-sm text-xs sm:text-sm transition-all duration-300 mr-1 mb-1 lg:mr-0 lg:mb-2 ${activeSection === section.id ? 'bg-primary/10 text-primary' : 'text-white hover:bg-secondary-800'}`}
                     >
-                      <span className="mr-3">{section.icon}</span>
-                      {section.name}
+                      <span className="mr-1.5 sm:mr-2 md:mr-3">{section.icon}</span>
+                      <span className="hidden xs:inline">{section.name}</span>
                     </button>
                   ))}
                 </nav>
@@ -2955,10 +2964,10 @@ const Admin = () => {
             </div>
 
             {/* Contenuto principale */}
-            <div className="lg:w-3/4">
+            <div className="w-full lg:w-3/4">
               {loading ? (
-                <div className="flex justify-center items-center h-64">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                <div className="flex justify-center items-center h-36 sm:h-48 md:h-64">
+                  <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 md:h-12 md:w-12 border-t-2 border-b-2 border-primary"></div>
                 </div>
               ) : (
                 renderActiveSection()
