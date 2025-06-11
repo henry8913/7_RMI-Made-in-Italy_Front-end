@@ -5,6 +5,9 @@ import { Button } from "../components";
 import { useAuth } from "../contexts/AuthContext";
 import { packageService } from "../services";
 import orderService from "../services/orderService";
+import customRequestService from "../services/customRequestService";
+import testDriveService from "../services/testDriveService";
+import contactService from "../services/contactService";
 
 const Profile = () => {
   const { currentUser, isAuthenticated, logout } = useAuth();
@@ -48,6 +51,18 @@ const Profile = () => {
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersError, setOrdersError] = useState("");
+  
+  const [requests, setRequests] = useState([]);
+  const [requestsLoading, setRequestsLoading] = useState(false);
+  const [requestsError, setRequestsError] = useState("");
+  
+  const [testDrives, setTestDrives] = useState([]);
+  const [testDrivesLoading, setTestDrivesLoading] = useState(false);
+  const [testDrivesError, setTestDrivesError] = useState("");
+  
+  const [contacts, setContacts] = useState([]);
+  const [contactsLoading, setContactsLoading] = useState(false);
+  const [contactsError, setContactsError] = useState("");
 
   // Carica gli ordini dell'utente
   useEffect(() => {
@@ -85,24 +100,70 @@ const Profile = () => {
     fetchUserOrders();
   }, [activeTab]);
 
-  const [requests, setRequests] = useState([
-    {
-      id: "REQ-001",
-      date: "2023-09-05",
-      status: "Risposto",
-      subject: "Informazioni su Lancia Delta Integrale",
-      message:
-        "Vorrei sapere se avete in programma un restomod della Lancia Delta Integrale.",
-    },
-    {
-      id: "REQ-002",
-      date: "2023-12-01",
-      status: "In attesa",
-      subject: "Richiesta test drive",
-      message:
-        "Sarei interessato a fare un test drive del vostro modello Alfa Romeo GTA.",
-    },
-  ]);
+  // Carica le richieste dell'utente
+  useEffect(() => {
+    const fetchUserRequests = async () => {
+      if (activeTab === "requests") {
+        setRequestsLoading(true);
+        setRequestsError("");
+        try {
+          const userRequests = await customRequestService.getUserRequests();
+          setRequests(userRequests);
+        } catch (error) {
+          console.error("Errore durante il recupero delle richieste:", error);
+          setRequestsError("Impossibile caricare le richieste. Riprova più tardi.");
+        } finally {
+          setRequestsLoading(false);
+        }
+      }
+    };
+
+    fetchUserRequests();
+  }, [activeTab]);
+
+  // Carica i test drive dell'utente
+  useEffect(() => {
+    const fetchUserTestDrives = async () => {
+      if (activeTab === "testdrives") {
+        setTestDrivesLoading(true);
+        setTestDrivesError("");
+        try {
+          const userTestDrives = await testDriveService.getUserTestDrives();
+          setTestDrives(userTestDrives);
+        } catch (error) {
+          console.error("Errore durante il recupero dei test drive:", error);
+          setTestDrivesError("Impossibile caricare i test drive. Riprova più tardi.");
+        } finally {
+          setTestDrivesLoading(false);
+        }
+      }
+    };
+
+    fetchUserTestDrives();
+  }, [activeTab]);
+  
+  // Carica i messaggi di contatto dell'utente
+  useEffect(() => {
+    const fetchUserContacts = async () => {
+      if (activeTab === "contacts") {
+        setContactsLoading(true);
+        setContactsError("");
+        try {
+          const userContacts = await contactService.getUserMessages();
+          setContacts(userContacts);
+        } catch (error) {
+          console.error("Errore durante il recupero dei messaggi di contatto:", error);
+          setContactsError("Impossibile caricare i messaggi di contatto. Riprova più tardi.");
+        } finally {
+          setContactsLoading(false);
+        }
+      }
+    };
+
+    fetchUserContacts();
+  }, [activeTab]);
+
+  // Le richieste vengono caricate dal backend
 
   // Gestisce il cambio di input nei form
   const handleChange = (e) => {
@@ -202,6 +263,26 @@ const Profile = () => {
               }`}
             >
               Richieste
+            </button>
+            <button
+              onClick={() => setActiveTab("testdrives")}
+              className={`pb-4 font-medium text-sm ${
+                activeTab === "testdrives"
+                  ? "text-red-500 border-b-2 border-red-500"
+                  : "text-secondary-400 hover:text-white"
+              }`}
+            >
+              Test Drive
+            </button>
+            <button
+              onClick={() => setActiveTab("contacts")}
+              className={`pb-4 font-medium text-sm ${
+                activeTab === "contacts"
+                  ? "text-red-500 border-b-2 border-red-500"
+                  : "text-secondary-400 hover:text-white"
+              }`}
+            >
+              Contatti
             </button>
             <button
               onClick={() => setActiveTab("settings")}
@@ -529,40 +610,116 @@ const Profile = () => {
                 Le tue richieste
               </h2>
 
-              {requests.length > 0 ? (
+              {requestsLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-secondary-400">Caricamento richieste...</p>
+                </div>
+              ) : requestsError ? (
+                <div className="text-center py-12">
+                  <p className="text-red-400">{requestsError}</p>
+                </div>
+              ) : requests.length > 0 ? (
                 <div className="space-y-6">
                   {requests.map((request) => (
                     <div
-                      key={request.id}
+                      key={request._id}
                       className="border border-secondary-800 rounded-lg overflow-hidden"
                     >
                       <div className="bg-secondary-800 p-4 flex flex-col md:flex-row md:items-center md:justify-between">
                         <div>
                           <p className="text-white font-medium">
-                            {request.subject}
+                            {request.titolo || request.title}
                           </p>
                           <p className="text-secondary-400 text-sm">
-                            {new Date(request.date).toLocaleDateString("it-IT")}
+                            {new Date(request.createdAt).toLocaleDateString("it-IT")}
                           </p>
                         </div>
                         <div className="mt-2 md:mt-0">
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              request.status === "Risposto"
+                              request.status === "completato" || request.status === "accettato"
                                 ? "bg-green-900/50 text-green-400"
-                                : "bg-yellow-900/50 text-yellow-400"
+                                : request.status === "in_attesa"
+                                ? "bg-yellow-900/50 text-yellow-400"
+                                : request.status === "rifiutato"
+                                ? "bg-red-900/50 text-red-400"
+                                : "bg-blue-900/50 text-blue-400"
                             }`}
                           >
-                            {request.status}
+                            {request.status === "in_attesa" ? "In attesa" :
+                             request.status === "in_lavorazione" ? "In lavorazione" :
+                             request.status === "preventivo_inviato" ? "Preventivo inviato" :
+                             request.status === "accettato" ? "Accettato" :
+                             request.status === "rifiutato" ? "Rifiutato" :
+                             request.status === "completato" ? "Completato" :
+                             request.status}
                           </span>
                         </div>
                       </div>
                       <div className="p-4">
-                        <p className="text-secondary-300">{request.message}</p>
+                        <p className="text-secondary-300">{request.descrizione || request.description}</p>
+                        {request.budget && (
+                          <p className="text-secondary-300 mt-2">Budget: € {request.budget.toLocaleString("it-IT")}</p>
+                        )}
+                        {request.timeline && (
+                          <p className="text-secondary-300 mt-2">Tempistica: {request.timeline}</p>
+                        )}
+                        {request.admin_response && request.admin_response.text && (
+                          <div className="mt-4 p-3 bg-secondary-800 rounded">
+                            <p className="text-white font-medium mb-1">Risposta:</p>
+                            <p className="text-secondary-300">{request.admin_response.text}</p>
+                            {request.admin_response.quote && (
+                              <p className="text-secondary-300 mt-2">Preventivo: € {request.admin_response.quote.toLocaleString("it-IT")}</p>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <div className="bg-secondary-800 p-4 flex justify-end">
-                        <Button variant="secondary" size="sm">
-                          Visualizza conversazione
+                      <div className="bg-secondary-800 p-4 flex justify-end space-x-3">
+                        {request.status === "preventivo_inviato" && (
+                          <>
+                            <Button 
+                              variant="primary" 
+                              size="sm"
+                              onClick={() => {
+                                // Implementare la logica per accettare il preventivo
+                                // customRequestService.acceptQuote(request._id)
+                              }}
+                            >
+                              Accetta preventivo
+                            </Button>
+                            <Button 
+                              variant="danger" 
+                              size="sm"
+                              onClick={() => {
+                                // Implementare la logica per rifiutare il preventivo
+                                // customRequestService.cancel(request._id)
+                              }}
+                            >
+                              Rifiuta
+                            </Button>
+                          </>
+                        )}
+                        {request.status === "in_attesa" && (
+                          <Button 
+                            variant="danger" 
+                            size="sm"
+                            onClick={() => {
+                              // Implementare la logica per annullare la richiesta
+                              // customRequestService.cancel(request._id)
+                            }}
+                          >
+                            Annulla richiesta
+                          </Button>
+                        )}
+                        <Button 
+                          variant="secondary" 
+                          size="sm"
+                          onClick={() => {
+                            // Implementare la logica per visualizzare i dettagli
+                            // navigate(`/requests/${request._id}`)
+                          }}
+                        >
+                          Visualizza dettagli
                         </Button>
                       </div>
                     </div>
@@ -572,6 +729,178 @@ const Profile = () => {
                 <div className="text-center py-12">
                   <p className="text-secondary-400">
                     Non hai ancora effettuato richieste.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Tab Test Drive */}
+          {activeTab === "testdrives" && (
+            <div className="bg-secondary-900 rounded-lg p-6 md:p-8">
+              <h2 className="text-xl font-bold text-white mb-6">
+                I tuoi test drive
+              </h2>
+
+              {testDrivesLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-secondary-400">Caricamento test drive...</p>
+                </div>
+              ) : testDrivesError ? (
+                <div className="text-center py-12">
+                  <p className="text-red-400">{testDrivesError}</p>
+                </div>
+              ) : testDrives.length > 0 ? (
+                <div className="space-y-6">
+                  {testDrives.map((testDrive) => (
+                    <div
+                      key={testDrive._id}
+                      className="border border-secondary-800 rounded-lg overflow-hidden"
+                    >
+                      <div className="bg-secondary-800 p-4 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div>
+                          <p className="text-white font-medium">
+                            {testDrive.modello?.nome || "Modello non disponibile"}
+                          </p>
+                          <p className="text-secondary-400 text-sm">
+                            {new Date(testDrive.data).toLocaleDateString("it-IT")} - {testDrive.ora}
+                          </p>
+                        </div>
+                        <div className="mt-2 md:mt-0">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              testDrive.stato === "completato"
+                                ? "bg-green-900/50 text-green-400"
+                                : testDrive.stato === "confermato"
+                                ? "bg-blue-900/50 text-blue-400"
+                                : testDrive.stato === "richiesto"
+                                ? "bg-yellow-900/50 text-yellow-400"
+                                : "bg-red-900/50 text-red-400"
+                            }`}
+                          >
+                            {testDrive.stato === "richiesto" ? "Richiesto" :
+                             testDrive.stato === "confermato" ? "Confermato" :
+                             testDrive.stato === "completato" ? "Completato" :
+                             testDrive.stato === "annullato" ? "Annullato" :
+                             testDrive.stato}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <p className="text-secondary-300">Luogo: {testDrive.luogo}</p>
+                        {testDrive.note && (
+                          <p className="text-secondary-300 mt-2">Note: {testDrive.note}</p>
+                        )}
+                      </div>
+                      <div className="bg-secondary-800 p-4 flex justify-end space-x-3">
+                        {testDrive.stato === "richiesto" && (
+                          <Button 
+                            variant="danger" 
+                            size="sm"
+                            onClick={() => {
+                              // Implementare la logica per annullare il test drive
+                              // testDriveService.cancel(testDrive._id)
+                            }}
+                          >
+                            Annulla test drive
+                          </Button>
+                        )}
+                        <Button 
+                          variant="secondary" 
+                          size="sm"
+                          onClick={() => {
+                            // Implementare la logica per visualizzare i dettagli
+                            // navigate(`/test-drive/${testDrive._id}`)
+                          }}
+                        >
+                          Visualizza dettagli
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-secondary-400">
+                    Non hai ancora prenotato test drive.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Tab Messaggi di Contatto */}
+          {activeTab === "contacts" && (
+            <div className="bg-secondary-900 rounded-lg p-6 md:p-8">
+              <h2 className="text-xl font-bold text-white mb-6">
+                I tuoi messaggi di contatto
+              </h2>
+
+              {contactsLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-secondary-400">Caricamento messaggi...</p>
+                </div>
+              ) : contactsError ? (
+                <div className="text-center py-12">
+                  <p className="text-red-400">{contactsError}</p>
+                </div>
+              ) : contacts.length > 0 ? (
+                <div className="space-y-6">
+                  {contacts.map((contact) => (
+                    <div
+                      key={contact._id}
+                      className="border border-secondary-800 rounded-lg overflow-hidden"
+                    >
+                      <div className="bg-secondary-800 p-4 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div>
+                          <p className="text-white font-medium">
+                            {contact.nome}
+                          </p>
+                          <p className="text-secondary-400 text-sm">
+                            {new Date(contact.dataInvio).toLocaleDateString("it-IT")}
+                          </p>
+                        </div>
+                        <div className="mt-2 md:mt-0">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              contact.letto
+                                ? "bg-green-900/50 text-green-400"
+                                : "bg-yellow-900/50 text-yellow-400"
+                            }`}
+                          >
+                            {contact.letto ? "Risposto" : "In attesa"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <p className="text-secondary-300">{contact.messaggio}</p>
+                        {contact.allegati && contact.allegati.length > 0 && (
+                          <div className="mt-4">
+                            <p className="text-white font-medium mb-2">Allegati:</p>
+                            <ul className="space-y-1">
+                              {contact.allegati.map((allegato, index) => (
+                                <li key={index}>
+                                  <a 
+                                    href={allegato.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-400 hover:underline"
+                                  >
+                                    {allegato.filename}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-secondary-400">
+                    Non hai ancora inviato messaggi di contatto.
                   </p>
                 </div>
               )}

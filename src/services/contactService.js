@@ -30,6 +30,16 @@ const contactService = {
       throw error;
     }
   },
+
+  // Ottieni i messaggi di contatto dell'utente corrente
+  getUserMessages: async () => {
+    try {
+      const response = await api.get('/contacts/user');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default contactService;
