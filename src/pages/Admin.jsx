@@ -100,7 +100,11 @@ const Admin = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {Object.entries(stats).map(([key, value]) => (
-            <div key={key} className="bg-secondary-800 p-4 sm:p-6 rounded-sm border border-secondary-700 hover:border-primary transition-colors duration-300">
+            <div 
+                key={key} 
+                className="bg-secondary-800 p-4 sm:p-6 rounded-sm border border-secondary-700 hover:border-primary transition-colors duration-300 cursor-pointer" 
+                onClick={() => setActiveSection(key)}
+              >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-secondary-400 text-xs sm:text-sm">{getDisplayName(key)}</p>
