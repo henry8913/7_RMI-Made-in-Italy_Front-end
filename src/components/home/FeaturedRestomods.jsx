@@ -115,7 +115,7 @@ const FeaturedRestomods = () => {
                   subtitle={`${restomod.costruttore?.nome || 'Brand sconosciuto'} | ${restomod.anno || 'Anno sconosciuto'}`}
                   description={restomod.descrizione ? restomod.descrizione.substring(0, 100) + '...' : ''}
                   price={restomod.prezzo}
-                  badge={restomod.stato === 'sold' ? 'Venduto' : restomod.stato === 'reserved' ? 'Riservato' : null}
+                  badge={restomod.stato === 'sold' ? 'venduta' : restomod.stato === 'reserved' ? 'Riservato' : null}
                   link={`/restomods/${restomod._id}`}
                 />
               </motion.div>

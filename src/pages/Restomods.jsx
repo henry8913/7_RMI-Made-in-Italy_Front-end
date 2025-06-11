@@ -231,7 +231,7 @@ const Restomods = () => {
                           <option value="all">Tutti gli stati</option>
                           <option value="available">Disponibile</option>
                           <option value="reserved">Riservato</option>
-                          <option value="sold">Venduto</option>
+                          <option value="sold">venduta</option>
                         </select>
                       </div>
                     </div>
@@ -320,7 +320,7 @@ const Restomods = () => {
                         <option value="all">Tutti gli stati</option>
                         <option value="available">Disponibile</option>
                         <option value="reserved">Riservato</option>
-                        <option value="sold">Venduto</option>
+                        <option value="sold">venduta</option>
                       </select>
                     </div>
                     
@@ -392,7 +392,7 @@ const Restomods = () => {
                             subtitle={restomod.costruttore?.nome ? `${restomod.costruttore.nome} | ${restomod.anno}` : 'Marca non specificata'}
                             description={restomod.descrizione ? restomod.descrizione.substring(0, 100) + '...' : ''}
                             price={restomod.prezzo}
-                            badge={restomod.stato === 'sold' ? 'Venduto' : restomod.stato === 'reserved' ? 'Riservato' : null}
+                            badge={restomod.stato === 'sold' ? 'venduta' : restomod.stato === 'reserved' ? 'Riservato' : null}
                             link={`/restomods/${restomod._id || restomod.id}`}
                           />
                         </motion.div>

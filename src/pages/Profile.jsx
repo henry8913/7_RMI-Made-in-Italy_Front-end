@@ -1336,11 +1336,11 @@ const Profile = () => {
               
               <div>
                 <h3 className="text-white font-medium mb-2">Informazioni Spedizione</h3>
-                <p className="text-secondary-300">Nome: {selectedOrder.shipping?.name || currentUser.name}</p>
-                <p className="text-secondary-300">Indirizzo: {selectedOrder.shipping?.address || currentUser.address}</p>
-                <p className="text-secondary-300">Città: {selectedOrder.shipping?.city || currentUser.city}</p>
-                <p className="text-secondary-300">CAP: {selectedOrder.shipping?.postalCode || currentUser.postalCode}</p>
-                <p className="text-secondary-300">Paese: {selectedOrder.shipping?.country || currentUser.country}</p>
+                <p className="text-secondary-300">Nome: {selectedOrder.infoCliente?.nome || selectedOrder.shipping?.name || currentUser.name}</p>
+                <p className="text-secondary-300">Indirizzo: {selectedOrder.infoCliente?.indirizzo || selectedOrder.shipping?.address || currentUser.address}</p>
+                <p className="text-secondary-300">Città: {selectedOrder.infoCliente?.citta || selectedOrder.shipping?.city || currentUser.city}</p>
+                <p className="text-secondary-300">CAP: {selectedOrder.infoCliente?.cap || selectedOrder.shipping?.postalCode || currentUser.postalCode}</p>
+                <p className="text-secondary-300">Paese: {selectedOrder.infoCliente?.paese || selectedOrder.shipping?.country || currentUser.country}</p>
               </div>
             </div>
             
@@ -1390,7 +1390,7 @@ const Profile = () => {
             <div>
               <h3 className="text-white font-medium mb-2">Pagamento</h3>
               <div className="bg-secondary-800 rounded-lg p-4">
-                <p className="text-secondary-300">Metodo: {selectedOrder.paymentMethod || "Carta di credito"}</p>
+                <p className="text-secondary-300">Metodo: {selectedOrder.infoCliente?.metodoPagamento || selectedOrder.paymentMethod || "Carta di credito"}</p>
                 {selectedOrder.paymentResult && (
                   <>
                     <p className="text-secondary-300">ID: {selectedOrder.paymentResult.id}</p>

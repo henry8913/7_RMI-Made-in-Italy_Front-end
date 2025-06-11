@@ -161,7 +161,7 @@ const RestomodDetail = () => {
                 {/* Badge stato */}
                 {restomod.stato !== 'available' && (
                   <div className="absolute top-2 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 bg-primary text-white px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-sm font-medium">
-                    {restomod.stato === 'sold' ? 'Venduto' : 'Riservato'}
+                    {restomod.stato === 'sold' ? 'venduta' : 'Riservato'}
                   </div>
                 )}
               </div>
@@ -211,7 +211,7 @@ const RestomodDetail = () => {
                   <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white">
                     {formatPrice(restomod.prezzo)}
                   </div>
-                  {restomod.stato === 'available' && (
+                  {(restomod.stato === 'available' || restomod.stato === 'sold') && (
                     <div className="flex gap-2 sm:gap-3 lg:gap-4 xl:gap-5">
                       <Button onClick={handleAddToCart} variant="primary" className="text-sm sm:text-base lg:text-lg py-2 px-3 sm:px-4 lg:px-5 xl:px-6">
                         <span className="flex items-start">
@@ -280,7 +280,7 @@ const RestomodDetail = () => {
               </div>
               
               {/* Modulo di contatto */}
-              {restomod.stato === 'available' && (
+              {(restomod.stato === 'available' || restomod.stato === 'sold') && (
                 <div className="bg-secondary-900/50 p-3 sm:p-4 md:p-5 lg:p-6 rounded-sm sm:rounded-md md:rounded-lg">
                   <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold mb-2 sm:mb-3 md:mb-4">Interessato a questo restomod?</h3>
                   <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3 md:space-y-4">

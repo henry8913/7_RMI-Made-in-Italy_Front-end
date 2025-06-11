@@ -221,7 +221,7 @@ const BrandDetail = () => {
                       subtitle={`${brand.nome} | ${restomod.anno}`}
                       description={restomod.descrizione ? restomod.descrizione.substring(0, 100) + '...' : ''}
                       price={restomod.prezzo}
-                      badge={restomod.stato === 'sold' ? 'Venduto' : restomod.stato === 'reserved' ? 'Riservato' : null}
+                      badge={restomod.stato === 'sold' ? 'venduta' : restomod.stato === 'reserved' ? 'Riservato' : null}
                       link={`/restomods/${restomod._id}`}
                     />
                   </motion.div>
