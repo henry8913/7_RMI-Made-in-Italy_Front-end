@@ -471,18 +471,50 @@ export const adminService = {
     }
   },
 
+  // ORDINI
+  async getOrders() {
+    try {
+      const response = await api.get('/orders');
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante il recupero degli ordini:', error);
+      throw error;
+    }
+  },
+
+  async getOrder(orderId) {
+    try {
+      const response = await api.get(`/orders/${orderId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante il recupero dell\'ordine:', error);
+      throw error;
+    }
+  },
+
+  async updateOrderStatus(orderId, status) {
+    try {
+      const response = await api.patch(`/orders/${orderId}/status`, { status });
+      return response.data;
+    } catch (error) {
+      console.error('Errore durante l\'aggiornamento dello stato dell\'ordine:', error);
+      throw error;
+    }
+  },
+
   // DASHBOARD
   async getDashboardStats() {
     try {
       // Ottieni i conteggi da varie API
-      const [users, restomods, brands, packages, jobs, customRequests, messages] = await Promise.all([
+      const [users, restomods, brands, packages, jobs, customRequests, messages, orders] = await Promise.all([
         this.getUsers(),
         this.getRestomods(),
         this.getBrands(),
         this.getPackages(),
         this.getJobs(),
         this.getCustomRequests(),
-        this.getMessages()
+        this.getMessages(),
+        this.getOrders()
       ]);
 
       // Ottieni i blog posts
@@ -495,7 +527,8 @@ export const adminService = {
         blogs: blogs.length,
         packages: packages.length,
         messages: messages.length,
-        jobs: jobs.length
+        jobs: jobs.length,
+        orders: orders.length
       };
     } catch (error) {
       console.error('Errore durante il recupero delle statistiche della dashboard:', error);
@@ -507,7 +540,8 @@ export const adminService = {
         blogs: 0,
         packages: 0,
         messages: 0,
-        jobs: 0
+        jobs: 0,
+        orders: 0,
       };
     }
   },

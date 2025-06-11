@@ -67,7 +67,7 @@ const Admin = () => {
     { id: 'packages', name: 'Pacchetti', icon: <FaBox /> },
     { id: 'jobs', name: 'Lavori', icon: <FaBriefcase /> },
     { id: 'messages', name: 'Contatti', icon: <FaEnvelope /> },
-    
+    { id: 'orders', name: 'Ordini', icon: <FaFile /> },
   ];
 
   // Componente per la dashboard
@@ -81,7 +81,9 @@ const Admin = () => {
         blogs: 'Articoli Blog',
         packages: 'Pacchetti',
         messages: 'Messaggi',
-        jobs: 'Lavori'
+        jobs: 'Lavori',
+        orders: 'Ordini',
+        customRequests: 'Richieste Personalizzate'
       };
       return displayNames[key] || key;
     };
@@ -113,6 +115,7 @@ const Admin = () => {
                   {key === 'messages' && <FaEnvelope />}
                   {key === 'jobs' && <FaBriefcase />}
                   {key === 'customRequests' && <FaEnvelope />}
+                  {key === 'orders' && <FaFile />}
                 </div>
               </div>
             </div>
@@ -2899,6 +2902,260 @@ const Admin = () => {
     );
   };
 
+  // Componente per la gestione degli ordini
+  const OrdersManagement = () => {
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [filterStatus, setFilterStatus] = useState('all');
+
+    // Carica gli ordini
+    useEffect(() => {
+      const fetchOrders = async () => {
+        setLoading(true);
+        setError('');
+        try {
+          const data = await adminService.getOrders();
+          setOrders(data);
+        } catch (err) {
+          console.error('Errore durante il recupero degli ordini:', err);
+          setError('Impossibile caricare gli ordini. Riprova più tardi.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchOrders();
+    }, []);
+
+    // Filtra gli ordini in base allo stato
+    const filteredOrders = filterStatus === 'all' 
+      ? orders 
+      : orders.filter(order => order.stato === filterStatus);
+
+    // Formatta la data
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return new Date(dateString).toLocaleDateString('it-IT', options);
+    };
+
+    // Gestisce il cambio di stato di un ordine
+    const handleStatusChange = async (orderId, newStatus) => {
+      if (!window.confirm(`Sei sicuro di voler cambiare lo stato dell'ordine a ${newStatus}?`)) {
+        return;
+      }
+
+      setLoading(true);
+      setError('');
+      try {
+        const updatedOrder = await adminService.updateOrderStatus(orderId, newStatus);
+        setOrders(orders.map(order => order._id === updatedOrder._id ? updatedOrder : order));
+        if (selectedOrder && selectedOrder._id === updatedOrder._id) {
+          setSelectedOrder(updatedOrder);
+        }
+      } catch (err) {
+        console.error('Errore durante l\'aggiornamento dello stato dell\'ordine:', err);
+        setError('Impossibile aggiornare lo stato dell\'ordine. Riprova più tardi.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Visualizza i dettagli di un ordine
+    const handleViewDetails = (order) => {
+      setSelectedOrder(order);
+    };
+
+    // Chiude i dettagli dell'ordine
+    const handleCloseDetails = () => {
+      setSelectedOrder(null);
+    };
+
+    return (
+      <div className="bg-secondary-900 p-4 sm:p-6 rounded-sm border border-secondary-800">
+        <h3 className="text-white text-lg sm:text-xl font-medium mb-3 sm:mb-4">Gestione Ordini</h3>
+        
+        {error && (
+          <div className="bg-red-900/30 border border-red-800 text-white p-3 sm:p-4 mb-4 sm:mb-6 rounded-sm text-sm sm:text-base">
+            {error}
+          </div>
+        )}
+
+        {/* Filtri */}
+        <div className="mb-4 sm:mb-6">
+          <label className="block text-secondary-400 text-sm sm:text-base mb-1 sm:mb-2">Filtra per stato:</label>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="bg-secondary-800 border border-secondary-700 text-white p-1.5 sm:p-2 rounded-sm text-sm sm:text-base w-full sm:w-auto"
+          >
+            <option value="all">Tutti gli stati</option>
+            <option value="in_attesa">In attesa</option>
+            <option value="completato">Completato</option>
+            <option value="annullato">Annullato</option>
+          </select>
+        </div>
+
+        {selectedOrder ? (
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 border border-secondary-800 rounded-sm">
+            <div className="flex justify-between items-center mb-3 sm:mb-4">
+              <h4 className="text-white text-base sm:text-lg">Dettagli Ordine #{selectedOrder._id}</h4>
+              <button
+                onClick={handleCloseDetails}
+                className="text-secondary-400 hover:text-white transition-colors duration-300"
+              >
+                <span className="text-xl">×</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+              <div>
+                <p className="text-secondary-400 text-sm sm:text-base">Data:</p>
+                <p className="text-white text-sm sm:text-base">{formatDate(selectedOrder.dataCreazione)}</p>
+              </div>
+              <div>
+                <p className="text-secondary-400 text-sm sm:text-base">Stato:</p>
+                <div className="flex items-center">
+                  <span className={`inline-block w-3 h-3 rounded-full mr-2 ${selectedOrder.stato === 'completato' ? 'bg-green-500' : selectedOrder.stato === 'in_attesa' ? 'bg-yellow-500' : 'bg-red-500'}`}></span>
+                  <span className="text-white text-sm sm:text-base capitalize">{selectedOrder.stato.replace('_', ' ')}</span>
+                </div>
+              </div>
+              <div>
+                <p className="text-secondary-400 text-sm sm:text-base">Cliente:</p>
+                <p className="text-white text-sm sm:text-base">{selectedOrder.infoCliente?.nome} {selectedOrder.infoCliente?.cognome}</p>
+              </div>
+              <div>
+                <p className="text-secondary-400 text-sm sm:text-base">Email:</p>
+                <p className="text-white text-sm sm:text-base">{selectedOrder.infoCliente?.email}</p>
+              </div>
+              <div>
+                <p className="text-secondary-400 text-sm sm:text-base">Indirizzo:</p>
+                <p className="text-white text-sm sm:text-base">{selectedOrder.infoCliente?.indirizzo}, {selectedOrder.infoCliente?.citta}, {selectedOrder.infoCliente?.cap}, {selectedOrder.infoCliente?.paese}</p>
+              </div>
+              <div>
+                <p className="text-secondary-400 text-sm sm:text-base">Metodo di pagamento:</p>
+                <p className="text-white text-sm sm:text-base">{selectedOrder.infoCliente?.metodoPagamento || 'Non specificato'}</p>
+              </div>
+              <div className="md:col-span-2">
+                <p className="text-secondary-400 text-sm sm:text-base">Totale:</p>
+                <p className="text-white text-base sm:text-lg font-medium">{selectedOrder.totale.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
+              </div>
+            </div>
+
+            <div className="mb-3 sm:mb-4">
+              <h5 className="text-white text-sm sm:text-base font-medium mb-2 sm:mb-3">Prodotti:</h5>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm sm:text-base">
+                  <thead>
+                    <tr className="border-b border-secondary-800">
+                      <th className="text-left text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Prodotto</th>
+                      <th className="text-left text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Tipo</th>
+                      <th className="text-right text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Prezzo</th>
+                      <th className="text-right text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Quantità</th>
+                      <th className="text-right text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Subtotale</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedOrder.items.map((item, index) => (
+                      <tr key={index} className="border-b border-secondary-800">
+                        <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white">{item.nome}</td>
+                        <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white capitalize">{item.tipo}</td>
+                        <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white text-right">{item.prezzo.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</td>
+                        <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white text-right">{item.quantita}</td>
+                        <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white text-right">{(item.prezzo * item.quantita).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              <button
+                onClick={() => handleStatusChange(selectedOrder._id, 'in_attesa')}
+                disabled={selectedOrder.stato === 'in_attesa'}
+                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-sm text-xs sm:text-sm ${selectedOrder.stato === 'in_attesa' ? 'bg-secondary-800 text-secondary-400 cursor-not-allowed' : 'bg-yellow-600 hover:bg-yellow-700 text-white transition-colors duration-300'}`}
+              >
+                Imposta In Attesa
+              </button>
+              <button
+                onClick={() => handleStatusChange(selectedOrder._id, 'completato')}
+                disabled={selectedOrder.stato === 'completato'}
+                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-sm text-xs sm:text-sm ${selectedOrder.stato === 'completato' ? 'bg-secondary-800 text-secondary-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white transition-colors duration-300'}`}
+              >
+                Imposta Completato
+              </button>
+              <button
+                onClick={() => handleStatusChange(selectedOrder._id, 'annullato')}
+                disabled={selectedOrder.stato === 'annullato'}
+                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-sm text-xs sm:text-sm ${selectedOrder.stato === 'annullato' ? 'bg-secondary-800 text-secondary-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 text-white transition-colors duration-300'}`}
+              >
+                Imposta Annullato
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm sm:text-base">
+              <thead>
+                <tr className="border-b border-secondary-800">
+                  <th className="text-left text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">ID Ordine</th>
+                  <th className="text-left text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Data</th>
+                  <th className="text-left text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Cliente</th>
+                  <th className="text-right text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Totale</th>
+                  <th className="text-center text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Stato</th>
+                  <th className="text-center text-secondary-400 py-1.5 sm:py-2 px-2 sm:px-3">Azioni</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="6" className="py-4 text-center text-secondary-400">
+                      <div className="flex justify-center items-center">
+                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary"></div>
+                        <span className="ml-2">Caricamento...</span>
+                      </div>
+                    </td>
+                  </tr>
+                ) : filteredOrders.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="py-4 text-center text-secondary-400">
+                      Nessun ordine trovato
+                    </td>
+                  </tr>
+                ) : (
+                  filteredOrders.map((order) => (
+                    <tr key={order._id} className="border-b border-secondary-800 hover:bg-secondary-800/50 transition-colors duration-300">
+                      <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white">{order._id.substring(0, 8)}...</td>
+                      <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white">{formatDate(order.dataCreazione)}</td>
+                      <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white">{order.infoCliente?.nome} {order.infoCliente?.cognome}</td>
+                      <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white text-right">{order.totale.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</td>
+                      <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-white text-center">
+                        <span className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs ${order.stato === 'completato' ? 'bg-green-900/30 text-green-400' : order.stato === 'in_attesa' ? 'bg-yellow-900/30 text-yellow-400' : 'bg-red-900/30 text-red-400'}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full mr-1 ${order.stato === 'completato' ? 'bg-green-400' : order.stato === 'in_attesa' ? 'bg-yellow-400' : 'bg-red-400'}`}></span>
+                          {order.stato === 'in_attesa' ? 'In attesa' : order.stato === 'completato' ? 'Completato' : 'Annullato'}
+                        </span>
+                      </td>
+                      <td className="py-1.5 sm:py-2 px-2 sm:px-3 text-center">
+                        <button
+                          onClick={() => handleViewDetails(order)}
+                          className="text-primary hover:text-primary-dark transition-colors duration-300 text-sm sm:text-base"
+                        >
+                          Dettagli
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // Renderizza la sezione attiva
   const renderActiveSection = () => {
     switch (activeSection) {
@@ -2920,6 +3177,8 @@ const Admin = () => {
         return <JobsManagement />;
       case 'customRequests':
         return <CustomRequestsManagement />;
+      case 'orders':
+        return <OrdersManagement />;
       default:
         return <Dashboard />;
     }
