@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "../components";
+import { Modal } from "../components/ui";
 import { useAuth } from "../contexts/AuthContext";
 import { packageService } from "../services";
 import orderService from "../services/orderService";
 import customRequestService from "../services/customRequestService";
 import testDriveService from "../services/testDriveService";
 import contactService from "../services/contactService";
+import { FaCheck, FaTimes, FaSpinner } from "react-icons/fa";
 
 const Profile = () => {
   const { currentUser, isAuthenticated, logout } = useAuth();
@@ -64,6 +66,22 @@ const Profile = () => {
   const [contactsLoading, setContactsLoading] = useState(false);
   const [contactsError, setContactsError] = useState("");
 
+  // Stati per i modali di dettaglio
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [isTestDriveModalOpen, setIsTestDriveModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  
+  // Stati per i dettagli degli elementi selezionati
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [selectedTestDrive, setSelectedTestDrive] = useState(null);
+  const [selectedContact, setSelectedContact] = useState(null);
+  
+  // Stati per il caricamento dei dettagli
+  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [detailsError, setDetailsError] = useState("");
+
   // Carica gli ordini dell'utente
   useEffect(() => {
     const fetchUserOrders = async () => {
@@ -100,28 +118,43 @@ const Profile = () => {
     fetchUserOrders();
   }, [activeTab]);
 
-  // Carica le richieste dell'utente
+  // Carica le richieste dell'utente (include richieste personalizzate, test drive e messaggi di contatto)
   useEffect(() => {
     const fetchUserRequests = async () => {
       if (activeTab === "requests") {
         setRequestsLoading(true);
+        setTestDrivesLoading(true);
+        setContactsLoading(true);
         setRequestsError("");
+        setTestDrivesError("");
+        setContactsError("");
+        
         try {
-          const userRequests = await customRequestService.getUserRequests();
+          // Carica tutte le tipologie di richieste in parallelo
+          const [userRequests, userTestDrives, userContacts] = await Promise.all([
+            customRequestService.getUserRequests(),
+            testDriveService.getUserTestDrives(),
+            contactService.getUserMessages()
+          ]);
+          
           setRequests(userRequests);
+          setTestDrives(userTestDrives);
+          setContacts(userContacts);
         } catch (error) {
           console.error("Errore durante il recupero delle richieste:", error);
           setRequestsError("Impossibile caricare le richieste. Riprova più tardi.");
         } finally {
           setRequestsLoading(false);
+          setTestDrivesLoading(false);
+          setContactsLoading(false);
         }
       }
     };
 
     fetchUserRequests();
   }, [activeTab]);
-
-  // Carica i test drive dell'utente
+  
+  // Carica i test drive dell'utente (solo quando si visualizza la tab dedicata)
   useEffect(() => {
     const fetchUserTestDrives = async () => {
       if (activeTab === "testdrives") {
@@ -142,7 +175,7 @@ const Profile = () => {
     fetchUserTestDrives();
   }, [activeTab]);
   
-  // Carica i messaggi di contatto dell'utente
+  // Carica i messaggi di contatto dell'utente (solo quando si visualizza la tab dedicata)
   useEffect(() => {
     const fetchUserContacts = async () => {
       if (activeTab === "contacts") {
@@ -219,6 +252,78 @@ const Profile = () => {
     }
   };
 
+  // Funzioni per gestire i modali di dettaglio
+  const handleViewOrderDetails = async (orderId) => {
+    try {
+      setDetailsLoading(true);
+      setDetailsError("");
+      const orderDetails = await orderService.getOrderById(orderId);
+      setSelectedOrder(orderDetails);
+      setIsOrderModalOpen(true);
+    } catch (error) {
+      console.error("Errore durante il caricamento dei dettagli dell'ordine:", error);
+      setDetailsError("Si è verificato un errore durante il caricamento dei dettagli dell'ordine.");
+    } finally {
+      setDetailsLoading(false);
+    }
+  };
+
+  const handleViewRequestDetails = async (requestId) => {
+    try {
+      setDetailsLoading(true);
+      setDetailsError("");
+      const requestDetails = await customRequestService.getById(requestId);
+      setSelectedRequest(requestDetails);
+      setIsRequestModalOpen(true);
+    } catch (error) {
+      console.error("Errore durante il caricamento dei dettagli della richiesta:", error);
+      setDetailsError("Si è verificato un errore durante il caricamento dei dettagli della richiesta.");
+    } finally {
+      setDetailsLoading(false);
+    }
+  };
+
+  const handleViewTestDriveDetails = async (testDriveId) => {
+    try {
+      setDetailsLoading(true);
+      setDetailsError("");
+      const testDriveDetails = await testDriveService.getById(testDriveId);
+      setSelectedTestDrive(testDriveDetails);
+      setIsTestDriveModalOpen(true);
+    } catch (error) {
+      console.error("Errore durante il caricamento dei dettagli del test drive:", error);
+      setDetailsError("Si è verificato un errore durante il caricamento dei dettagli del test drive.");
+    } finally {
+      setDetailsLoading(false);
+    }
+  };
+
+  const handleViewContactDetails = (contact) => {
+    setSelectedContact(contact);
+    setIsContactModalOpen(true);
+  };
+
+  // Funzioni per chiudere i modali
+  const closeOrderModal = () => {
+    setIsOrderModalOpen(false);
+    setSelectedOrder(null);
+  };
+
+  const closeRequestModal = () => {
+    setIsRequestModalOpen(false);
+    setSelectedRequest(null);
+  };
+
+  const closeTestDriveModal = () => {
+    setIsTestDriveModalOpen(false);
+    setSelectedTestDrive(null);
+  };
+
+  const closeContactModal = () => {
+    setIsContactModalOpen(false);
+    setSelectedContact(null);
+  };
+
   return (
     <div className="min-h-screen bg-secondary-950 py-12 pt-28">
       <div className="container mx-auto px-4">
@@ -264,26 +369,7 @@ const Profile = () => {
             >
               Richieste
             </button>
-            <button
-              onClick={() => setActiveTab("testdrives")}
-              className={`pb-4 font-medium text-sm ${
-                activeTab === "testdrives"
-                  ? "text-red-500 border-b-2 border-red-500"
-                  : "text-secondary-400 hover:text-white"
-              }`}
-            >
-              Test Drive
-            </button>
-            <button
-              onClick={() => setActiveTab("contacts")}
-              className={`pb-4 font-medium text-sm ${
-                activeTab === "contacts"
-                  ? "text-red-500 border-b-2 border-red-500"
-                  : "text-secondary-400 hover:text-white"
-              }`}
-            >
-              Contatti
-            </button>
+            {/* I tab Test Drive e Contatti sono stati rimossi perché il loro contenuto è stato integrato nella sezione Richieste */}
             <button
               onClick={() => setActiveTab("settings")}
               className={`pb-4 font-medium text-sm ${
@@ -586,7 +672,11 @@ const Profile = () => {
                         )}
                       </div>
                       <div className="bg-secondary-800 p-4 flex justify-end">
-                        <Button variant="secondary" size="sm">
+                        <Button 
+                          variant="secondary" 
+                          size="sm"
+                          onClick={() => handleViewOrderDetails(order._id || order.id)}
+                        >
                           Visualizza dettagli
                         </Button>
                       </div>
@@ -609,129 +699,307 @@ const Profile = () => {
               <h2 className="text-xl font-bold text-white mb-6">
                 Le tue richieste
               </h2>
-
-              {requestsLoading ? (
-                <div className="text-center py-12">
-                  <p className="text-secondary-400">Caricamento richieste...</p>
-                </div>
-              ) : requestsError ? (
-                <div className="text-center py-12">
-                  <p className="text-red-400">{requestsError}</p>
-                </div>
-              ) : requests.length > 0 ? (
-                <div className="space-y-6">
-                  {requests.map((request) => (
-                    <div
-                      key={request._id}
-                      className="border border-secondary-800 rounded-lg overflow-hidden"
-                    >
-                      <div className="bg-secondary-800 p-4 flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div>
-                          <p className="text-white font-medium">
-                            {request.titolo || request.title}
-                          </p>
-                          <p className="text-secondary-400 text-sm">
-                            {new Date(request.createdAt).toLocaleDateString("it-IT")}
-                          </p>
-                        </div>
-                        <div className="mt-2 md:mt-0">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              request.status === "completato" || request.status === "accettato"
-                                ? "bg-green-900/50 text-green-400"
-                                : request.status === "in_attesa"
-                                ? "bg-yellow-900/50 text-yellow-400"
-                                : request.status === "rifiutato"
-                                ? "bg-red-900/50 text-red-400"
-                                : "bg-blue-900/50 text-blue-400"
-                            }`}
-                          >
-                            {request.status === "in_attesa" ? "In attesa" :
-                             request.status === "in_lavorazione" ? "In lavorazione" :
-                             request.status === "preventivo_inviato" ? "Preventivo inviato" :
-                             request.status === "accettato" ? "Accettato" :
-                             request.status === "rifiutato" ? "Rifiutato" :
-                             request.status === "completato" ? "Completato" :
-                             request.status}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <p className="text-secondary-300">{request.descrizione || request.description}</p>
-                        {request.budget && (
-                          <p className="text-secondary-300 mt-2">Budget: € {request.budget.toLocaleString("it-IT")}</p>
-                        )}
-                        {request.timeline && (
-                          <p className="text-secondary-300 mt-2">Tempistica: {request.timeline}</p>
-                        )}
-                        {request.admin_response && request.admin_response.text && (
-                          <div className="mt-4 p-3 bg-secondary-800 rounded">
-                            <p className="text-white font-medium mb-1">Risposta:</p>
-                            <p className="text-secondary-300">{request.admin_response.text}</p>
-                            {request.admin_response.quote && (
-                              <p className="text-secondary-300 mt-2">Preventivo: € {request.admin_response.quote.toLocaleString("it-IT")}</p>
-                            )}
+              
+              {/* Sezione Richieste Personalizzate */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-white mb-4 border-b border-secondary-800 pb-2">
+                  Richieste personalizzate
+                </h3>
+                
+                {requestsLoading ? (
+                  <div className="text-center py-6">
+                    <p className="text-secondary-400">Caricamento richieste...</p>
+                  </div>
+                ) : requestsError ? (
+                  <div className="text-center py-6">
+                    <p className="text-red-400">{requestsError}</p>
+                  </div>
+                ) : requests.length > 0 ? (
+                  <div className="space-y-6">
+                    {requests.map((request) => (
+                      <div
+                        key={request._id}
+                        className="border border-secondary-800 rounded-lg overflow-hidden"
+                      >
+                        <div className="bg-secondary-800 p-4 flex flex-col md:flex-row md:items-center md:justify-between">
+                          <div>
+                            <p className="text-white font-medium">
+                              {request.titolo || request.title}
+                            </p>
+                            <p className="text-secondary-400 text-sm">
+                              {new Date(request.createdAt).toLocaleDateString("it-IT")}
+                            </p>
                           </div>
-                        )}
-                      </div>
-                      <div className="bg-secondary-800 p-4 flex justify-end space-x-3">
-                        {request.status === "preventivo_inviato" && (
-                          <>
-                            <Button 
-                              variant="primary" 
-                              size="sm"
-                              onClick={() => {
-                                // Implementare la logica per accettare il preventivo
-                                // customRequestService.acceptQuote(request._id)
-                              }}
+                          <div className="mt-2 md:mt-0">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                request.status === "completato" || request.status === "accettato"
+                                  ? "bg-green-900/50 text-green-400"
+                                  : request.status === "in_attesa"
+                                  ? "bg-yellow-900/50 text-yellow-400"
+                                  : request.status === "rifiutato"
+                                  ? "bg-red-900/50 text-red-400"
+                                  : "bg-blue-900/50 text-blue-400"
+                              }`}
                             >
-                              Accetta preventivo
-                            </Button>
+                              {request.status === "in_attesa" ? "In attesa" :
+                               request.status === "in_lavorazione" ? "In lavorazione" :
+                               request.status === "preventivo_inviato" ? "Preventivo inviato" :
+                               request.status === "accettato" ? "Accettato" :
+                               request.status === "rifiutato" ? "Rifiutato" :
+                               request.status === "completato" ? "Completato" :
+                               request.status}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-4">
+                          <p className="text-secondary-300">{request.descrizione || request.description}</p>
+                          {request.budget && (
+                            <p className="text-secondary-300 mt-2">Budget: € {request.budget.toLocaleString("it-IT")}</p>
+                          )}
+                          {request.timeline && (
+                            <p className="text-secondary-300 mt-2">Tempistica: {request.timeline}</p>
+                          )}
+                          {request.admin_response && request.admin_response.text && (
+                            <div className="mt-4 p-3 bg-secondary-800 rounded">
+                              <p className="text-white font-medium mb-1">Risposta:</p>
+                              <p className="text-secondary-300">{request.admin_response.text}</p>
+                              {request.admin_response.quote && (
+                                <p className="text-secondary-300 mt-2">Preventivo: € {request.admin_response.quote.toLocaleString("it-IT")}</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div className="bg-secondary-800 p-4 flex justify-end space-x-3">
+                          {request.status === "preventivo_inviato" && (
+                            <>
+                              <Button 
+                                variant="primary" 
+                                size="sm"
+                                onClick={() => {
+                                  // Implementare la logica per accettare il preventivo
+                                  // customRequestService.acceptQuote(request._id)
+                                }}
+                              >
+                                Accetta preventivo
+                              </Button>
+                              <Button 
+                                variant="danger" 
+                                size="sm"
+                                onClick={() => {
+                                  // Implementare la logica per rifiutare il preventivo
+                                  // customRequestService.cancel(request._id)
+                                }}
+                              >
+                                Rifiuta
+                              </Button>
+                            </>
+                          )}
+                          {request.status === "in_attesa" && (
                             <Button 
                               variant="danger" 
                               size="sm"
                               onClick={() => {
-                                // Implementare la logica per rifiutare il preventivo
+                                // Implementare la logica per annullare la richiesta
                                 // customRequestService.cancel(request._id)
                               }}
                             >
-                              Rifiuta
+                              Annulla richiesta
                             </Button>
-                          </>
-                        )}
-                        {request.status === "in_attesa" && (
+                          )}
                           <Button 
-                            variant="danger" 
+                            variant="secondary" 
                             size="sm"
-                            onClick={() => {
-                              // Implementare la logica per annullare la richiesta
-                              // customRequestService.cancel(request._id)
-                            }}
+                            onClick={() => handleViewRequestDetails(request._id)}
                           >
-                            Annulla richiesta
+                            Visualizza dettagli
                           </Button>
-                        )}
-                        <Button 
-                          variant="secondary" 
-                          size="sm"
-                          onClick={() => {
-                            // Implementare la logica per visualizzare i dettagli
-                            // navigate(`/requests/${request._id}`)
-                          }}
-                        >
-                          Visualizza dettagli
-                        </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-secondary-400">
-                    Non hai ancora effettuato richieste.
-                  </p>
-                </div>
-              )}
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <p className="text-secondary-400">
+                      Non hai ancora effettuato richieste personalizzate.
+                    </p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Sezione Test Drive */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-white mb-4 border-b border-secondary-800 pb-2">
+                  Test Drive
+                </h3>
+                
+                {testDrivesLoading ? (
+                  <div className="text-center py-6">
+                    <p className="text-secondary-400">Caricamento test drive...</p>
+                  </div>
+                ) : testDrivesError ? (
+                  <div className="text-center py-6">
+                    <p className="text-red-400">{testDrivesError}</p>
+                  </div>
+                ) : testDrives.length > 0 ? (
+                  <div className="space-y-6">
+                    {testDrives.map((testDrive) => (
+                      <div
+                        key={testDrive._id}
+                        className="border border-secondary-800 rounded-lg overflow-hidden"
+                      >
+                        <div className="bg-secondary-800 p-4 flex flex-col md:flex-row md:items-center md:justify-between">
+                          <div>
+                            <p className="text-white font-medium">
+                              {testDrive.modello?.nome || "Modello non disponibile"}
+                            </p>
+                            <p className="text-secondary-400 text-sm">
+                              {new Date(testDrive.data).toLocaleDateString("it-IT")} - {testDrive.ora}
+                            </p>
+                          </div>
+                          <div className="mt-2 md:mt-0">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                testDrive.stato === "completato"
+                                  ? "bg-green-900/50 text-green-400"
+                                  : testDrive.stato === "confermato"
+                                  ? "bg-blue-900/50 text-blue-400"
+                                  : testDrive.stato === "richiesto"
+                                  ? "bg-yellow-900/50 text-yellow-400"
+                                  : "bg-red-900/50 text-red-400"
+                              }`}
+                            >
+                              {testDrive.stato === "richiesto" ? "Richiesto" :
+                               testDrive.stato === "confermato" ? "Confermato" :
+                               testDrive.stato === "completato" ? "Completato" :
+                               testDrive.stato === "annullato" ? "Annullato" :
+                               testDrive.stato}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-4">
+                          <p className="text-secondary-300">Luogo: {testDrive.luogo}</p>
+                          {testDrive.note && (
+                            <p className="text-secondary-300 mt-2">Note: {testDrive.note}</p>
+                          )}
+                        </div>
+                        <div className="bg-secondary-800 p-4 flex justify-end space-x-3">
+                          {testDrive.stato === "richiesto" && (
+                            <Button 
+                              variant="danger" 
+                              size="sm"
+                              onClick={() => {
+                                // Implementare la logica per annullare il test drive
+                                // testDriveService.cancel(testDrive._id)
+                              }}
+                            >
+                              Annulla test drive
+                            </Button>
+                          )}
+                          <Button 
+                            variant="secondary" 
+                            size="sm"
+                            onClick={() => handleViewTestDriveDetails(testDrive._id)}
+                          >
+                            Visualizza dettagli
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <p className="text-secondary-400">
+                      Non hai ancora prenotato test drive.
+                    </p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Sezione Messaggi di Contatto */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-4 border-b border-secondary-800 pb-2">
+                  Messaggi di contatto
+                </h3>
+                
+                {contactsLoading ? (
+                  <div className="text-center py-6">
+                    <p className="text-secondary-400">Caricamento messaggi...</p>
+                  </div>
+                ) : contactsError ? (
+                  <div className="text-center py-6">
+                    <p className="text-red-400">{contactsError}</p>
+                  </div>
+                ) : contacts.length > 0 ? (
+                  <div className="space-y-6">
+                    {contacts.map((contact) => (
+                      <div
+                        key={contact._id}
+                        className="border border-secondary-800 rounded-lg overflow-hidden"
+                      >
+                        <div className="bg-secondary-800 p-4 flex flex-col md:flex-row md:items-center md:justify-between">
+                          <div>
+                            <p className="text-white font-medium">
+                              {contact.nome}
+                            </p>
+                            <p className="text-secondary-400 text-sm">
+                              {new Date(contact.dataInvio).toLocaleDateString("it-IT")}
+                            </p>
+                          </div>
+                          <div className="mt-2 md:mt-0">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                contact.letto
+                                  ? "bg-green-900/50 text-green-400"
+                                  : "bg-yellow-900/50 text-yellow-400"
+                              }`}
+                            >
+                              {contact.letto ? "Risposto" : "In attesa"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-4">
+                          <p className="text-secondary-300">{contact.messaggio}</p>
+                          {contact.allegati && contact.allegati.length > 0 && (
+                            <div className="mt-4">
+                              <p className="text-white font-medium mb-2">Allegati:</p>
+                              <ul className="space-y-1">
+                                {contact.allegati.map((allegato, index) => (
+                                  <li key={index}>
+                                    <a 
+                                      href={allegato.url} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-blue-400 hover:underline"
+                                    >
+                                      {allegato.filename}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                        <div className="bg-secondary-800 p-4 flex justify-end">
+                          <Button 
+                            variant="secondary" 
+                            size="sm"
+                            onClick={() => handleViewContactDetails(contact)}
+                          >
+                            Visualizza dettagli
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <p className="text-secondary-400">
+                      Non hai ancora inviato messaggi di contatto.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -1025,6 +1293,382 @@ const Profile = () => {
           )}
         </motion.div>
       </div>
+
+      {/* Modali per visualizzare i dettagli */}
+      
+      {/* Modale Dettagli Ordine */}
+      <Modal
+        isOpen={isOrderModalOpen}
+        onClose={closeOrderModal}
+        title="Dettagli Ordine"
+        size="lg"
+      >
+        {detailsLoading ? (
+          <div className="flex justify-center items-center py-8">
+            <FaSpinner className="animate-spin text-red-500 text-2xl" />
+          </div>
+        ) : detailsError ? (
+          <div className="text-center py-6">
+            <p className="text-red-400">{detailsError}</p>
+          </div>
+        ) : selectedOrder ? (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h3 className="text-white font-medium mb-2">Informazioni Ordine</h3>
+                <p className="text-secondary-300">ID: {selectedOrder._id || selectedOrder.id}</p>
+                <p className="text-secondary-300">
+                  Data: {new Date(selectedOrder.dataAcquisto || selectedOrder.dataCreazione || selectedOrder.date || selectedOrder.createdAt).toLocaleDateString("it-IT")}
+                </p>
+                <p className="text-secondary-300">
+                  Stato: <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    selectedOrder.stato === "completato" || selectedOrder.status === "completed" || selectedOrder.status === "Completato"
+                      ? "bg-green-900/50 text-green-400"
+                      : "bg-yellow-900/50 text-yellow-400"
+                  }`}>
+                    {selectedOrder.stato === "completato" || selectedOrder.status === "completed" ? "Completato" : selectedOrder.stato || selectedOrder.status}
+                  </span>
+                </p>
+                <p className="text-secondary-300">
+                  Totale: € {(selectedOrder.totale || selectedOrder.total || selectedOrder.amount || 0).toLocaleString("it-IT")}
+                </p>
+              </div>
+              
+              <div>
+                <h3 className="text-white font-medium mb-2">Informazioni Spedizione</h3>
+                <p className="text-secondary-300">Nome: {selectedOrder.shipping?.name || currentUser.name}</p>
+                <p className="text-secondary-300">Indirizzo: {selectedOrder.shipping?.address || currentUser.address}</p>
+                <p className="text-secondary-300">Città: {selectedOrder.shipping?.city || currentUser.city}</p>
+                <p className="text-secondary-300">CAP: {selectedOrder.shipping?.postalCode || currentUser.postalCode}</p>
+                <p className="text-secondary-300">Paese: {selectedOrder.shipping?.country || currentUser.country}</p>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-medium mb-2">Articoli</h3>
+              {selectedOrder.items && selectedOrder.items.length > 0 ? (
+                <div className="bg-secondary-800 rounded-lg overflow-hidden">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-secondary-700">
+                        <th className="px-4 py-2 text-left text-white">Articolo</th>
+                        <th className="px-4 py-2 text-right text-white">Prezzo</th>
+                        <th className="px-4 py-2 text-right text-white">Quantità</th>
+                        <th className="px-4 py-2 text-right text-white">Totale</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedOrder.items.map((item, index) => (
+                        <tr key={index} className="border-t border-secondary-700">
+                          <td className="px-4 py-3 text-secondary-300">{item.nome || item.name}</td>
+                          <td className="px-4 py-3 text-secondary-300 text-right">€ {(item.prezzo || item.price || 0).toLocaleString("it-IT")}</td>
+                          <td className="px-4 py-3 text-secondary-300 text-right">{item.quantita || item.quantity || 1}</td>
+                          <td className="px-4 py-3 text-secondary-300 text-right">€ {((item.prezzo || item.price || 0) * (item.quantita || item.quantity || 1)).toLocaleString("it-IT")}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : selectedOrder.package ? (
+                <div className="bg-secondary-800 rounded-lg p-4">
+                  <p className="text-secondary-300">
+                    {selectedOrder.package.nome || "Pacchetto"}: € {(selectedOrder.package.prezzo || 0).toLocaleString("it-IT")}
+                  </p>
+                  {selectedOrder.package.descrizione && (
+                    <p className="text-secondary-300 mt-2">{selectedOrder.package.descrizione}</p>
+                  )}
+                </div>
+              ) : (
+                <div className="bg-secondary-800 rounded-lg p-4">
+                  <p className="text-secondary-300">
+                    {selectedOrder.packageName || "Pacchetto"}: € {(selectedOrder.amount || 0).toLocaleString("it-IT")}
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            <div>
+              <h3 className="text-white font-medium mb-2">Pagamento</h3>
+              <div className="bg-secondary-800 rounded-lg p-4">
+                <p className="text-secondary-300">Metodo: {selectedOrder.paymentMethod || "Carta di credito"}</p>
+                {selectedOrder.paymentResult && (
+                  <>
+                    <p className="text-secondary-300">ID: {selectedOrder.paymentResult.id}</p>
+                    <p className="text-secondary-300">Stato: {selectedOrder.paymentResult.status}</p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-6">
+            <p className="text-secondary-400">Nessun dettaglio disponibile</p>
+          </div>
+        )}
+      </Modal>
+
+      {/* Modale Dettagli Richiesta */}
+      <Modal
+        isOpen={isRequestModalOpen}
+        onClose={closeRequestModal}
+        title="Dettagli Richiesta Personalizzata"
+        size="lg"
+      >
+        {detailsLoading ? (
+          <div className="flex justify-center items-center py-8">
+            <FaSpinner className="animate-spin text-red-500 text-2xl" />
+          </div>
+        ) : detailsError ? (
+          <div className="text-center py-6">
+            <p className="text-red-400">{detailsError}</p>
+          </div>
+        ) : selectedRequest ? (
+          <div className="space-y-6">
+            <div className="bg-secondary-800 rounded-lg p-4">
+              <h3 className="text-white font-medium mb-2">{selectedRequest.titolo || selectedRequest.title}</h3>
+              <p className="text-secondary-300 mb-2">
+                Data: {new Date(selectedRequest.createdAt).toLocaleDateString("it-IT")}
+              </p>
+              <p className="text-secondary-300 mb-2">
+                Stato: <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  selectedRequest.status === "completato" || selectedRequest.status === "accettato"
+                    ? "bg-green-900/50 text-green-400"
+                    : selectedRequest.status === "in_attesa"
+                    ? "bg-yellow-900/50 text-yellow-400"
+                    : selectedRequest.status === "rifiutato"
+                    ? "bg-red-900/50 text-red-400"
+                    : "bg-blue-900/50 text-blue-400"
+                }`}>
+                  {selectedRequest.status === "in_attesa" ? "In attesa" :
+                   selectedRequest.status === "in_lavorazione" ? "In lavorazione" :
+                   selectedRequest.status === "preventivo_inviato" ? "Preventivo inviato" :
+                   selectedRequest.status === "accettato" ? "Accettato" :
+                   selectedRequest.status === "rifiutato" ? "Rifiutato" :
+                   selectedRequest.status === "completato" ? "Completato" :
+                   selectedRequest.status}
+                </span>
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-medium mb-2">Descrizione</h3>
+              <div className="bg-secondary-800 rounded-lg p-4">
+                <p className="text-secondary-300">{selectedRequest.descrizione || selectedRequest.description}</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {selectedRequest.budget && (
+                <div>
+                  <h3 className="text-white font-medium mb-2">Budget</h3>
+                  <div className="bg-secondary-800 rounded-lg p-4">
+                    <p className="text-secondary-300">€ {selectedRequest.budget.toLocaleString("it-IT")}</p>
+                  </div>
+                </div>
+              )}
+              
+              {selectedRequest.timeline && (
+                <div>
+                  <h3 className="text-white font-medium mb-2">Tempistica</h3>
+                  <div className="bg-secondary-800 rounded-lg p-4">
+                    <p className="text-secondary-300">{selectedRequest.timeline}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {selectedRequest.admin_response && selectedRequest.admin_response.text && (
+              <div>
+                <h3 className="text-white font-medium mb-2">Risposta dell'amministratore</h3>
+                <div className="bg-secondary-800 rounded-lg p-4">
+                  <p className="text-secondary-300">{selectedRequest.admin_response.text}</p>
+                  {selectedRequest.admin_response.quote && (
+                    <p className="text-secondary-300 mt-4 font-medium">Preventivo: € {selectedRequest.admin_response.quote.toLocaleString("it-IT")}</p>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            {selectedRequest.status === "preventivo_inviato" && (
+              <div className="flex justify-end space-x-3">
+                <Button 
+                  variant="primary" 
+                  onClick={() => {
+                    // Implementare la logica per accettare il preventivo
+                    // customRequestService.acceptQuote(selectedRequest._id)
+                  }}
+                >
+                  Accetta preventivo
+                </Button>
+                <Button 
+                  variant="danger" 
+                  onClick={() => {
+                    // Implementare la logica per rifiutare il preventivo
+                    // customRequestService.cancel(selectedRequest._id)
+                  }}
+                >
+                  Rifiuta
+                </Button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-6">
+            <p className="text-secondary-400">Nessun dettaglio disponibile</p>
+          </div>
+        )}
+      </Modal>
+
+      {/* Modale Dettagli Test Drive */}
+      <Modal
+        isOpen={isTestDriveModalOpen}
+        onClose={closeTestDriveModal}
+        title="Dettagli Test Drive"
+        size="md"
+      >
+        {detailsLoading ? (
+          <div className="flex justify-center items-center py-8">
+            <FaSpinner className="animate-spin text-red-500 text-2xl" />
+          </div>
+        ) : detailsError ? (
+          <div className="text-center py-6">
+            <p className="text-red-400">{detailsError}</p>
+          </div>
+        ) : selectedTestDrive ? (
+          <div className="space-y-6">
+            <div className="bg-secondary-800 rounded-lg p-4">
+              <h3 className="text-white font-medium mb-2">{selectedTestDrive.modello?.nome || "Modello non disponibile"}</h3>
+              <p className="text-secondary-300 mb-2">
+                Data: {new Date(selectedTestDrive.data).toLocaleDateString("it-IT")}
+              </p>
+              <p className="text-secondary-300 mb-2">
+                Ora: {selectedTestDrive.ora}
+              </p>
+              <p className="text-secondary-300 mb-2">
+                Stato: <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  selectedTestDrive.stato === "completato"
+                    ? "bg-green-900/50 text-green-400"
+                    : selectedTestDrive.stato === "confermato"
+                    ? "bg-blue-900/50 text-blue-400"
+                    : selectedTestDrive.stato === "richiesto"
+                    ? "bg-yellow-900/50 text-yellow-400"
+                    : "bg-red-900/50 text-red-400"
+                }`}>
+                  {selectedTestDrive.stato === "richiesto" ? "Richiesto" :
+                   selectedTestDrive.stato === "confermato" ? "Confermato" :
+                   selectedTestDrive.stato === "completato" ? "Completato" :
+                   selectedTestDrive.stato === "annullato" ? "Annullato" :
+                   selectedTestDrive.stato}
+                </span>
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-medium mb-2">Luogo</h3>
+              <div className="bg-secondary-800 rounded-lg p-4">
+                <p className="text-secondary-300">{selectedTestDrive.luogo}</p>
+              </div>
+            </div>
+            
+            {selectedTestDrive.note && (
+              <div>
+                <h3 className="text-white font-medium mb-2">Note</h3>
+                <div className="bg-secondary-800 rounded-lg p-4">
+                  <p className="text-secondary-300">{selectedTestDrive.note}</p>
+                </div>
+              </div>
+            )}
+            
+            {selectedTestDrive.stato === "richiesto" && (
+              <div className="flex justify-end">
+                <Button 
+                  variant="danger" 
+                  onClick={() => {
+                    // Implementare la logica per annullare il test drive
+                    // testDriveService.cancel(selectedTestDrive._id)
+                  }}
+                >
+                  Annulla test drive
+                </Button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-6">
+            <p className="text-secondary-400">Nessun dettaglio disponibile</p>
+          </div>
+        )}
+      </Modal>
+
+      {/* Modale Dettagli Contatto */}
+      <Modal
+        isOpen={isContactModalOpen}
+        onClose={closeContactModal}
+        title="Dettagli Messaggio"
+        size="md"
+      >
+        {selectedContact ? (
+          <div className="space-y-6">
+            <div className="bg-secondary-800 rounded-lg p-4">
+              <h3 className="text-white font-medium mb-2">{selectedContact.nome}</h3>
+              <p className="text-secondary-300 mb-2">
+                Data: {new Date(selectedContact.dataInvio).toLocaleDateString("it-IT")}
+              </p>
+              <p className="text-secondary-300 mb-2">
+                Stato: <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  selectedContact.letto
+                    ? "bg-green-900/50 text-green-400"
+                    : "bg-yellow-900/50 text-yellow-400"
+                }`}>
+                  {selectedContact.letto ? "Risposto" : "In attesa"}
+                </span>
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-medium mb-2">Messaggio</h3>
+              <div className="bg-secondary-800 rounded-lg p-4">
+                <p className="text-secondary-300">{selectedContact.messaggio}</p>
+              </div>
+            </div>
+            
+            {selectedContact.allegati && selectedContact.allegati.length > 0 && (
+              <div>
+                <h3 className="text-white font-medium mb-2">Allegati</h3>
+                <div className="bg-secondary-800 rounded-lg p-4">
+                  <ul className="space-y-2">
+                    {selectedContact.allegati.map((allegato, index) => (
+                      <li key={index}>
+                        <a 
+                          href={allegato.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:underline"
+                        >
+                          {allegato.filename}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            
+            {selectedContact.risposta && (
+              <div>
+                <h3 className="text-white font-medium mb-2">Risposta</h3>
+                <div className="bg-secondary-800 rounded-lg p-4">
+                  <p className="text-secondary-300">{selectedContact.risposta}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-6">
+            <p className="text-secondary-400">Nessun dettaglio disponibile</p>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
