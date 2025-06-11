@@ -3,6 +3,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "../components";
 import { useAuth } from "../contexts/AuthContext";
+import { packageService } from "../services";
+import orderService from "../services/orderService";
 
 const Profile = () => {
   const { currentUser, isAuthenticated, logout } = useAuth();
@@ -42,23 +44,46 @@ const Profile = () => {
   // Tabs per la navigazione nella pagina profilo
   const [activeTab, setActiveTab] = useState("profile");
 
-  // Dati fittizi per gli ordini e le richieste
-  const [orders, setOrders] = useState([
-    {
-      id: "ORD-001",
-      date: "2023-10-15",
-      status: "Completato",
-      total: 250000,
-      items: [{ name: "Consulenza Personalizzazione", price: 250000 }],
-    },
-    {
-      id: "ORD-002",
-      date: "2023-11-20",
-      status: "In elaborazione",
-      total: 500000,
-      items: [{ name: "Acconto Restomod Alfa Romeo", price: 500000 }],
-    },
-  ]);
+  // Stato per gli ordini e le richieste
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersError, setOrdersError] = useState("");
+
+  // Carica gli ordini dell'utente
+  useEffect(() => {
+    const fetchUserOrders = async () => {
+      if (activeTab === "orders") {
+        setOrdersLoading(true);
+        setOrdersError("");
+        try {
+          // Ottieni sia gli ordini dei pacchetti che gli ordini generali
+          const [packageOrders, generalOrders] = await Promise.all([
+            packageService.getUserOrders(),
+            orderService.getUserOrders()
+          ]);
+          
+          // Combina gli ordini
+          const allOrders = [...packageOrders, ...generalOrders];
+          
+          // Ordina gli ordini per data (dal più recente)
+          const sortedOrders = allOrders.sort((a, b) => {
+            const dateA = new Date(a.dataAcquisto || a.dataCreazione || a.date || a.createdAt);
+            const dateB = new Date(b.dataAcquisto || b.dataCreazione || b.date || b.createdAt);
+            return dateB - dateA;
+          });
+          
+          setOrders(sortedOrders);
+        } catch (error) {
+          console.error("Errore durante il recupero degli ordini:", error);
+          setOrdersError("Impossibile caricare gli ordini. Riprova più tardi.");
+        } finally {
+          setOrdersLoading(false);
+        }
+      }
+    };
+
+    fetchUserOrders();
+  }, [activeTab]);
 
   const [requests, setRequests] = useState([
     {
@@ -417,32 +442,40 @@ const Profile = () => {
                 I tuoi ordini
               </h2>
 
-              {orders.length > 0 ? (
+              {ordersLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-secondary-400">Caricamento ordini...</p>
+                </div>
+              ) : ordersError ? (
+                <div className="text-center py-12">
+                  <p className="text-red-400">{ordersError}</p>
+                </div>
+              ) : orders.length > 0 ? (
                 <div className="space-y-6">
                   {orders.map((order) => (
                     <div
-                      key={order.id}
+                      key={order._id || order.id}
                       className="border border-secondary-800 rounded-lg overflow-hidden"
                     >
                       <div className="bg-secondary-800 p-4 flex flex-col md:flex-row md:items-center md:justify-between">
                         <div>
-                          <p className="text-white font-medium">{order.id}</p>
+                          <p className="text-white font-medium">{order._id || order.id}</p>
                           <p className="text-secondary-400 text-sm">
-                            {new Date(order.date).toLocaleDateString("it-IT")}
+                            {new Date(order.dataAcquisto || order.dataCreazione || order.date || order.createdAt).toLocaleDateString("it-IT")}
                           </p>
                         </div>
                         <div className="mt-2 md:mt-0 flex items-center">
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              order.status === "Completato"
+                              order.stato === "completato" || order.status === "completed" || order.status === "Completato"
                                 ? "bg-green-900/50 text-green-400"
                                 : "bg-yellow-900/50 text-yellow-400"
                             }`}
                           >
-                            {order.status}
+                            {order.stato === "completato" || order.status === "completed" ? "Completato" : order.stato || order.status}
                           </span>
                           <span className="ml-4 text-white font-medium">
-                            € {order.total.toLocaleString("it-IT")}
+                            € {(order.totale || order.total || order.amount || 0).toLocaleString("it-IT")}
                           </span>
                         </div>
                       </div>
@@ -450,16 +483,26 @@ const Profile = () => {
                         <h3 className="text-white font-medium mb-2">
                           Dettagli ordine
                         </h3>
-                        <ul className="space-y-2">
-                          {order.items.map((item, index) => (
-                            <li key={index} className="flex justify-between">
-                              <span className="text-secondary-300">{item.name}</span>
-                              <span className="text-secondary-300">
-                                € {item.price.toLocaleString("it-IT")}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
+                        {order.items && order.items.length > 0 ? (
+                          <ul className="space-y-2">
+                            {order.items.map((item, index) => (
+                              <li key={index} className="flex justify-between">
+                                <span className="text-secondary-300">{item.nome || item.name}</span>
+                                <span className="text-secondary-300">
+                                  € {(item.prezzo || item.price || 0).toLocaleString("it-IT")}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : order.package ? (
+                          <p className="text-secondary-300">
+                            {order.package.nome || "Pacchetto"}: € {(order.package.prezzo || 0).toLocaleString("it-IT")}
+                          </p>
+                        ) : (
+                          <p className="text-secondary-300">
+                            {order.packageName || "Pacchetto"}: € {(order.amount || 0).toLocaleString("it-IT")}
+                          </p>
+                        )}
                       </div>
                       <div className="bg-secondary-800 p-4 flex justify-end">
                         <Button variant="secondary" size="sm">

@@ -44,7 +44,7 @@ const packageService = {
   // Ottieni gli ordini dell'utente corrente
   getUserOrders: async () => {
     try {
-      const response = await api.get('/packages/ordini');
+      const response = await api.get('/packages/user/orders');
       return response.data;
     } catch (error) {
       throw error;

@@ -96,35 +96,47 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((count, item) => count + item.quantity, 0);
   };
 
-  // Simula il processo di checkout
+  // Processo di checkout
   const checkout = async (customerInfo) => {
     try {
       setLoading(true);
       setError(null);
       
-      // Simula una richiesta API
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Importa il servizio degli ordini
+      const orderService = (await import('../services/orderService')).default;
       
-      // Crea un ordine fittizio
-      const order = {
-        id: `order_${Date.now()}`,
-        items: [...cartItems],
-        total: getCartTotal(),
-        customer: customerInfo,
-        date: new Date().toISOString(),
-        status: 'completed'
+      // Prepara i dati dell'ordine
+      const orderData = {
+        items: cartItems.map(item => ({
+          type: item.type.toLowerCase(),
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image
+        })),
+        totale: getCartTotal(),
+        infoCliente: {
+          nome: customerInfo.firstName,
+          cognome: customerInfo.lastName,
+          email: customerInfo.email,
+          indirizzo: customerInfo.address,
+          citta: customerInfo.city,
+          cap: customerInfo.postalCode,
+          paese: customerInfo.country,
+          metodoPagamento: customerInfo.paymentMethod
+        }
       };
       
-      // Salva l'ordine nel localStorage
-      const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-      savedOrders.push(order);
-      localStorage.setItem('orders', JSON.stringify(savedOrders));
+      // Crea l'ordine nel backend
+      const order = await orderService.createOrder(orderData);
       
       // Svuota il carrello
       clearCart();
       
       return order;
     } catch (err) {
+      console.error('Errore durante il checkout:', err);
       setError('Si è verificato un errore durante il checkout. Riprova più tardi.');
       throw err;
     } finally {
@@ -133,10 +145,12 @@ export const CartProvider = ({ children }) => {
   };
 
   // Ottieni gli ordini dell'utente
-  const getOrders = () => {
+  const getOrders = async () => {
     try {
-      const savedOrders = localStorage.getItem('orders');
-      return savedOrders ? JSON.parse(savedOrders) : [];
+      // Importa il servizio degli ordini
+      const orderService = (await import('../services/orderService')).default;
+      // Ottieni gli ordini dal backend
+      return await orderService.getUserOrders();
     } catch (err) {
       console.error('Errore nel recupero degli ordini:', err);
       return [];
