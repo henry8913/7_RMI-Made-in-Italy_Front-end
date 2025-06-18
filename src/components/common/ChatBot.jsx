@@ -14,9 +14,9 @@ const ChatBot = () => {
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
   const location = useLocation();
-
-  // Scroll automatico come richiesto dall'utente
-  const [autoScroll] = useState(false);
+  // Riferimenti per lo scrolling
+  const messagesContainerRef = useRef(null);
+  const aiMessageRefs = useRef({});
   
 
   // Check if HenryAI service is available
@@ -32,6 +32,30 @@ const ChatBot = () => {
     
     checkStatus();
   }, []);
+  
+  // Effetto per gestire l'autoscroll quando vengono aggiunti nuovi messaggi
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      
+      // Se l'ultimo messaggio è dell'AI, scorri alla sua posizione
+      if (lastMessage.sender === 'ai') {
+        // Utilizziamo setTimeout per assicurarci che il DOM sia stato aggiornato
+        setTimeout(() => {
+          const lastAiMessageRef = aiMessageRefs.current[messages.length - 1];
+          if (lastAiMessageRef && messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTo({
+              top: lastAiMessageRef.offsetTop,
+              behavior: 'smooth'
+            });
+          }
+        }, 100);
+      } else {
+        // Se è un messaggio dell'utente, scorri in fondo per vedere il messaggio di caricamento
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [messages]);
   
   // Auto-open chatbot when user scrolls on the homepage
   useEffect(() => {
@@ -50,6 +74,8 @@ const ChatBot = () => {
         if (scrolledVh >= 75) {
           setIsOpen(true);
           if (messages.length === 0) {
+            // Aggiungiamo il messaggio di benvenuto
+            // L'useEffect che monitora i messaggi si occuperà di scrollare all'inizio della risposta
             setMessages([{
               text: 'Ciao! Sono Henry, l\'assistente virtuale di RMI Made in Italy. Come posso aiutarti oggi?',
               sender: 'ai'
@@ -87,6 +113,7 @@ const ChatBot = () => {
       const response = await henryAIService.sendMessage(userMessage, conversationId);
       
       // Add AI response to chat
+      // L'useEffect che monitora i messaggi si occuperà di scrollare all'inizio della risposta
       setMessages(prev => [...prev, { text: response.answer, sender: 'ai' }]);
       
       // Save conversation ID for context
@@ -105,6 +132,8 @@ const ChatBot = () => {
     setIsOpen(prev => !prev);
     // If opening the chat and it's empty, add a welcome message
     if (!isOpen && messages.length === 0) {
+      // Aggiungiamo il messaggio di benvenuto
+      // L'useEffect che monitora i messaggi si occuperà di scrollare all'inizio della risposta
       setMessages([{
         text: 'Ciao! Sono Henry, l\'assistente virtuale di RMI Made in Italy. Come posso aiutarti oggi?',
         sender: 'ai'
@@ -146,11 +175,20 @@ const ChatBot = () => {
             </div>
 
             {/* Chat messages */}
-            <div className="flex-grow p-4 overflow-y-auto bg-secondary-950 relative">
+            <div 
+              ref={messagesContainerRef}
+              className="flex-grow p-4 overflow-y-auto bg-secondary-950 relative"
+            >
               {messages.map((msg, index) => (
                 <div
                   key={index}
                   className={`mb-4 ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}
+                  ref={el => {
+                    // Salva i riferimenti solo per i messaggi dell'AI
+                    if (msg.sender === 'ai') {
+                      aiMessageRefs.current[index] = el;
+                    }
+                  }}
                 >
                   <div
                     className={`inline-block p-3 rounded-lg ${msg.sender === 'user' ? 'bg-primary-600 text-white' : 'bg-secondary-800 text-white'} max-w-[80%]`}
